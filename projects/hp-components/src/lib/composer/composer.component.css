@@ -1,0 +1,57 @@
+:host /deep/ .interaction-container {
+  height: 1080px;
+  width: 1920px;
+  transform-origin: left top;
+  margin-left: 33px;
+  margin-top: 185px;
+}
+
+.composer_container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.composer_container > * {
+  --container-background: rgb(35, 36, 35);
+  --container-header: rgb(63, 63, 63);
+  --container-header-color: rgb(29, 202, 38);
+  --container-main: rgb(63, 63, 63);
+}
+
+.composer_container-widgets {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  background-color: var(--container-background);
+}
+
+.composer_container-properties {
+  width: 300px;
+  background-color: var(--container-background);
+}
+
+.composer-interaction {
+  overflow: auto;
+  background-color: var(--container-main);
+  height: 100%;
+  flex: 1;
+}
+
+.header-row {
+  display: flex;
+  flex-wrap: wrap;
+  height: 75px;
+  background: gray;
+}
+
+.body-row {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+
+
+
+

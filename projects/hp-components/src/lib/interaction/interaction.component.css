@@ -1,0 +1,145 @@
+   :host {
+     box-sizing: border-box;
+     position: absolute;
+     height: 100%;
+     width: 100%;
+   }
+
+   .is-locked {}
+
+   .no-size {}
+
+   .no-drag {}
+
+   .interaction-container {
+     height: 100%;
+     box-sizing: border-box;
+     background: transparent;
+   }
+
+   .checkers-background {
+     background: gray url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity=".25" >\
+            <rect x="200" width="200" height="200" />\
+            <rect y="200" width="200" height="200" />\
+            </svg>');
+     background-size: 20px 20px;
+   }
+
+   .element-selector,
+   .lasso-selector {
+     border: 2px dashed black;
+     pointer-events: None;
+   }
+
+   .grip-container {
+     pointer-events: None;
+     height: 100%;
+     width: 100%;
+     display: flex;
+   }
+
+   .grip-container-l,
+   .grip-container-m,
+   .grip-container-r {
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     flex: 1;
+   }
+
+   .grip-container-l {
+     align-items: flex-start;
+   }
+
+   .grip-container-m {
+     align-items: center;
+   }
+
+   .grip-container-r {
+     align-items: flex-end;
+   }
+
+   .grip {
+     --grip-offset: -9px;
+     background-color: #f2f2f2;
+     border: 2px solid black;
+     height: 13px;
+     width: 13px;
+     opacity: 0.85;
+   }
+
+   .grip-tl,
+   .grip-tm,
+   .grip-tr,
+   .grip-rm,
+   .grip-br,
+   .grip-bm,
+   .grip-bl,
+   .grip-lm {
+     pointer-events: auto;
+   }
+
+   .grip-tl {
+     margin-left: var(--grip-offset);
+     margin-top: var(--grip-offset);
+     cursor: nw-resize;
+   }
+
+   .grip-tm {
+     margin-top: var(--grip-offset);
+     cursor: n-resize;
+   }
+
+   .grip-bm {
+     margin-bottom: var(--grip-offset);
+     cursor: n-resize;
+   }
+
+   .grip-tr {
+     margin-top: var(--grip-offset);
+     margin-right: var(--grip-offset);
+     cursor: ne-resize;
+   }
+
+   .grip-br {
+     cursor: nw-resize;
+     margin-right: var(--grip-offset);
+     margin-bottom: var(--grip-offset);
+   }
+
+   .grip-rm {
+     cursor: e-resize;
+     margin-right: var(--grip-offset);
+   }
+
+   .grip-bl {
+     cursor: ne-resize;
+     margin-left: var(--grip-offset);
+     margin-bottom: var(--grip-offset);
+   }
+
+   .grip-lm {
+     cursor: e-resize;
+     margin-left: var(--grip-offset);
+   }
+
+   .grip-tl,
+   .grip-tr,
+   .grip-br,
+   .grip-bl {
+     border-radius: 50%;
+   }
+
+   .size-overlay {
+     z-index: 10000;
+   }
+
+   .drag-overlay {
+     opacity: 0.5;
+     z-index: 10000;
+   }
+
+   .dropzone {
+     border: 2px dashed white;
+   }
+

@@ -121,6 +121,46 @@
           }
         }
       }
+    },
+    "hp-components": {
+      "root": "projects/hp-components",
+      "sourceRoot": "projects/hp-components/src",
+      "projectType": "library",
+      "prefix": "hpc",
+      "targets": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/hp-components/tsconfig.lib.json",
+            "project": "projects/hp-components/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/hp-components/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/hp-components/src/test.ts",
+            "tsConfig": "projects/hp-components/tsconfig.spec.json",
+            "karmaConfig": "projects/hp-components/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/hp-components/tsconfig.lib.json",
+              "projects/hp-components/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "hp-components-app"

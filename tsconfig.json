@@ -16,6 +16,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "hp-components-src": [
+        "projects/hp-components/src/public_api"
+      ],
+      "hp-components/*": [
+        "dist/hp-components/*"
+      ]
+    }
   }
 }
