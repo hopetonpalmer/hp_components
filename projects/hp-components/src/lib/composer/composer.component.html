@@ -1,15 +1,24 @@
 <div class="composer_container">
-    <div class="header-row"> </div>
+    <div *ngIf="headerVisible" class="header-row">
+       <ng-content select="[header]"></ng-content>
+    </div>
     <div class= "body-row">
-      <div class="composer_container-widgets"></div>
-      <div class="composer-interaction">
-        <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [scale]=.65>
-          <div is-dropzone=true style="position: absolute; top: 400px; left: 100px; height: 200px; width:400px; background: orangered">
+      <div class="composer_container-widgets">
+          <ng-content select="[widgets]"></ng-content>
+      </div>
+      <div class="composer-main-container">
+        <div class="composer-menu-container">
+           <ng-content select="[menu]"></ng-content>
+        </div>
+        <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [scale]=0.65>
+          <!-- sample elements - will remove in production version  -->
+          <div class="hpc-dropzone" style="position: absolute; top: 400px; left: 100px; height: 200px; width:400px; background: orangered">
             <div style="position: absolute; top: 10px; left: 10px; height: 180px; width:200px; background: yellow">
-              <div is-dropzone=true style="position: absolute; top: 10px; left: 10px; height: 100px; width:100px; background: rgb(0, 255, 0)"></div>
+              <div class="hpc-dropzone" style="position: absolute; top: 10px; left: 10px; height: 100px; width:100px; background: rgb(0, 255, 0)"></div>
             </div>
           </div>
-          <div style="position: absolute; left: 600px; top: 100px; height: 200px; width:200px; background: rgb(15, 94, 88)"></div>
+          <div class="hpc-no-drag hpc-no-size" style="position: absolute; left: 600px; top: 100px; height: 600px; width:500px; background: rgb(15, 94, 88)"></div>
+          <!-- end sample elements -->
         </hpc-interaction>
       </div>
       <div class="composer_container-properties"></div>

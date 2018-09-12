@@ -3,7 +3,6 @@ import { Rect, Point } from '../scripts/math';
 import * as dom from '../scripts/dom';
 import { SizeService } from '../services/size.service';
 import { DragService } from '../services/drag.service';
-import { SelectorComponent } from './selector.component';
 
 export interface ISelector {
   selectorEl: HTMLElement;
@@ -30,7 +29,7 @@ export class SelectorService implements OnDestroy {
   scale: number;
   lassoCursor = 'crosshair';
   renderer: Renderer2;
-  parent: HTMLElement;
+  interactionHost: HTMLElement;
   shouldAllowSizing = true;
   isLassoSelectable = true;
 
@@ -79,6 +78,11 @@ export class SelectorService implements OnDestroy {
     return this.selectors.map(x => x.clientEl);
   }
 
+    get selectableElements(): HTMLElement[] {
+    const children = dom.childrenOf(this.interactionHost).filter(x => dom.isSelectable(x));
+    return children;
+  }
+
   constructor(
     private _sizeService: SizeService,
     private _dragService: DragService,
@@ -89,16 +93,16 @@ export class SelectorService implements OnDestroy {
   createlassoSelector(left: number, top: number) {
     this.clearSelectors();
     if (this.isLassoSelectable) {
-      const selector = this.createSelector(left, top, this.parent);
-      this.renderer.setStyle(this.parent, 'cursor', this.lassoCursor);
-      this.renderer.addClass(selector, 'lasso-selector');
+      const selector = this.createSelector(left, top, this.interactionHost);
+      this.renderer.setStyle(this.interactionHost, 'cursor', this.lassoCursor);
+      this.renderer.addClass(selector, 'hpc-lasso-selector');
       this._lassoSelector = selector;
     }
   }
 
   removelassoSelector() {
     if (this._lassoSelector) {
-      this.renderer.removeChild(this.parent, this._lassoSelector);
+      this.renderer.removeChild(this.interactionHost, this._lassoSelector);
       this._lassoSelector = null;
     }
   }
@@ -122,7 +126,7 @@ export class SelectorService implements OnDestroy {
 
   selectCapturedElements() {
     const rect = dom.elementBounds(this._lassoSelector);
-    const capturedElements = dom.elementsAtRect(this.parent, rect, [
+    const capturedElements = dom.elementsAtRect(this.interactionHost, rect, [
       this._lassoSelector
     ]);
     capturedElements.forEach(el => {
@@ -131,7 +135,7 @@ export class SelectorService implements OnDestroy {
     this.removelassoSelector();
   }
 
-  unSelectElements() {
+  unSelectAll() {
     this.clearSelectors();
   }
 
@@ -140,6 +144,14 @@ export class SelectorService implements OnDestroy {
     if (selector) {
       this.clearSelector(selector);
     }
+  }
+
+  selectAll() {
+    this.clearSelectors();
+    const children = this.selectableElements;
+    children.forEach(child => {
+        this.selectElement(child, false);
+    });
   }
 
   selectElement(element: HTMLElement, clearFirst = true, isSizable = true) {
@@ -154,7 +166,7 @@ export class SelectorService implements OnDestroy {
         x => x.selectorEl === element.parentElement.parentElement.parentElement
       );
       const cursor = getComputedStyle(element).cursor;
-      this.renderer.setStyle(this.parent, 'cursor', cursor);
+      this.renderer.setStyle(this.interactionHost, 'cursor', cursor);
       this._sizeService.gripKey = element.getAttribute('gripKey');
       this.state = SelectionState.Sizable;
       return;
@@ -176,14 +188,16 @@ export class SelectorService implements OnDestroy {
     );
     selectorEl['isSelector'] = true;
     dom.assignBoundingRect(this.renderer, element, selectorEl);
-    this.renderer.addClass(selectorEl, 'element-selector');
+    this.renderer.addClass(selectorEl, 'hpc-element-selector');
     selector = { clientEl: element, selectorEl: selectorEl, overlay: null };
     this._selectors.push(selector);
     this._activeSelector = selector;
     if (isSizable && this._sizeService.canSize(element)) {
       this._sizeService.addSizingGrips(selectorEl, this.renderer);
     }
-    this.renderer.setStyle(this.parent, 'cursor', 'move');
+    if (dom.elementDraggable(element)) {
+      this.renderer.setStyle(this.interactionHost, 'cursor', 'move');
+    }
     this.state = SelectionState.Idle;
   }
 
@@ -201,16 +215,14 @@ export class SelectorService implements OnDestroy {
         this._sizeService.canSize(selector.clientEl)
       ) {
         selector.overlay = this._sizeService.createSizingOverlay(
-          selector.selectorEl,
-          this.renderer
+          selector.selectorEl
         );
       } else if (
         this.state === SelectionState.Draggable &&
         this._dragService.canDrag(selector.clientEl)
       ) {
         selector.overlay = this._dragService.createDragOverlay(
-          selector.clientEl,
-          this.renderer
+          selector.clientEl
         );
       }
       if (selector.overlay) {
@@ -256,6 +268,7 @@ export class SelectorService implements OnDestroy {
         selector.overlay
       );
     }
+    this.selectors.splice(this.selectors.indexOf(selector), 1);
   }
 
   resizeLasso(width: number, height: number, initialPos: Point) {
@@ -275,22 +288,22 @@ export class SelectorService implements OnDestroy {
 
   resizeSelectorsBy(delta: Point) {
     const selectors = this.selectors.map(x => x.selectorEl);
-    this._sizeService.sizeElementsBy(delta, selectors, this.renderer);
+    this._sizeService.sizeElementsBy(delta, selectors);
   }
 
   resizeOverlaysBy(delta: Point) {
     const overlays = this.selectors.map(x => x.overlay);
-    this._sizeService.sizeElementsBy(delta, overlays, this.renderer);
+    this._sizeService.sizeElementsBy(delta, overlays);
   }
 
   moveSelectorsBy(delta: Point) {
     const selectors = this.selectors.map(x => x.overlay);
-    this._dragService.dragElementsBy(delta, selectors, this.renderer);
+    this._dragService.dragElementsBy(delta, selectors);
   }
 
   moveOverlaysBy(delta: Point) {
     const overlays = this.selectors.map(x => x.overlay);
-    this._dragService.dragElementsBy(delta, overlays, this.renderer);
+    this._dragService.dragElementsBy(delta, overlays);
   }
 
   reselect() {
@@ -327,6 +340,6 @@ export class SelectorService implements OnDestroy {
   ngOnDestroy(): void {
     this.clearSelectors();
     this.renderer = null;
-    this.parent = null;
+    this.interactionHost = null;
   }
 }

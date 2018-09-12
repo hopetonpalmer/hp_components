@@ -1,5 +1,5 @@
 <div #interactionContainer tabindex="0" (dragstart)="dragStart()" (pointerdown)="pointerDown($event)" (pointerup)="pointerUp($event)"
   (pointermove)="pointerMove($event)" (keydown)="keyDown($event)" (keyup)="keyUp($event)" (keypress)="keyPress($event)"
-  [style.transform]="'scale('+scale+')'" [ngClass]="{'checkers-background': isCheckersBackground}" class="interaction-container">
+  [style.transform]="'scale('+scale+')'" [ngClass]="{'hpc-checkers-background': isCheckersBackground}" class="interaction-container">
   <ng-content></ng-content>
 </div>

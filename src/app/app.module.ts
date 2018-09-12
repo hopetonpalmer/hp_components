@@ -7,6 +7,7 @@ import {HpComponentsModule} from 'hp-components-src';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent
@@ -18,4 +19,4 @@ import {HpComponentsModule} from 'hp-components-src';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

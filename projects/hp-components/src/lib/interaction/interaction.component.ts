@@ -1,13 +1,16 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
-  Input, Renderer2, ViewChild, ElementRef, HostListener, Output, EventEmitter
+  Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy
 } from '@angular/core';
+import { debounceTime, distinctUntilKeyChanged, map } from 'rxjs/operators';
 import { DragService } from '../services/drag.service';
 import { SizeService } from '../services/size.service';
 import { SelectorService, SelectionState, NudgeType } from '../selector/selector.service';
 import * as dom from '../scripts/dom';
 import { Point } from '../scripts/math';
 import { InteractionService } from './interaction.service';
+import { Subject, Observable, Subscription } from 'rxjs';
+
 
 export type ICancellable = ( value: any )  => boolean;
 
@@ -22,55 +25,72 @@ export type ICancellable = ( value: any )  => boolean;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InteractionComponent implements OnInit {
-
+export class InteractionComponent implements OnInit, OnDestroy {
   private _isMouseDown = false;
   private _mouseDownPos = new Point();
   private _lastMousePos: Point;
   private _cursor: string;
-
+  private _lastDropZone: HTMLElement;
+  private _deleteSelectedElementsSubscription: Subscription;
+  private _addElementSubscription: Subscription;
 
   @ViewChild('interactionContainer')
   private _el: ElementRef;
-
+  private _keyDownSubject = new Subject<KeyboardEvent>();
 
   /**
    * Scale value to apply to the Interaction host element.  The value is applied
    * to both scaleX and scaleY of the host element.
    */
-  @Input() scale = 1;
+  @Input()
+  scale = 1;
 
   /**
    * Determins if elements span when sized or dragged
    */
-  @Input() snap = 0;
+  @Input()
+  snap = 0;
 
   /**
    * Gets or sets the minimum width of the element when drag-sized.
    */
-  @Input() minSizingWidth = 30;
+  @Input()
+  minSizingWidth = 30;
 
   /**
    * Gets or sets the minimum height of the element when drag-sized.
    */
-  @Input() minSizingHeight = 30;
+  @Input()
+  minSizingHeight = 30;
 
   /**
    * Determines if elements can be selected by dragging around (lasso) them and releasing the pointer.
    */
-  @Input() isLassoSelectable = true;
+  @Input()
+  isLassoSelectable = true;
 
   /**
    * Optionally set "checkers" background for the interaction host.  Useful when building IDE-like interactive UI.
    */
-  @Input() isCheckersBackground = false;
+  @Input()
+  isCheckersBackground = false;
 
-  @Output() resizeElement = new EventEmitter<HTMLElement>();
-  @Output() moveElement = new EventEmitter<HTMLElement>();
-  @Output() moveElements = new EventEmitter<HTMLElement[]>();
-  @Output() selectElement = new EventEmitter<HTMLElement>();
+  @Output()
+  resizedElement = new EventEmitter<HTMLElement>();
+  @Output()
+  resizedElements = new EventEmitter<HTMLElement[]>();
+  @Output()
+  movedElement = new EventEmitter<HTMLElement>();
+  @Output()
+  movedElements = new EventEmitter<HTMLElement[]>();
+  @Output()
+  selectElement = new EventEmitter<HTMLElement>();
 
-  @Input() canDelete: ICancellable = () => true;
+  @Input()
+  canDelete: ICancellable = () => true
+
+  @Input()
+  canDrop: ICancellable = () => true
 
   constructor(
     private _renderer: Renderer2,
@@ -78,7 +98,13 @@ export class InteractionComponent implements OnInit {
     private _sizeService: SizeService,
     private _interactionService: InteractionService,
     private _selectionService: SelectorService
-  ) {}
+  ) {
+    this._selectionService.renderer = this._renderer;
+    this._sizeService.renderer = this._renderer;
+    this._dragService.renderer = this._renderer;
+    this._interactionService.renderer = this._renderer;
+    this._keyDownSubject.subscribe(e => this.keyDownHandler(e));
+  }
 
   /**
    * Called when the keyboard key is released.
@@ -86,7 +112,7 @@ export class InteractionComponent implements OnInit {
    */
   keyUp(e: KeyboardEvent) {
     if (e.code === 'Delete' && this._selectionService.selectors.length > 0) {
-       this.deleteSelectedElements();
+      this.deleteSelectedElements();
     }
   }
 
@@ -105,7 +131,12 @@ export class InteractionComponent implements OnInit {
    * @param e KeyboardEvent
    */
   keyDown(e: KeyboardEvent) {
-/*    if (
+    this._keyDownSubject.next(e);
+  }
+
+  keyDownHandler(e: KeyboardEvent) {
+    // debounceTime(5000);
+    /*    if (
       e.code !== 'Delete' &&
       e.code !== 'Escape' &&
       e.code !== 'ArrowLeft' &&
@@ -158,13 +189,11 @@ export class InteractionComponent implements OnInit {
           this._sizeService.gripKey = 'keyboard';
           this._sizeService.sizeElementsBy(
             delta,
-            this._selectionService.selectorElements,
-            this._renderer
+            this._selectionService.selectorElements
           );
           this._sizeService.sizeElementsBy(
             delta,
-            this._selectionService.clients,
-            this._renderer
+            this._selectionService.clients
           );
         }
       } else {
@@ -186,21 +215,16 @@ export class InteractionComponent implements OnInit {
 
         this._dragService.dragElementsBy(
           delta,
-          this._selectionService.selectorElements,
-          this._renderer
+          this._selectionService.selectorElements
         );
-        this._dragService.dragElementsBy(
-          delta,
-          this._selectionService.clients,
-          this._renderer
-        );
+        this._dragService.dragElementsBy(delta, this._selectionService.clients);
       }
     }
   }
 
   /**
    * Ensures that the default HTML5 dragging operations do not execute.
-  */
+   */
   dragStart() {
     // -- prevent default drag
     return false;
@@ -225,12 +249,15 @@ export class InteractionComponent implements OnInit {
         const mouseChange = this.getPointerChange(e);
         this._selectionService.nudgeBy(mouseChange[0], NudgeType.Overlay);
         mousePos = mouseChange[1];
-        this._dragService.updateDropZone(this._selectionService.activeSelector.overlay,
-           this._el.nativeElement, this._renderer, [this._selectionService.activeSelector.clientEl]);
+        this._lastDropZone = this._dragService.updateDropZone(
+          this._selectionService.activeSelector.overlay,
+          this._el.nativeElement,
+          [this._selectionService.activeSelector.clientEl]
+        );
       }
       this._lastMousePos = mousePos;
     } else {
-      this.ensureDragCursor(e);
+      this.ensureCursor(e);
     }
   }
 
@@ -263,25 +290,45 @@ export class InteractionComponent implements OnInit {
       this._selectionService.selectCapturedElements();
     } else {
       if (this._selectionService.state === SelectionState.Draggable) {
-        this.moveSelectedElements();
+        this.moveSelectedElements(NudgeType.Overlay, false);
+        this.tryDropSelectedElements();
       } else if (this._selectionService.state === SelectionState.Sizable) {
         this.resizeSelectedElements();
       }
-      // this.ensureDragCursor(e);
-      this._dragService.clearDropZones(this._el.nativeElement, this._renderer);
+      this._dragService.clearDropZones(this._el.nativeElement);
     }
     this._renderer.setStyle(this._el.nativeElement, 'cursor', this._cursor);
+    this._lastDropZone = null;
+    this._interactionService.selectedElements = this._selectionService.clients;
+  }
+
+
+  /**
+   * Attemps to drop the currently selected elements into a drop zone
+   * @param e PointerEvent
+   */
+  tryDropSelectedElements() {
+    const selectors = this._selectionService.selectors;
+    selectors.forEach(selector => {
+      if (this.canDrop(selector.clientEl)) {
+        this._dragService.dropElement(
+          this._lastDropZone,
+          selector.clientEl,
+          this._el.nativeElement
+        );
+      }
+    });
+    this._selectionService.reselect();
   }
 
   /**
    * Ensures that the appropriate cursor is set when element is draggable.
    * @param e PointerEvent
    */
-  ensureDragCursor(e: PointerEvent) {
+  ensureCursor(e: PointerEvent) {
     const mousePos = new Point(e.pageX, e.pageY);
-    this.getRelativePointerPos(e);
     const selector = this._selectionService.selectorAtPoint(mousePos);
-    if (selector) {
+    if (selector && dom.elementDraggable(selector.clientEl)) {
       this._renderer.setStyle(this._el.nativeElement, 'cursor', 'move');
     } else {
       this._renderer.setStyle(this._el.nativeElement, 'cursor', 'default');
@@ -293,15 +340,22 @@ export class InteractionComponent implements OnInit {
    */
   resizeSelectedElements() {
     const selectors = this._selectionService.selectors;
+    const sizedElements = [];
     selectors.forEach(selector => {
-      dom.assignBoundingRect(
-        this._renderer,
-        selector.overlay,
-        selector.clientEl
-      );
-      this.resizeElement.emit(selector.clientEl);
+      if (dom.elementSizable(selector.clientEl)) {
+        sizedElements.push(selector.clientEl);
+        dom.assignBoundingRect(
+          this._renderer,
+          selector.overlay,
+          selector.clientEl
+        );
+        this.resizedElement.emit(selector.clientEl);
+      }
     });
     this.resetSelection();
+    if (sizedElements.length > 0) {
+      this.resizedElements.emit(sizedElements);
+    }
   }
 
   /**
@@ -311,19 +365,31 @@ export class InteractionComponent implements OnInit {
    * Usually only the overlay is dragged/moved, hence the default of NudgeType.Overlay.
    * @param resetAfterMove determines if the selector should reset itself after every move.
    */
-  moveSelectedElements(nudgeType: NudgeType = NudgeType.Overlay,    resetAfterMove = true) {
+  moveSelectedElements(
+    nudgeType: NudgeType = NudgeType.Overlay,
+    resetAfterMove = true
+  ) {
     const selectors = this._selectionService.selectors;
+    const movedElements = [];
     selectors.forEach(selector => {
-      dom.assignPosition(
-        this._renderer, nudgeType === NudgeType.Overlay ? selector.overlay : selector.selectorEl,
-        selector.clientEl
-      );
-      this.moveElement.emit(selector.clientEl);
+      if (dom.elementDraggable(selector.clientEl)) {
+        movedElements.push(selector.clientEl);
+        dom.assignPosition(
+          this._renderer,
+          nudgeType === NudgeType.Overlay
+            ? selector.overlay
+            : selector.selectorEl,
+          selector.clientEl
+        );
+        this.movedElement.emit(selector.clientEl);
+      }
     });
     if (resetAfterMove) {
       this.resetSelection();
     }
-    this.moveElements.emit(this._selectionService.clients);
+    if (movedElements.length > 0) {
+      this.movedElements.emit(movedElements);
+    }
   }
 
   /**
@@ -332,15 +398,26 @@ export class InteractionComponent implements OnInit {
   deleteSelectedElements() {
     const selectors = this._selectionService.selectors;
     const deletedElements = [];
-    selectors.forEach(selector => {
+    for (let index = selectors.length - 1; index >= 0; index--) {
+      const selector = selectors[index];
       if (this.canDelete(selector.clientEl)) {
         const el = selector.clientEl;
         this._selectionService.clearSelector(selector);
-        this._interactionService.deleteElement(el, this._renderer);
+        this._interactionService.deleteElement(el);
         deletedElements.push(el);
       }
-   });
-    this._interactionService.deleteElements(deletedElements, this._renderer);
+    }
+    this._interactionService.deleteElements(deletedElements);
+    this._interactionService.selectedElements = this._selectionService.clients;
+  }
+
+  /**
+   * Add a new child element to the host element.
+   */
+  addElement(element: Element) {
+    const selector = this._selectionService.activeSelector;
+    const parent = selector && dom.isContainer(selector.clientEl) ? selector.clientEl : this._el.nativeElement;
+    this._renderer.appendChild(parent, element);
   }
 
   /**
@@ -348,11 +425,7 @@ export class InteractionComponent implements OnInit {
    * @param e PointerEvent
    */
   getRelativePointerPos(e: PointerEvent) {
-    const relativePos = dom.offset(this._el.nativeElement);
-    return new Point(
-      (e.pageX - relativePos.x) / this.scale,
-      (e.pageY - relativePos.y) / this.scale
-    );
+    return dom.getRelativePointerPos(e, this._el.nativeElement, this.scale);
   }
 
   /**
@@ -375,7 +448,6 @@ export class InteractionComponent implements OnInit {
     }
     return [new Point(left, top), pointerPos];
   }
-
 
   /**
    * Re-selects the currently selected elements.  Usually happens after
@@ -400,10 +472,26 @@ export class InteractionComponent implements OnInit {
 
   ngOnInit() {
     if (this._el.nativeElement && this._renderer) {
-      this._selectionService.parent = this._el.nativeElement;
-      this._selectionService.renderer = this._renderer;
+      this._interactionService.interactionHost = this._el.nativeElement;
+      this._selectionService.interactionHost = this._el.nativeElement;
       this._selectionService.isLassoSelectable = this.isLassoSelectable;
       this._cursor = getComputedStyle(this._el.nativeElement).cursor;
+      this._deleteSelectedElementsSubscription = this._interactionService.deleteSelectedElements$.subscribe(
+        () => {
+           this.deleteSelectedElements();
+        }
+      );
+      this._addElementSubscription = this._interactionService.addElement$.subscribe(
+        element => {
+          // this.addElement(element);
+        }
+      );
     }
+  }
+
+  ngOnDestroy(): void {
+    this._lastDropZone = null;
+    this._deleteSelectedElementsSubscription.unsubscribe();
+    this._addElementSubscription.unsubscribe();
   }
 }

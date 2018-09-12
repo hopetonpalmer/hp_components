@@ -43,8 +43,8 @@ export function childElements(element: HTMLElement, orderByZOrder = false): HTML
   for (let i = 0; i < children.length; i++) {
     const child = children[i] as HTMLElement;
     if (child && child.parentElement === element &&
-      child.className.indexOf('lasso-selector') === -1 &&
-      child.className.indexOf('element-selector') === -1 &&
+      child.className.indexOf('hpc-lasso-selector') === -1 &&
+      child.className.indexOf('hpc-element-selector') === -1 &&
       child.className.indexOf('grip') === -1) {
       result.push(child);
     }
@@ -59,9 +59,9 @@ export function childElements(element: HTMLElement, orderByZOrder = false): HTML
 export function removeHelperChildren(children: HTMLElement[]) {
   for (let i = children.length - 1; i >= 0; i--) {
     const child = children[i] as HTMLElement;
-    if (child.className.indexOf('lasso-selector') > -1 ||
-      child.className.indexOf('element-selector') > -1 ||
-      child.className.indexOf('drag-overlay') > -1 ||
+    if (child.className.indexOf('hpc-lasso-selector') > -1 ||
+      child.className.indexOf('hpc-element-selector') > -1 ||
+      child.className.indexOf('hpc-drag-overlay') > -1 ||
       child.className.indexOf('grip-container') > -1 ||
       child.className.indexOf('grip') > -1) {
       removeArrayItem(children, child);
@@ -155,14 +155,13 @@ export function parentTree(element: HTMLElement, lastClass: string = 'surface', 
 }
 
 export function moveElementTo(renderer: Renderer2, element: HTMLElement, position: Point): void {
-  if (!element) {
-    return;
-  }
+  if (!element) { return; }
   renderer.setStyle(element, 'top', position.y + 'px');
   renderer.setStyle(element, 'left', position.x + 'px');
 }
 
 export function moveElementBy(renderer: Renderer2, element, delta: Point) {
+  if (!element) { return; }
   const pos = elementPos(element);
   const top = pos.y + delta.y;
   const left = pos.x + delta.x;
@@ -171,6 +170,7 @@ export function moveElementBy(renderer: Renderer2, element, delta: Point) {
 }
 
 export function sizeElementBy(renderer: Renderer2, element, delta: Point) {
+  if (!element) { return; }
   const size = elementSize(element);
   const height = size.height + delta.y;
   const width = size.width + delta.x;
@@ -205,13 +205,15 @@ export function setElementRect(renderer: Renderer2, rect: Rect, element: HTMLEle
 
 export function childrenOf(parent: HTMLElement, deep = false, exclude = []): HTMLElement[] {
   let result = [];
-  if (deep) {
-    result = Array.from(parent.querySelectorAll('*'));
-  } else {
-    result = Array.from(parent.children);
+  if (parent) {
+    if (deep) {
+      result = Array.from(parent.querySelectorAll('*'));
+    } else {
+      result = Array.from(parent.children);
+    }
+    removeHelperChildren(result);
+    result = result.filter(x => !(x in exclude));
   }
-  removeHelperChildren(result);
-  result = result.filter(x => !(x in exclude));
   return result;
 }
 
@@ -253,15 +255,51 @@ export function xelementAtPoint(pos: Point, parent: HTMLElement, exclude = []): 
   return result;
 }
 
+export function changeParent(element: HTMLElement, newParent: HTMLElement, renderer: Renderer2) {
+  if (!newParent || element.parentElement === newParent) {
+    return;
+  }
+  const parentPos = elementPagePos(newParent);
+  const elPos = elementPagePos(element);
+  const newPos = new Point(elPos.x - parentPos.x, elPos.y - parentPos.y);
+  renderer.appendChild(newParent, element);
+  moveElementTo(renderer, element, newPos);
+}
+
+export function getScaledPos(element: HTMLElement, scale: number): Point {
+    const pos = offset(element);
+    return new Point(
+      pos.x / scale,
+      pos.y / scale
+    );
+}
+
+export function getRelativePointerPos(e: PointerEvent, element: HTMLElement, scale = 1) {
+  const relativePos = offset(element);
+  return new Point(
+    (e.pageX - relativePos.x) / scale,
+    (e.pageY - relativePos.y) / scale
+  );
+}
+
 export function elementDraggable(element: Element) {
-  return !elementLocked(element) && element.className.indexOf('no-drag') === -1;
+  return !elementLocked(element) && element.className.indexOf('hpc-no-drag') === -1;
 }
 
 export function elementSizable(element: Element) {
-  return !elementLocked(element) && element.className.indexOf('no-size') === -1;
+  return !elementLocked(element) && element.className.indexOf('hpc-no-size') === -1;
 }
 
 export function elementLocked(element: Element): boolean {
-  return element.className.indexOf('is-locked') > -1;
+  return element.className.indexOf('hpc-locked') > -1;
 }
+
+export function isContainer(element: Element): boolean {
+  return element.classList.contains('hpc-container');
+}
+
+export function isSelectable(element: Element): boolean {
+  return !element.classList.contains('hpc-no-select');
+}
+
 

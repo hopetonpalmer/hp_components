@@ -5,11 +5,24 @@
      width: 100%;
    }
 
-   .is-locked {}
+   .hpc-new-element {
+     background-color: gray;
+     top: 10px;
+     left: 10px;
+     height: 200px;
+     width: 400px;
+     border: 1px solid black;
+   }
 
-   .no-size {}
+   .hpc-container {}
 
-   .no-drag {}
+   .hpc-locked {}
+
+   .hpc-no-size {}
+
+   .hpc-no-drag {}
+
+   .hpc-no-select {}
 
    .interaction-container {
      height: 100%;
@@ -17,7 +30,7 @@
      background: transparent;
    }
 
-   .checkers-background {
+   .hpc-checkers-background {
      background: gray url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity=".25" >\
             <rect x="200" width="200" height="200" />\
             <rect y="200" width="200" height="200" />\
@@ -25,8 +38,8 @@
      background-size: 20px 20px;
    }
 
-   .element-selector,
-   .lasso-selector {
+   .hpc-element-selector,
+   .hpc-lasso-selector {
      border: 2px dashed black;
      pointer-events: None;
    }
@@ -130,16 +143,16 @@
      border-radius: 50%;
    }
 
-   .size-overlay {
+   .hpc-sizer-overlay {
      z-index: 10000;
    }
 
-   .drag-overlay {
+   .hpc-drag-overlay {
      opacity: 0.5;
      z-index: 10000;
    }
 
-   .dropzone {
+   .hpc-dropzone.active {
      border: 2px dashed white;
    }
 

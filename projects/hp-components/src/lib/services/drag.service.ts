@@ -1,23 +1,27 @@
-import { Injectable, Renderer2 } from '@angular/core';
+import { Injectable, Renderer2, OnDestroy } from '@angular/core';
 import { Point } from '../scripts/math';
 import * as dom from '../scripts/dom';
 
 @Injectable()
-export class DragService  {
+export class DragService implements OnDestroy  {
   dragCursor = 'move';
+  renderer: Renderer2;
+
   constructor() {}
 
-  createDragOverlay(element: HTMLElement, renderer: Renderer2): HTMLElement {
+  createDragOverlay(element: HTMLElement): HTMLElement {
     const result = element.cloneNode(true) as HTMLElement;
-    renderer.addClass(result, 'drag-overlay');
-    renderer.setStyle(result, 'cursor', this.dragCursor);
-    renderer.setStyle(result, 'zIndex', 10000);
+    this.renderer.addClass(result, 'hpc-drag-overlay');
+    this.renderer.setStyle(result, 'cursor', this.dragCursor);
+    this.renderer.setStyle(result, 'zIndex', 10000);
     return result;
   }
 
-  dragElementsBy(delta: Point, elements: HTMLElement[], renderer: Renderer2) {
+  dragElementsBy(delta: Point, elements: HTMLElement[]) {
     elements.forEach(element => {
-      dom.moveElementBy(renderer, element, delta);
+      if (element) {
+        dom.moveElementBy(this.renderer, element, delta);
+      }
     });
   }
 
@@ -40,24 +44,39 @@ export class DragService  {
     exclude.push(draggedElement);
     const pos = dom.offset(draggedElement);
     const el = dom.elementAtPoint(pos, parent, exclude);
-    if (el !== parent && el.getAttribute('is-dropzone')) {
+    if (el !== parent && el.classList.contains('hpc-dropzone')) {
       return el;
     }
     return null;
   }
 
-  updateDropZone(draggedElement: HTMLElement, parent: HTMLElement, renderer: Renderer2, exclude = []) {
-    this.clearDropZones(parent, renderer);
+  updateDropZone(draggedElement: HTMLElement, parent: HTMLElement, exclude = []): HTMLElement {
+    this.clearDropZones(parent);
     const dropZone = this.findDropZone(draggedElement, parent, exclude);
     if (dropZone) {
-      renderer.addClass(dropZone, 'dropzone');
+      this.renderer.addClass(dropZone, 'active');
     }
+    return dropZone;
   }
 
-  clearDropZones(parent: HTMLElement, renderer: Renderer2) {
+  clearDropZones(parent: HTMLElement) {
     const children = dom.childrenOf(parent, true);
     children.forEach(child => {
-      renderer.removeClass(child, 'dropzone');
+      this.renderer.removeClass(child, 'active');
     });
+  }
+
+  dropElement(dropZone: HTMLElement, draggedElement: HTMLElement,  parent: HTMLElement) {
+      try {
+        dom.changeParent(draggedElement, dropZone, this.renderer);
+      } catch (error) {
+        console.log(error);
+        // -- todo log error;
+      }
+  }
+
+
+  ngOnDestroy(): void {
+    this.renderer = null;
   }
 }

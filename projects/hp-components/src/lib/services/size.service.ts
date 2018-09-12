@@ -1,19 +1,28 @@
-import { Injectable, Renderer2 } from '@angular/core';
+import { Injectable, Renderer2, OnDestroy } from '@angular/core';
 import * as dom from '../scripts/dom';
 import { Point, Rect } from '../scripts/math';
 
 @Injectable()
-export class SizeService {
+export class SizeService implements OnDestroy {
+  renderer: Renderer2;
 
-  get isHorizontalSizing(): boolean { return this.gripKey === 'lm' || this.gripKey === 'rm'; }
+  get isHorizontalSizing(): boolean {
+    return this.gripKey === 'lm' || this.gripKey === 'rm';
+  }
 
-  get isVerticalSizing(): boolean { return this.gripKey === 'tm' || this.gripKey === 'bm'; }
+  get isVerticalSizing(): boolean {
+    return this.gripKey === 'tm' || this.gripKey === 'bm';
+  }
 
   get isSizingFromTop(): boolean {
-    return this.gripKey === 'tl' || this.gripKey === 'tm' || this.gripKey === 'tr';
+    return (
+      this.gripKey === 'tl' || this.gripKey === 'tm' || this.gripKey === 'tr'
+    );
   }
   get isSizingFromLeft(): boolean {
-    return this.gripKey === 'tl' || this.gripKey === 'lm' || this.gripKey === 'bl';
+    return (
+      this.gripKey === 'tl' || this.gripKey === 'lm' || this.gripKey === 'bl'
+    );
   }
   get isRotating(): boolean {
     return this.gripKey === 'rotate';
@@ -33,7 +42,7 @@ export class SizeService {
 
   cursor: string;
   gripKey: string;
-  constructor() { }
+  constructor() {}
 
   orientations = ['tb', 'rl'];
 
@@ -45,21 +54,21 @@ export class SizeService {
     });
   }
 
-  createSizingOverlay(element: HTMLElement, renderer: Renderer2): HTMLElement {
+  createSizingOverlay(element: HTMLElement): HTMLElement {
     const result = element.cloneNode(false) as HTMLElement;
-    renderer.addClass(result, 'size-overlay');
-    renderer.setStyle(result, 'border-style', 'solid');
-    renderer.setStyle(result, 'cursor', 'inherit');
+    this.renderer.addClass(result, 'hpc-sizer-overlay');
+    this.renderer.setStyle(result, 'border-style', 'solid');
+    this.renderer.setStyle(result, 'cursor', 'inherit');
     return result;
   }
 
-  sizeElementsBy(delta: Point, elements: HTMLElement[], renderer: Renderer2) {
+  sizeElementsBy(delta: Point, elements: HTMLElement[]) {
     elements.forEach(element => {
-      this.sizeElementBy(delta, renderer, element);
+      this.sizeElementBy(delta, element);
     });
   }
 
-  sizeElementBy(delta: Point, renderer: Renderer2, element: HTMLElement) {
+  sizeElementBy(delta: Point, element: HTMLElement) {
     const currentBounds = dom.elementBounds(element);
     let height = currentBounds.height + delta.y;
     let width = currentBounds.width + delta.x;
@@ -79,7 +88,6 @@ export class SizeService {
       if (this.gripKey === 'lm') {
         height = currentBounds.height;
       }
-
     }
 
     if (this.isHorizontalSizing) {
@@ -89,17 +97,14 @@ export class SizeService {
       width = currentBounds.width;
     }
 
-
     let boundsRect = new Rect(left, top, width, height);
     if (width < this.minWidth || height < this.minHeight) {
       boundsRect = currentBounds;
     }
-    dom.setElementRect(renderer, boundsRect, element);
+    dom.setElementRect(this.renderer, boundsRect, element);
   }
 
-  prepareToSize() {
-
-  }
+  prepareToSize() {}
 
   canSize(element: Element): boolean {
     return dom.elementSizable(element);
@@ -128,4 +133,7 @@ export class SizeService {
     renderer.setProperty(parentEl, 'innerHTML', html);
   }
 
+  ngOnDestroy(): void {
+    this.renderer = null;
+  }
 }

@@ -3,7 +3,7 @@
   width: 1920px;
   transform-origin: left top;
   margin-left: 33px;
-  margin-top: 185px;
+  margin-top: 2%;
 }
 
 .composer_container {
@@ -31,11 +31,21 @@
   background-color: var(--container-background);
 }
 
-.composer-interaction {
+.composer-main-container {
   overflow: auto;
   background-color: var(--container-main);
   height: 100%;
+  display: flex;
+  flex-direction: column;
   flex: 1;
+}
+
+.composer-menu-container {
+
+  color: white;
+  padding: 10px;
+  min-height: 75px;
+  width: 100%;
 }
 
 .header-row {
