@@ -1,30 +1,34 @@
 import { splitToProperCase } from '../scripts/strings';
 
-const annotationKey = Symbol('inspectable:annotation');
+const inspectableKey = Symbol('inspectable');
 export interface IInspectableConfig {
    icon?: string;
    displayName?: string;
    description?: string;
    editorClass?: any;
+   isWidget?: boolean;
 }
 export function Inspectable(config: IInspectableConfig = {}) {
   return (target: Function) => {
     const displayName = splitToProperCase(target.name.replace('Component', ''));
-    const classConfig = Object.assign({displayName: displayName, classType: target.name}, config);
-    Reflect.defineMetadata(annotationKey, classConfig, target);
+    const classConfig = Object.assign({displayName: displayName, classType: target.name, isWidget: true}, config);
+    if (classConfig.isWidget) {
+       // --future use -add widget-specific meta-data here
+    }
+    Reflect.defineMetadata(inspectableKey, classConfig, target);
   };
 }
 
 export function getInspectableComponentInfo(target: any): IInspectableConfig {
   if (target && target.constructor) {
-    return Reflect.getMetadata(annotationKey, target.constructor);
+    return Reflect.getMetadata(inspectableKey, target.constructor);
   }
   return null;
 }
 
 
 const inspectPropKey = Symbol('inspectProp');
-const inspectPropKeys = Symbol('inspectProps');
+const inspectPropsKey = Symbol('inspectProps');
 export interface IInspectConfig {
   category?: string;
   description?: string;
@@ -39,7 +43,7 @@ export function Inspect(config: IInspectConfig = {}) {
     Reflect.defineMetadata(inspectPropKey, propConfig, target, key);
 
     const configs = getInspectPropertyInfos(target);
-    Reflect.defineMetadata(inspectPropKeys, [...configs, propConfig], target);
+    Reflect.defineMetadata(inspectPropsKey, [...configs, propConfig], target);
   };
 }
 
@@ -50,7 +54,7 @@ export function getInspectPropertyInfo(target: any, propertyName: string): IInsp
 export function getInspectPropertyInfos(target: any): IInspectConfig[] {
   let result = [];
   if (target) {
-    result = Reflect.getMetadata(inspectPropKeys, target);
+    result = Reflect.getMetadata(inspectPropsKey, target);
   }
   return result ? result : [];
 }
