@@ -1,0 +1,7 @@
+<div *ngIf="headerTemplate; else defaultTemplate">
+  <ng-container *ngTemplateOutlet="itemsPanelTemplate; context:{$implicit: dataContext}"></ng-container>
+</div>
+<ng-template #defaultTemplate>
+  <div *ngIf="dataContext">{{dataContext[displayMemberPath]}}</div>
+</ng-template>
+<ng-content></ng-content>

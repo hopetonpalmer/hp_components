@@ -1,0 +1,22 @@
+:host {
+  --container-background: rgb(35, 36, 35);
+  --container-header: rgb(63, 63, 63);
+  --container-color: rgb(230, 228, 228);
+  --container-main: rgb(63, 63, 63);
+
+  --header-background: rgb(67, 138, 219);
+  --header-color: rgb(230, 228, 228);
+  --header-padding: 10px;
+}
+
+.hpc-stack-vert, .hpc-stack-horz, .hpc-stack-wrap {
+  display: flex;
+}
+
+.hpc-stack-horz {
+  flex-direction: row;
+}
+
+.hpc-stack-horz {
+  flex-direction: column;
+}

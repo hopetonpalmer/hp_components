@@ -5,14 +5,14 @@
      width: 100%;
    }
 
-   .hpc-new-element {
+   .hpc-new-element, .hpc-widget {
      background-color: gray;
      top: 10px;
      left: 10px;
      height: 200px;
      width: 400px;
-     border: 1px solid black;
    }
+
 
    .hpc-container {}
 
@@ -24,7 +24,7 @@
 
    .hpc-no-select {}
 
-   .interaction-container {
+   .hpc-interaction-host {
      height: 100%;
      box-sizing: border-box;
      background: transparent;

@@ -46,7 +46,7 @@ export class SizeService implements OnDestroy {
 
   orientations = ['tb', 'rl'];
 
-  removeSizingGrips(parent: HTMLElement, renderer: Renderer2) {
+  removeSizingGrips(parent: Element, renderer: Renderer2) {
     Array.from(parent.children).forEach(child => {
       if (child.className.indexOf('grip-container') > -1) {
         renderer.removeChild(parent, child);
@@ -54,7 +54,7 @@ export class SizeService implements OnDestroy {
     });
   }
 
-  createSizingOverlay(element: HTMLElement): HTMLElement {
+  createSizingOverlay(element: Element): HTMLElement {
     const result = element.cloneNode(false) as HTMLElement;
     this.renderer.addClass(result, 'hpc-sizer-overlay');
     this.renderer.setStyle(result, 'border-style', 'solid');
@@ -62,13 +62,13 @@ export class SizeService implements OnDestroy {
     return result;
   }
 
-  sizeElementsBy(delta: Point, elements: HTMLElement[]) {
+  sizeElementsBy(delta: Point, elements: Element[]) {
     elements.forEach(element => {
       this.sizeElementBy(delta, element);
     });
   }
 
-  sizeElementBy(delta: Point, element: HTMLElement) {
+  sizeElementBy(delta: Point, element: Element) {
     const currentBounds = dom.elementBounds(element);
     let height = currentBounds.height + delta.y;
     let width = currentBounds.width + delta.x;

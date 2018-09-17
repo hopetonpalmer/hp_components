@@ -1,12 +1,18 @@
 import { Property } from '../../property-grid/models/property';
+import { ComponentDef } from '@angular/core/src/render3';
 
-export interface IWidgetData {
+
+export interface IWidget {
   id: string;
   name: string;
-  top: number;
-  left: number;
-  height: number;
-  width: number;
-  widgetClass: string;
+  widgetType: IWidgetType;
   properties: Property[];
 }
+
+export interface IWidgetType {
+  name: string;
+  description?: string;
+  icon?: string;
+  componentClass: any;
+}
+

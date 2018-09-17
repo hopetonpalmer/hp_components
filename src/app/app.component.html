@@ -1,7 +1,9 @@
 <hpc-composer>
     <div menu>
-      <button (click)="interactionService.addElement()">New</button>
+      <button (click)="interactionService.addElement()">New Element</button>
       <button (click)="interactionService.addContainer()">New Container</button>
+      <button (click)="addPanelComponent()">Image Component</button>
+      <button (click)="addVideoPlayer()">Video Player</button>
       <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.deleteSelectedElements()">Delete
         Selected</button>
       <button (click)="interactionService.deleteAll()">Delete All</button>

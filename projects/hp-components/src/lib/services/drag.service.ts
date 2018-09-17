@@ -9,7 +9,7 @@ export class DragService implements OnDestroy  {
 
   constructor() {}
 
-  createDragOverlay(element: HTMLElement): HTMLElement {
+  createDragOverlay(element: Element): HTMLElement {
     const result = element.cloneNode(true) as HTMLElement;
     this.renderer.addClass(result, 'hpc-drag-overlay');
     this.renderer.setStyle(result, 'cursor', this.dragCursor);
@@ -17,7 +17,7 @@ export class DragService implements OnDestroy  {
     return result;
   }
 
-  dragElementsBy(delta: Point, elements: HTMLElement[]) {
+  dragElementsBy(delta: Point, elements: Element[]) {
     elements.forEach(element => {
       if (element) {
         dom.moveElementBy(this.renderer, element, delta);
@@ -37,7 +37,7 @@ export class DragService implements OnDestroy  {
    * @param HTMLElement parent
    * @returns HTMLElement
    */
-  findDropZone(draggedElement: HTMLElement, parent: HTMLElement, exclude = []): HTMLElement {
+  findDropZone(draggedElement: Element, parent: Element, exclude = []): Element {
     if (!draggedElement) {
       return null;
     }
@@ -50,7 +50,7 @@ export class DragService implements OnDestroy  {
     return null;
   }
 
-  updateDropZone(draggedElement: HTMLElement, parent: HTMLElement, exclude = []): HTMLElement {
+  updateDropZone(draggedElement: Element, parent: Element, exclude = []): Element {
     this.clearDropZones(parent);
     const dropZone = this.findDropZone(draggedElement, parent, exclude);
     if (dropZone) {
@@ -59,14 +59,14 @@ export class DragService implements OnDestroy  {
     return dropZone;
   }
 
-  clearDropZones(parent: HTMLElement) {
+  clearDropZones(parent: Element) {
     const children = dom.childrenOf(parent, true);
     children.forEach(child => {
       this.renderer.removeClass(child, 'active');
     });
   }
 
-  dropElement(dropZone: HTMLElement, draggedElement: HTMLElement,  parent: HTMLElement) {
+  dropElement(dropZone: Element, draggedElement: Element,  parent: Element) {
       try {
         dom.changeParent(draggedElement, dropZone, this.renderer);
       } catch (error) {

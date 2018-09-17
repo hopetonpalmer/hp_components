@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  background: var(--container-background);
+  color: var(--container-color);
+}
+
+.content-container {
+  display: flex;
+  height: 100%;
+  flex: 1;
+}

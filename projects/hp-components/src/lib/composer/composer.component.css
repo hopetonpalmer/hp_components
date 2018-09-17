@@ -1,10 +1,11 @@
-:host /deep/ .interaction-container {
+:host /deep/ .hpc-interaction-host {
   height: 1080px;
   width: 1920px;
   transform-origin: left top;
   margin-left: 33px;
   margin-top: 2%;
 }
+
 
 .composer_container {
   display: flex;
@@ -13,7 +14,6 @@
 }
 
 .composer_container > * {
-  --container-background: rgb(35, 36, 35);
   --container-header: rgb(63, 63, 63);
   --container-header-color: rgb(29, 202, 38);
   --container-main: rgb(63, 63, 63);

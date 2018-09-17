@@ -1,9 +1,9 @@
 {
   "name": "hp-components",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
-    "rxjs": "^6.0.0"
+    "@types/lodash": "^4.14.116"
   }
 }

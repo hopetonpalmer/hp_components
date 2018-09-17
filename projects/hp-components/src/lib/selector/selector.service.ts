@@ -5,9 +5,9 @@ import { SizeService } from '../services/size.service';
 import { DragService } from '../services/drag.service';
 
 export interface ISelector {
-  selectorEl: HTMLElement;
-  overlay: HTMLElement;
-  clientEl: HTMLElement;
+  selectorEl: Element;
+  overlay: Element;
+  clientEl: Element;
 }
 
 export enum SelectionState {
@@ -66,7 +66,7 @@ export class SelectorService implements OnDestroy {
   /**
    * Represents all selector elements hovering above the captured elements
    */
-  get selectorElements(): HTMLElement[] {
+  get selectorElements(): Element[] {
     return this.selectors.map(x => x.selectorEl);
   }
 
@@ -74,11 +74,11 @@ export class SelectorService implements OnDestroy {
    * Represents all the captured elements
    *
    */
-  get clients(): HTMLElement[] {
+  get clients(): Element[] {
     return this.selectors.map(x => x.clientEl);
   }
 
-    get selectableElements(): HTMLElement[] {
+  get selectableElements(): Element[] {
     const children = dom.childrenOf(this.interactionHost).filter(x => dom.isSelectable(x));
     return children;
   }
@@ -154,7 +154,11 @@ export class SelectorService implements OnDestroy {
     });
   }
 
-  selectElement(element: HTMLElement, clearFirst = true, isSizable = true) {
+  selectElement(element: Element, clearFirst = true, isSizable = true) {
+    const compositeParent = dom.compositeParent(element);
+    if (compositeParent) {
+      element = compositeParent;
+    }
     let selector = this.selectors.find(
       x =>
         x.selectorEl === element ||
@@ -171,12 +175,16 @@ export class SelectorService implements OnDestroy {
       this.state = SelectionState.Sizable;
       return;
     }
-
     if (selector) {
       this.state = SelectionState.Idle;
       this._activeSelector = selector;
       return;
     }
+
+    if (!dom.isSelectable(element)) {
+       return;
+    }
+
     if (clearFirst) {
       this.clearSelectors();
     }

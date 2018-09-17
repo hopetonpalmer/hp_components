@@ -1,6 +1,7 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
-  Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy
+  Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy,
+   ViewContainerRef, ViewChildren, QueryList, ComponentFactoryResolver
 } from '@angular/core';
 import { debounceTime, distinctUntilKeyChanged, map } from 'rxjs/operators';
 import { DragService } from '../services/drag.service';
@@ -10,6 +11,8 @@ import * as dom from '../scripts/dom';
 import { Point } from '../scripts/math';
 import { InteractionService } from './interaction.service';
 import { Subject, Observable, Subscription } from 'rxjs';
+import { ComposerService } from '../composer/composer.service';
+import { uniqueId } from 'lodash';
 
 
 export type ICancellable = ( value: any )  => boolean;
@@ -21,19 +24,20 @@ export type ICancellable = ( value: any )  => boolean;
 @Component({
   selector: 'hpc-interaction',
   templateUrl: './interaction.component.html',
-  styleUrls: ['./interaction.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./interaction.component.css', '../hp-components.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class InteractionComponent implements OnInit, OnDestroy {
   private _isMouseDown = false;
   private _mouseDownPos = new Point();
   private _lastMousePos: Point;
   private _cursor: string;
-  private _lastDropZone: HTMLElement;
+  private _lastDropZone: Element;
   private _deleteSelectedElementsSubscription: Subscription;
   private _addElementSubscription: Subscription;
+  private _addComponentSubscription: Subscription;
 
+  @ViewChild('viewContainer', { read: ViewContainerRef })  viewContainer;
   @ViewChild('interactionContainer')
   private _el: ElementRef;
   private _keyDownSubject = new Subject<KeyboardEvent>();
@@ -76,15 +80,15 @@ export class InteractionComponent implements OnInit, OnDestroy {
   isCheckersBackground = false;
 
   @Output()
-  resizedElement = new EventEmitter<HTMLElement>();
+  resizedElement = new EventEmitter<Element>();
   @Output()
-  resizedElements = new EventEmitter<HTMLElement[]>();
+  resizedElements = new EventEmitter<Element[]>();
   @Output()
-  movedElement = new EventEmitter<HTMLElement>();
+  movedElement = new EventEmitter<Element>();
   @Output()
-  movedElements = new EventEmitter<HTMLElement[]>();
+  movedElements = new EventEmitter<Element[]>();
   @Output()
-  selectElement = new EventEmitter<HTMLElement>();
+  selectElement = new EventEmitter<Element>();
 
   @Input()
   canDelete: ICancellable = () => true
@@ -94,6 +98,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
   constructor(
     private _renderer: Renderer2,
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    protected _composerService: ComposerService,
     private _dragService: DragService,
     private _sizeService: SizeService,
     private _interactionService: InteractionService,
@@ -302,7 +308,6 @@ export class InteractionComponent implements OnInit, OnDestroy {
     this._interactionService.selectedElements = this._selectionService.clients;
   }
 
-
   /**
    * Attemps to drop the currently selected elements into a drop zone
    * @param e PointerEvent
@@ -403,11 +408,35 @@ export class InteractionComponent implements OnInit, OnDestroy {
       if (this.canDelete(selector.clientEl)) {
         const el = selector.clientEl;
         this._selectionService.clearSelector(selector);
-        this._interactionService.deleteElement(el);
+        const compRef = this._interactionService.findComponentRef(el);
+        if (compRef) {
+           this.viewContainer.remove(this.viewContainer.indexOf(compRef));
+           this._interactionService.removeComponentByRef(compRef);
+        } else {
+          this._interactionService.deleteElement(el);
+        }
         deletedElements.push(el);
       }
     }
     this._interactionService.deleteElements(deletedElements);
+    this._interactionService.selectedElements = this._selectionService.clients;
+  }
+
+  loadComponent(component: any, data: any) {
+    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
+    const componentRef = this.viewContainer.createComponent(componentFactory) as any;
+    const el = componentRef.location.nativeElement;
+    el.className = 'hpc-widget hpc-composite ' + el.className;
+    this._renderer.setStyle(el, 'box-sizing', 'border-box');
+    this._renderer.setStyle(el, 'position', 'absolute');
+    if (el.children.length > 0) {
+      const root = el.children[0];
+      this._renderer.addClass(root, 'hcp-root');
+      this._renderer.setStyle(root, 'height', '100%');
+      this._renderer.setStyle(root, 'width', '100%');
+    }
+    this._interactionService.components.push({el: el, ref: componentRef });
+    this._selectionService.selectElement(el);
     this._interactionService.selectedElements = this._selectionService.clients;
   }
 
@@ -416,7 +445,9 @@ export class InteractionComponent implements OnInit, OnDestroy {
    */
   addElement(element: Element) {
     const selector = this._selectionService.activeSelector;
-    const parent = selector && dom.isContainer(selector.clientEl) ? selector.clientEl : this._el.nativeElement;
+    const parent = selector && dom.isContainer(selector.clientEl)
+        ? selector.clientEl
+        : this._el.nativeElement;
     this._renderer.appendChild(parent, element);
   }
 
@@ -478,7 +509,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
       this._cursor = getComputedStyle(this._el.nativeElement).cursor;
       this._deleteSelectedElementsSubscription = this._interactionService.deleteSelectedElements$.subscribe(
         () => {
-           this.deleteSelectedElements();
+          this.deleteSelectedElements();
         }
       );
       this._addElementSubscription = this._interactionService.addElement$.subscribe(
@@ -486,10 +517,17 @@ export class InteractionComponent implements OnInit, OnDestroy {
           // this.addElement(element);
         }
       );
+
+      this._addComponentSubscription = this._interactionService.addComponent$.subscribe(
+        component => {
+           this.loadComponent(component, null);
+        }
+      );
     }
   }
 
   ngOnDestroy(): void {
+    this.viewContainer.clear();
     this._lastDropZone = null;
     this._deleteSelectedElementsSubscription.unsubscribe();
     this._addElementSubscription.unsubscribe();

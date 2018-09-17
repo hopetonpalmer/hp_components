@@ -1,3 +1,11 @@
-<p>
-  property-grid works!
-</p>
+<ng-container *ngIf="!inspectableComponentInfo?.editorClass">
+     <ng-container #viewContainer></ng-container>
+</ng-container>
+<ng-container *ngIf="!inspectableComponentInfo?.editorClass">
+  <hpc-header>{{inspectableComponentInfo?.displayName}}</hpc-header>
+  <div *ngFor="let prop of inspectableProperties">
+    <div>{{prop.displayName}}</div>
+    <textarea>{{component[prop.propertyName]}}</textarea>
+  </div>
+</ng-container>
+

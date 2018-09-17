@@ -1,15 +1,8 @@
 import {Point, Rect, Size} from './math';
 import {Renderer2} from '@angular/core';
 
-export function offset2(el: HTMLElement): Point {
-   const result = new Point(el.offsetLeft, el.offsetTop);
-   if (el.parentElement) {
-     result.add(offset(el.parentElement));
-   }
-   return result;
-}
 
-export function offset(el: HTMLElement): Point {
+export function offset(el: Element): Point {
   const box = el.getBoundingClientRect();
   const top = box.top;
   const left = box.left;
@@ -34,7 +27,7 @@ export function numToPix(value: number, autoWhenZero: boolean = false): string {
   return value.toString() + 'px';
 }
 
-export function childElements(element: HTMLElement, orderByZOrder = false): HTMLElement[] {
+export function childElements(element: Element, orderByZOrder = false): HTMLElement[] {
   const result = new Array<HTMLElement>();
   if (!element) {
     return result;
@@ -56,10 +49,11 @@ export function childElements(element: HTMLElement, orderByZOrder = false): HTML
   return result;
 }
 
-export function removeHelperChildren(children: HTMLElement[]) {
+export function defaultExcludeFromChildren(children: HTMLElement[]) {
   for (let i = children.length - 1; i >= 0; i--) {
     const child = children[i] as HTMLElement;
     if (child.className.indexOf('hpc-lasso-selector') > -1 ||
+      child.getAttribute('skipChildLookup') === 'true' ||
       child.className.indexOf('hpc-element-selector') > -1 ||
       child.className.indexOf('hpc-drag-overlay') > -1 ||
       child.className.indexOf('grip-container') > -1 ||
@@ -96,17 +90,17 @@ export function  elementsAtRect(parent: HTMLElement, rect: Rect, exclude: HTMLEl
   return result;
 }
 
-export function elementPos(element: HTMLElement): Point {
+export function elementPos(element: Element): Point {
   const computedStyles = getComputedStyle(element, null);
   return new Point(pixToNum(computedStyles.left), pixToNum(computedStyles.top));
 }
 
-export function elementSize(element: HTMLElement): Size {
+export function elementSize(element: Element): Size {
   const computedStyles = getComputedStyle(element, null);
   return new Size(pixToNum(computedStyles.height), pixToNum(computedStyles.width));
 }
 
-export function elementBounds(element: HTMLElement, relativeToPage: boolean = false, scale: Point = null): Rect {
+export function elementBounds(element: Element, relativeToPage: boolean = false, scale: Point = null): Rect {
   let pos = elementPos(element);
   if (relativeToPage) {
     pos = elementPagePos(element);
@@ -119,7 +113,7 @@ export function elementBounds(element: HTMLElement, relativeToPage: boolean = fa
   return new Rect(pos.x, pos.y, size.width, size.height);
 }
 
-export function elementPagePos(element: HTMLElement): Point {
+export function elementPagePos(element: Element): Point {
   const result = elementPos(element);
   if (element.parentElement == null) {
     return result;
@@ -135,7 +129,7 @@ export function elementPagePos(element: HTMLElement): Point {
 }
 
 
-export function parentTree(element: HTMLElement, lastClass: string = 'surface', inclusive = false): Array<HTMLElement> {
+export function parentTree(element: Element, lastClass: string = 'hpc-interaction-container', inclusive = false): Array<HTMLElement> {
   const result = new Array<HTMLElement>();
   if (!element) {
     return result;
@@ -154,7 +148,20 @@ export function parentTree(element: HTMLElement, lastClass: string = 'surface', 
   return result;
 }
 
-export function moveElementTo(renderer: Renderer2, element: HTMLElement, position: Point): void {
+export function parentByClass(element: Element, className: string): Element {
+  const parent = element.parentElement;
+  if (parent == null) {
+    return null;
+  }
+  if (parent.classList.contains(className)) {
+    return parent;
+  } else {
+    return parentByClass(parent, className);
+  }
+
+}
+
+export function moveElementTo(renderer: Renderer2, element: Element, position: Point): void {
   if (!element) { return; }
   renderer.setStyle(element, 'top', position.y + 'px');
   renderer.setStyle(element, 'left', position.x + 'px');
@@ -178,7 +185,7 @@ export function sizeElementBy(renderer: Renderer2, element, delta: Point) {
   renderer.setStyle(element, 'width', width + 'px');
 }
 
-export function assignBoundingRect(renderer: Renderer2, source: HTMLElement, target: HTMLElement) {
+export function assignBoundingRect(renderer: Renderer2, source: Element, target: Element) {
   const sourceRect = elementBounds(source);
   // const styles = getComputedStyle(source);
   const top = sourceRect.top; // + pixToNum(styles.marginTop);
@@ -189,21 +196,21 @@ export function assignBoundingRect(renderer: Renderer2, source: HTMLElement, tar
   renderer.setStyle(target, 'width', sourceRect.width + 'px');
 }
 
-export function assignPosition(renderer: Renderer2, source: HTMLElement, target: HTMLElement) {
+export function assignPosition(renderer: Renderer2, source: Element, target: Element) {
   const sourceRect = elementBounds(source);
   const pos = elementPos(source);
   renderer.setStyle(target, 'top', pos.y + 'px');
   renderer.setStyle(target, 'left', pos.x + 'px');
 }
 
-export function setElementRect(renderer: Renderer2, rect: Rect, element: HTMLElement) {
+export function setElementRect(renderer: Renderer2, rect: Rect, element: Element) {
   renderer.setStyle(element, 'top', rect.top + 'px');
   renderer.setStyle(element, 'left', rect.left + 'px');
   renderer.setStyle(element, 'height', rect.height + 'px');
   renderer.setStyle(element, 'width', rect.width + 'px');
 }
 
-export function childrenOf(parent: HTMLElement, deep = false, exclude = []): HTMLElement[] {
+export function childrenOf(parent: Element, deep = false, exclude = []): Element[] {
   let result = [];
   if (parent) {
     if (deep) {
@@ -211,7 +218,7 @@ export function childrenOf(parent: HTMLElement, deep = false, exclude = []): HTM
     } else {
       result = Array.from(parent.children);
     }
-    removeHelperChildren(result);
+    defaultExcludeFromChildren(result);
     result = result.filter(x => !(x in exclude));
   }
   return result;
@@ -225,7 +232,7 @@ export function pointInRect(point: Point, rect: Rect): boolean {
 * Returns the first child element of the parent element at a given point.
 * If there are no child elements at the given point, then the parent element is returned.
 */
-export function elementAtPoint(pos: Point, parent: HTMLElement, exclude = []): HTMLElement {
+export function elementAtPoint(pos: Point, parent: Element, exclude = []): Element {
     let result = parent;
     const children = childrenOf(parent, false, exclude);
     for (let index = 0; index < children.length; index++) {
@@ -240,7 +247,7 @@ export function elementAtPoint(pos: Point, parent: HTMLElement, exclude = []): H
     return result;
 }
 
-export function xelementAtPoint(pos: Point, parent: HTMLElement, exclude = []): HTMLElement {
+export function xelementAtPoint(pos: Point, parent: Element, exclude = []): Element {
   let result = parent;
   const children = childElements(parent);
   for (let index = 0; index < children.length; index++) {
@@ -255,7 +262,7 @@ export function xelementAtPoint(pos: Point, parent: HTMLElement, exclude = []): 
   return result;
 }
 
-export function changeParent(element: HTMLElement, newParent: HTMLElement, renderer: Renderer2) {
+export function changeParent(element: Element, newParent: Element, renderer: Renderer2) {
   if (!newParent || element.parentElement === newParent) {
     return;
   }
@@ -266,7 +273,7 @@ export function changeParent(element: HTMLElement, newParent: HTMLElement, rende
   moveElementTo(renderer, element, newPos);
 }
 
-export function getScaledPos(element: HTMLElement, scale: number): Point {
+export function getScaledPos(element: Element, scale: number): Point {
     const pos = offset(element);
     return new Point(
       pos.x / scale,
@@ -298,8 +305,18 @@ export function isContainer(element: Element): boolean {
   return element.classList.contains('hpc-container');
 }
 
+export function isComposite(element: Element): boolean {
+  return element.classList.contains('hpc-composite');
+}
+
+export function compositeParent(element: Element): Element {
+  return parentByClass(element, 'hpc-composite');
+}
+
 export function isSelectable(element: Element): boolean {
-  return !element.classList.contains('hpc-no-select');
+  return !element.classList.contains('hpc-no-select')
+   && (element.parentElement && element.parentElement.classList.contains('hpc-interaction-host') ||
+    element.parentElement && element.parentElement.classList.contains('hpc-container')) ;
 }
 
 

@@ -1,0 +1,9 @@
+:host {
+  display: grid;
+  background-color: var(--container-background);
+  color: var(--container-color);
+}
+
+.row {
+  display: flex;
+}
