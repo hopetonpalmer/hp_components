@@ -10,27 +10,27 @@ const typeTemplateIds = ['string', 'number', 'boolean', 'objectfit'];
   styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })
 export class PropertyGridComponent implements OnInit, AfterViewInit {
-  @ViewChildren(typeTemplateIds.toString())
-  private _templates: QueryList<any>;
+  @ViewChildren('string, number, boolean, objectfit')
+  private _templates: QueryList<TemplateRef<any>>;
 
   get component(): any {
-     const components = this._interactionService.selectedComponents;
-     if (components && components.length > 0) {
-       return components[0];
-     }
-     return null;
+    const components = this._interactionService.selectedComponents;
+    if (components && components.length > 0) {
+      return components[0];
+    }
+    return null;
   }
 
   get inspectableComponentInfo(): IInspectableConfig {
-     return getInspectableComponentInfo(this.component);
+    return getInspectableComponentInfo(this.component);
   }
 
   get inspectableProperties(): IInspectConfig[] {
-     return getInspectPropertyInfos(this.component);
+    return getInspectPropertyInfos(this.component);
   }
 
   getPropType(prop: IInspectConfig) {
-     return prop.propType;
+    return prop.propType;
   }
 
   getTemplate(prop: IInspectConfig): TemplateRef<any> {
@@ -41,14 +41,12 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
     return this._templates.toArray()[index];
   }
 
-  constructor(private _interactionService: InteractionService,
-    private _changeDectorRef: ChangeDetectorRef) {
+  constructor(
+    private _interactionService: InteractionService,
+    private _changeDectorRef: ChangeDetectorRef
+  ) {}
 
-  }
-
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this._changeDectorRef.detectChanges();
