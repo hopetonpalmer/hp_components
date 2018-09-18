@@ -11,7 +11,10 @@
     "copy-readme": "copy .\\README.md .\\dist\\hp-components",
     "build_lib": "ng build --prod hp-components",
     "npm_pack": "cd dist/hp-components && npm pack",
-    "package": "npm run build_lib && npm run copy-readme && npm run npm_pack"
+    "package": "npm run build_lib && npm run copy-readme && npm run npm_pack",
+    "build_git_page": "ng build --prod --base-href \"https://hopetonpalmer.github.io/hp_components/\"",
+    "publish_git_page": "ngh --dir=dist/hp-components-app",
+    "update_git_page": "npm run build_git_page && npm run publish_git_page"
   },
   "private": true,
   "dependencies": {
