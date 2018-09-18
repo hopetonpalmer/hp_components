@@ -1,9 +1,8 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
   Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy,
-   ViewContainerRef, ViewChildren, QueryList, ComponentFactoryResolver
+   ViewContainerRef, ComponentFactoryResolver
 } from '@angular/core';
-import { debounceTime, distinctUntilKeyChanged, map } from 'rxjs/operators';
 import { DragService } from '../services/drag.service';
 import { SizeService } from '../services/size.service';
 import { SelectorService, SelectionState, NudgeType } from '../selector/selector.service';
@@ -12,7 +11,7 @@ import { Point } from '../scripts/math';
 import { InteractionService } from './interaction.service';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { ComposerService } from '../composer/composer.service';
-import { uniqueId } from 'lodash';
+import { Inspectable, Inspect } from '../decorator';
 
 
 export type ICancellable = ( value: any )  => boolean;
@@ -20,7 +19,7 @@ export type ICancellable = ( value: any )  => boolean;
 /**
  * Handles selection, sizing, deletions, and dragging interactions with any child Element.
  */
-
+@Inspectable({displayName: 'Page'})
 @Component({
   selector: 'hpc-interaction',
   templateUrl: './interaction.component.html',
@@ -46,6 +45,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * Scale value to apply to the Interaction host element.  The value is applied
    * to both scaleX and scaleY of the host element.
    */
+  @Inspect({displayName: 'Design Scale', propType: 'number'})
   @Input()
   scale = 1;
 
@@ -95,6 +95,24 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
   @Input()
   canDrop: ICancellable = () => true
+
+  @Inspect({ propType: 'number' })
+  set height(value: number) {
+     this._renderer.setStyle(this._el.nativeElement, 'height', value + 'px');
+  }
+  get height(): number {
+     const bounds = dom.elementBounds(this._el.nativeElement as Element);
+     return bounds.height;
+  }
+
+  @Inspect({propType: 'number'})
+  set width(value: number) {
+    this._renderer.setStyle(this._el.nativeElement, 'width', value + 'px');
+  }
+  get width(): number {
+    const bounds = dom.elementBounds(this._el.nativeElement as Element);
+    return bounds.width;
+  }
 
   constructor(
     private _renderer: Renderer2,
@@ -503,6 +521,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._el.nativeElement && this._renderer) {
+      this._interactionService.defaultSelectedComponent = this;
       this._interactionService.interactionHost = this._el.nativeElement;
       this._selectionService.interactionHost = this._el.nativeElement;
       this._selectionService.isLassoSelectable = this.isLassoSelectable;

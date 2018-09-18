@@ -34,6 +34,8 @@ export interface IInspectConfig {
   description?: string;
   displayName?: string;
   editorClass?: any;
+  propType?: any;
+  valueOptions?: any[];
 }
 export function Inspect(config: IInspectConfig = {}) {
   return (target: any, key: string) => {

@@ -1,12 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import 'reflect-metadata';
-import {
-   Inspect,
-   Inspectable,
-   getInspectableComponentInfo,
-   getInspectPropertyInfos
-} from 'hp-components-src';
-import { DomSanitizer } from '@angular/platform-browser';
+import {Inspect, Inspectable} from 'hp-components-src';
+
 
 @Inspectable({ icon: 'assets/videoplayer.png' })
 @Component({
@@ -15,9 +10,11 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./video-player.component.css']
 })
 export class VideoPlayerComponent implements OnInit {
-  @Inspect({ category: 'Other' })
+
+  @Inspect({ category: 'Other', propType: 'string'})
   @Input()
-  source = 'https://webstorage.cloud.convergent.com/Content/Cox/Video/c3fca7fa-7be0-49ac-9e56-fdfa5decc3d4.mp4';
+  source = 'https://webstorage.cloud.convergent.com/Content/Cox/Video/2d58f20b-61de-4468-9124-7825f92686b9.mp4';
+
 
   @Inspect({ category: 'Other' })
   @Input()
@@ -27,9 +24,11 @@ export class VideoPlayerComponent implements OnInit {
   @Input()
   width: number;
 
-  constructor(private sanitizer: DomSanitizer) {
-    console.log(getInspectPropertyInfos(this));
-    console.log(getInspectableComponentInfo(this));
+  @Inspect({ propType: 'objectfit' })
+  videoFit = 'contain';
+
+  constructor() {
+
   }
 
   ngOnInit() {}

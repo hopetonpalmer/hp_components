@@ -5,6 +5,8 @@ import * as dom from '../scripts/dom';
 
 @Injectable()
 export class InteractionService implements OnDestroy {
+  defaultSelectedComponent: any;
+
   private _deleteElementSubject = new Subject<Element>();
   deleteElement$ = this._deleteElementSubject.asObservable();
 
@@ -25,6 +27,9 @@ export class InteractionService implements OnDestroy {
 
   private _selectedComponents = [];
   get selectedComponents(): any[] {
+    if (!this.hasSelectedElements) {
+      return [this.defaultSelectedComponent];
+    }
     return this._selectedComponents;
   }
   set selectedComponents(components: any[]) {
@@ -179,5 +184,6 @@ export class InteractionService implements OnDestroy {
   ngOnDestroy(): void {
     this.renderer = null;
     this._components = [];
+    this.defaultSelectedComponent = null;
   }
 }

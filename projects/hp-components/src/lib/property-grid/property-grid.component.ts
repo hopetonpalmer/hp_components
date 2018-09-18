@@ -1,13 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChildren, TemplateRef, QueryList, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
 import { InteractionService } from '../interaction/interaction.service';
+
+const typeTemplateIds = ['string', 'number', 'boolean', 'objectfit'];
 
 @Component({
   selector: 'hpc-property-grid',
   templateUrl: './property-grid.component.html',
-  styleUrls: ['./property-grid.component.css']
+  styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })
-export class PropertyGridComponent implements OnInit {
+export class PropertyGridComponent implements OnInit, AfterViewInit {
+  @ViewChildren(typeTemplateIds.toString())
+  private _templates: QueryList<any>;
 
   get component(): any {
      const components = this._interactionService.selectedComponents;
@@ -24,7 +28,21 @@ export class PropertyGridComponent implements OnInit {
   get inspectableProperties(): IInspectConfig[] {
      return getInspectPropertyInfos(this.component);
   }
-  constructor(private _interactionService: InteractionService) {
+
+  getPropType(prop: IInspectConfig) {
+     return prop.propType;
+  }
+
+  getTemplate(prop: IInspectConfig): TemplateRef<any> {
+    if (!this._templates) {
+      return null;
+    }
+    const index = typeTemplateIds.indexOf(prop.propType.toLowerCase());
+    return this._templates.toArray()[index];
+  }
+
+  constructor(private _interactionService: InteractionService,
+    private _changeDectorRef: ChangeDetectorRef) {
 
   }
 
@@ -32,4 +50,7 @@ export class PropertyGridComponent implements OnInit {
 
   }
 
+  ngAfterViewInit() {
+    this._changeDectorRef.detectChanges();
+  }
 }

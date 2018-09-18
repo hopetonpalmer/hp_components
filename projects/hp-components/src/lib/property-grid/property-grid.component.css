@@ -4,6 +4,26 @@
   color: var(--container-color);
 }
 
-.row {
-  display: flex;
+.property-table {
+  font-size: 0.75em;
+  box-sizing: border-box;
+  padding: 10px;
+  background: rgb(78, 78, 77);
+  width: 100%;
 }
+
+.property-label {
+  width: 100px;
+  padding-right: 10px;
+}
+
+.property-value {
+  width: 100%;
+}
+
+.properties-container {
+  padding: 10px;
+  overflow: auto;
+  width: "100%"
+}
+
