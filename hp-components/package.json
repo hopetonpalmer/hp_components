@@ -1,0 +1,22 @@
+{
+  "name": "hp-components",
+  "version": "0.1.5",
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
+    "rxjs": "^6.0.0"
+  },
+  "main": "bundles/hp-components.umd.js",
+  "module": "fesm5/hp-components.js",
+  "es2015": "fesm2015/hp-components.js",
+  "esm5": "esm5/hp-components.js",
+  "esm2015": "esm2015/hp-components.js",
+  "fesm5": "fesm5/hp-components.js",
+  "fesm2015": "fesm2015/hp-components.js",
+  "typings": "hp-components.d.ts",
+  "metadata": "hp-components.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}
