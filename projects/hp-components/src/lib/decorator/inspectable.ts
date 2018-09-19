@@ -1,4 +1,5 @@
 import { splitToProperCase } from '../scripts/strings';
+import 'reflect-metadata';
 
 const inspectableKey = Symbol('inspectable');
 export interface IInspectableConfig {

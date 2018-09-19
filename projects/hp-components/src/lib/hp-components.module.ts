@@ -25,6 +25,7 @@ import { StringPropertyEditorComponent,
   FontPropertyEditorComponent,
   ColorPropertyEditorComponent,
   MediaSourcePropertyEditorComponent } from './property-grid/editors';
+import { StylePropertyEditorComponent } from './property-grid/editors/property-editors/style-property-editor/style-property-editor.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { StringPropertyEditorComponent,
     BackgroundPropertyEditorComponent,
     FontPropertyEditorComponent,
     ColorPropertyEditorComponent,
-    MediaSourcePropertyEditorComponent
+    MediaSourcePropertyEditorComponent,
+    StylePropertyEditorComponent
   ],
   exports: [
     InteractionComponent,

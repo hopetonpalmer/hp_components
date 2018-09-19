@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 const metaKey = 'propertyInfo';
 export function PropertyInfo(displayName: string, description: string, category: string) {
   return (target: any, key: string) =>  {
