@@ -32,6 +32,7 @@ export class SelectorService implements OnDestroy {
   interactionHost: HTMLElement;
   shouldAllowSizing = true;
   isLassoSelectable = true;
+  isSelectable = true;
 
   private _activeSelector: ISelector;
   get activeSelector(): ISelector {
@@ -155,6 +156,9 @@ export class SelectorService implements OnDestroy {
   }
 
   selectElement(element: Element, clearFirst = true, isSizable = true) {
+    if (!this.isSelectable) {
+       return;
+    }
     const compositeParent = dom.compositeParent(element);
     if (compositeParent) {
       element = compositeParent;

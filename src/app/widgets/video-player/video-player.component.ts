@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import 'reflect-metadata';
-import {Inspect, Inspectable} from 'hp-components-src';
+import {Inspect, Inspectable, MediaSourcePropertyEditorComponent} from 'hp-components-src';
 
 
 @Inspectable({ icon: 'assets/videoplayer.png' })
@@ -11,7 +11,7 @@ import {Inspect, Inspectable} from 'hp-components-src';
 })
 export class VideoPlayerComponent implements OnInit {
 
-  @Inspect({ category: 'Other', propType: 'string'})
+  @Inspect({ category: 'Other', propType: 'string', editorClass: MediaSourcePropertyEditorComponent})
   @Input()
   source = 'https://webstorage.cloud.convergent.com/Content/Cox/Video/2d58f20b-61de-4468-9124-7825f92686b9.mp4';
 

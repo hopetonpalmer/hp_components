@@ -36,13 +36,20 @@ export interface IInspectConfig {
   displayName?: string;
   editorClass?: any;
   propType?: any;
+  isStyle?: boolean;
   valueOptions?: any[];
+  readonly propertyName?: string;
 }
 export function Inspect(config: IInspectConfig = {}) {
   return (target: any, key: string) => {
     const propType = Reflect.getMetadata('design:type', target, key);
     const displayName = splitToProperCase(key);
-    const propConfig = Object.assign({propertyName: key, displayName: displayName, propType: propType.name}, config);
+    const propConfig = Object.assign({
+      propertyName: key,
+      displayName: displayName,
+      propType: propType.name,
+      isStyle: false
+    }, config);
     Reflect.defineMetadata(inspectPropKey, propConfig, target, key);
 
     const configs = getInspectPropertyInfos(target);

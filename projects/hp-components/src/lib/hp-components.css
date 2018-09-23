@@ -1,12 +1,38 @@
-:host {
-  --container-background: rgb(35, 36, 35);
-  --container-header: rgb(63, 63, 63);
-  --container-color: rgb(230, 228, 228);
-  --container-main: rgb(63, 63, 63);
+:root * {
+  --hpc-h: 0;
+  --hpc-s: 100%;
+  --hpc-l: 50%;
 
-  --header-background: rgb(67, 138, 219);
-  --header-color: rgb(230, 228, 228);
-  --header-padding: 10px;
+  --hpc-container-background: rgb(35, 36, 35);
+  --hpc-container-header: rgb(63, 63, 63);
+  --hpc-container-color: rgb(230, 228, 228);
+  --hpc-container-main: rgb(63, 63, 63);
+
+  --hpc-header-background: rgb(67, 138, 219);
+  --hpc-header-color: rgb(230, 228, 228);
+  --hpc-header-padding: 10px;
+
+  --hpc-property-editor-font-color: rgb(230, 228, 228);
+
+  --hpc-danger-color: white;
+  --hpc-danger-background: rgb(212, 51, 51);
+
+  --hpc-warning-color: white;
+  --hpc-warning-background: rgb(247, 71, 7);
+
+  --hpc-info-color: white;
+  --hpc-info-background: rgb(61, 93, 196);
+
+  --hpc-success-color: white;
+  --hpc-success-background: rgb(84, 168, 105);
+}
+
+:host * {
+  box-sizing: border-box;
+}
+
+.hpc-hide {
+  display: none;
 }
 
 .hpc-stack-vert, .hpc-stack-horz, .hpc-stack-wrap {
@@ -19,4 +45,15 @@
 
 .hpc-stack-horz {
   flex-direction: column;
+}
+
+.hpc-fill-parent{
+  height: 100%;
+  width: 100%;
+}
+
+.hpc-property-grid {
+    font-size: 0.75em;
+    color: var(--hpc-property-editor-font-color);
+    padding: 10px;
 }

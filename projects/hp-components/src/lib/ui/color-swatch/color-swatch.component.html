@@ -1,0 +1,3 @@
+<div class="swatch-box" *ngFor="let color of activePalette?.colors" [style.background-color]="color"
+(click)="selectColor(color)" [ngClass]="{'selected': isSelected(color)}" ></div>
+

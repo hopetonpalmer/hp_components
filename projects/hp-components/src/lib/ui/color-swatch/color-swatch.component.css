@@ -1,0 +1,26 @@
+:host {
+  --swatchBorder: 1px solid black;
+  --swatchSelectedBorder: 1px dotted orange;
+  display: grid;
+  min-height: 100px;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.swatch-box {
+  cursor: pointer;
+  border: var(--swatchBorder);
+  border-radius: 3px;
+  margin: 1px;
+}
+
+.xswatch-box:nth-child(10n) {
+  border-right: var(--swatchBorder);
+}
+
+.xswatch-box:nth-last-child(-n+10) {
+  border-bottom: var(--swatchBorder);
+}
+
+.selected {
+  border: var(--swatchSelectedBorder);
+}

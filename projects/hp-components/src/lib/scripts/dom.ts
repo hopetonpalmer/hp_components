@@ -319,4 +319,22 @@ export function isSelectable(element: Element): boolean {
     element.parentElement && element.parentElement.classList.contains('hpc-container')) ;
 }
 
+export function pauseVideos(element: Element) {
+  if (!element) {
+    return;
+  }
+  if (element instanceof HTMLVideoElement) {
+    element.pause();
+  }
+  const videos = element.querySelectorAll('video');
+  for (let index = 0; index < videos.length; index++) {
+    const el = videos[index];
+    pauseVideos(el);
+  }
+}
+
+export function hasVideo(element: Element): boolean {
+  return element instanceof HTMLVideoElement || childrenOf(element, true).find(f => f instanceof HTMLVideoElement) != null;
+}
+
 

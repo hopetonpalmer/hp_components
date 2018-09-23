@@ -24,8 +24,13 @@ import { StringPropertyEditorComponent,
   BackgroundPropertyEditorComponent,
   FontPropertyEditorComponent,
   ColorPropertyEditorComponent,
-  MediaSourcePropertyEditorComponent } from './property-grid/editors';
-import { StylePropertyEditorComponent } from './property-grid/editors/property-editors/style-property-editor/style-property-editor.component';
+  MediaSourcePropertyEditorComponent,
+  StylePropertyEditorComponent} from './property-grid/editors';
+import { ColorPickerComponent } from './ui/color-picker/color-picker.component';
+import { InteractionDirective } from './interaction/interaction.directive';
+import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
+import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
+
 
 
 @NgModule({
@@ -53,7 +58,12 @@ import { StylePropertyEditorComponent } from './property-grid/editors/property-e
     FontPropertyEditorComponent,
     ColorPropertyEditorComponent,
     MediaSourcePropertyEditorComponent,
-    StylePropertyEditorComponent
+    StylePropertyEditorComponent,
+    ColorPickerComponent,
+    InteractionDirective,
+    SliderDirective,
+    TextDirective,
+    ColorSwatchComponent
   ],
   exports: [
     InteractionComponent,
@@ -62,7 +72,8 @@ import { StylePropertyEditorComponent } from './property-grid/editors/property-e
     PanelComponent,
     HeaderComponent,
     ListViewComponent,
-    HeaderComponent
+    HeaderComponent,
+    ColorPropertyEditorComponent
   ],
   providers: [
     DragService,
@@ -72,7 +83,18 @@ import { StylePropertyEditorComponent } from './property-grid/editors/property-e
     ComposerService
   ],
   entryComponents: [
-    PanelComponent
+    PanelComponent,
+    StringPropertyEditorComponent,
+    NumberPropertyEditorComponent,
+    BooleanPropertyEditorComponent,
+    AlignmentPropertyEditorComponent,
+    BrushPropertyEditorComponent,
+    BackgroundPropertyEditorComponent,
+    FontPropertyEditorComponent,
+    ColorPropertyEditorComponent,
+    MediaSourcePropertyEditorComponent,
+    StylePropertyEditorComponent,
+    ColorPickerComponent
   ]
 })
 export class HpComponentsModule { }

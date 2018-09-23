@@ -1,8 +1,15 @@
 import { Component, OnInit, ViewChildren, TemplateRef, QueryList, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
 import { InteractionService } from '../interaction/interaction.service';
+import { PropertyInspectorService } from './property-inspector.service';
+import {StringPropertyEditorComponent,
+  BooleanPropertyEditorComponent,
+  NumberPropertyEditorComponent,
+  ColorPropertyEditorComponent,
+  FontPropertyEditorComponent,
+  MediaSourcePropertyEditorComponent,
+  StylePropertyEditorComponent} from './editors/';
 
-const typeTemplateIds = ['string', 'number', 'boolean', 'objectfit'];
 
 @Component({
   selector: 'hpc-property-grid',
@@ -10,8 +17,6 @@ const typeTemplateIds = ['string', 'number', 'boolean', 'objectfit'];
   styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })
 export class PropertyGridComponent implements OnInit, AfterViewInit {
-  @ViewChildren('string, number, boolean, objectfit')
-  private _templates: QueryList<TemplateRef<any>>;
 
   get component(): any {
     const components = this._interactionService.selectedComponents;
@@ -33,18 +38,32 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
     return prop.propType;
   }
 
-  getTemplate(prop: IInspectConfig): TemplateRef<any> {
-    if (!this._templates) {
-      return null;
-    }
-    const index = typeTemplateIds.indexOf(prop.propType.toLowerCase());
-    return this._templates.toArray()[index];
+  getPropertyEditor(prop: IInspectConfig): any {
+    return prop.editorClass
+      ? prop.editorClass
+      : this._inspectorService.getPropertyEditor(prop.propType);
   }
 
   constructor(
+    private _inspectorService: PropertyInspectorService,
     private _interactionService: InteractionService,
-    private _changeDectorRef: ChangeDetectorRef
-  ) {}
+    private _changeDectorRef: ChangeDetectorRef) {
+      this.registerKnownInspectors();
+   }
+
+  private registerKnownInspectors() {
+    this._inspectorService.registerPropertyInspector('string', StringPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('text', StringPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('boolean', BooleanPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('number', NumberPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('color', ColorPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('backgroundColor', ColorPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('borderColor', ColorPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('font', FontPropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('src', MediaSourcePropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('mediaSource', MediaSourcePropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector('style', StylePropertyEditorComponent);
+  }
 
   ngOnInit() {}
 

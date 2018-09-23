@@ -8,4 +8,6 @@ export * from './media-source-property-editor/media-source-property-editor.compo
 export * from './number-property-editor/number-property-editor.component';
 export * from './alignment-property-editor/alignment-property-editor.component';
 export * from './string-property-editor/string-property-editor.component';
+export * from './style-property-editor/style-property-editor.component';
+
 

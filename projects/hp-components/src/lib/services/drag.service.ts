@@ -9,11 +9,12 @@ export class DragService implements OnDestroy  {
 
   constructor() {}
 
-  createDragOverlay(element: Element): HTMLElement {
-    const result = element.cloneNode(true) as HTMLElement;
+  createDragOverlay(element: Element): Element {
+    const result = element.cloneNode(!dom.hasVideo(element)) as Element;
     this.renderer.addClass(result, 'hpc-drag-overlay');
     this.renderer.setStyle(result, 'cursor', this.dragCursor);
     this.renderer.setStyle(result, 'zIndex', 10000);
+    dom.pauseVideos(result);
     return result;
   }
 

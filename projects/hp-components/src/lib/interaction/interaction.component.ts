@@ -19,7 +19,7 @@ export type ICancellable = ( value: any )  => boolean;
 /**
  * Handles selection, sizing, deletions, and dragging interactions with any child Element.
  */
-@Inspectable({displayName: 'Page'})
+@Inspectable({ displayName: 'Design Surface' })
 @Component({
   selector: 'hpc-interaction',
   templateUrl: './interaction.component.html',
@@ -36,7 +36,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
   private _addElementSubscription: Subscription;
   private _addComponentSubscription: Subscription;
 
-  @ViewChild('viewContainer', { read: ViewContainerRef })  viewContainer;
+  @ViewChild('viewContainer', { read: ViewContainerRef })
+  viewContainer;
   @ViewChild('interactionContainer')
   private _el: ElementRef;
   private _keyDownSubject = new Subject<KeyboardEvent>();
@@ -45,7 +46,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * Scale value to apply to the Interaction host element.  The value is applied
    * to both scaleX and scaleY of the host element.
    */
-  @Inspect({displayName: 'Design Scale', propType: 'number'})
+  @Inspect({ displayName: 'Design Scale', propType: 'number' })
   @Input()
   scale = 1;
 
@@ -68,10 +69,16 @@ export class InteractionComponent implements OnInit, OnDestroy {
   minSizingHeight = 30;
 
   /**
-   * Determines if elements can be selected by dragging around (lasso) them and releasing the pointer.
+   * Determines if selectable elements can be selected by dragging around (lasso) them and releasing the pointer.
    */
   @Input()
   isLassoSelectable = true;
+
+  /**
+   * Determines if elements can be selected.
+   */
+  @Input()
+  isSelectable = true;
 
   /**
    * Optionally set "checkers" background for the interaction host.  Useful when building IDE-like interactive UI.
@@ -98,14 +105,14 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
   @Inspect({ propType: 'number' })
   set height(value: number) {
-     this._renderer.setStyle(this._el.nativeElement, 'height', value + 'px');
+    this._renderer.setStyle(this._el.nativeElement, 'height', value + 'px');
   }
   get height(): number {
-     const bounds = dom.elementBounds(this._el.nativeElement as Element);
-     return bounds.height;
+    const bounds = dom.elementBounds(this._el.nativeElement as Element);
+    return bounds.height;
   }
 
-  @Inspect({propType: 'number'})
+  @Inspect({ propType: 'number' })
   set width(value: number) {
     this._renderer.setStyle(this._el.nativeElement, 'width', value + 'px');
   }
@@ -290,6 +297,9 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * @param e PointerEvent
    */
   pointerDown(e: PointerEvent) {
+    if (!this.isCheckersBackground) {
+      return;
+    }
     this._isMouseDown = true;
     this._mouseDownPos = this.getRelativePointerPos(e);
     this._lastMousePos = this._mouseDownPos;
@@ -300,7 +310,11 @@ export class InteractionComponent implements OnInit, OnDestroy {
       );
     } else {
       const element = e.target as HTMLElement;
-      this._selectionService.selectElement(element, !e.shiftKey);
+
+      // -- ignore elements with native dragging turned on
+      if (!element.hasAttribute('draggable')) {
+        this._selectionService.selectElement(element, !e.shiftKey);
+      }
     }
   }
 
@@ -349,8 +363,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * @param e PointerEvent
    */
   ensureCursor(e: PointerEvent) {
-    const mousePos = new Point(e.pageX, e.pageY);
-    const selector = this._selectionService.selectorAtPoint(mousePos);
+    const pointerPos = new Point(e.pageX, e.pageY);
+    const selector = this._selectionService.selectorAtPoint(pointerPos);
     if (selector && dom.elementDraggable(selector.clientEl)) {
       this._renderer.setStyle(this._el.nativeElement, 'cursor', 'move');
     } else {
@@ -428,8 +442,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
         this._selectionService.clearSelector(selector);
         const compRef = this._interactionService.findComponentRef(el);
         if (compRef) {
-           this.viewContainer.remove(this.viewContainer.indexOf(compRef));
-           this._interactionService.removeComponentByRef(compRef);
+          this.viewContainer.remove(this.viewContainer.indexOf(compRef));
+          this._interactionService.removeComponentByRef(compRef);
         } else {
           this._interactionService.deleteElement(el);
         }
@@ -441,8 +455,12 @@ export class InteractionComponent implements OnInit, OnDestroy {
   }
 
   loadComponent(component: any, data: any) {
-    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
-    const componentRef = this.viewContainer.createComponent(componentFactory) as any;
+    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
+      component
+    );
+    const componentRef = this.viewContainer.createComponent(
+      componentFactory
+    ) as any;
     const el = componentRef.location.nativeElement;
     el.className = 'hpc-widget hpc-composite ' + el.className;
     this._renderer.setStyle(el, 'box-sizing', 'border-box');
@@ -453,7 +471,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
       this._renderer.setStyle(root, 'height', '100%');
       this._renderer.setStyle(root, 'width', '100%');
     }
-    this._interactionService.components.push({el: el, ref: componentRef });
+    this._interactionService.components.push({ el: el, ref: componentRef });
     this._selectionService.selectElement(el);
     this._interactionService.selectedElements = this._selectionService.clients;
   }
@@ -463,7 +481,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
    */
   addElement(element: Element) {
     const selector = this._selectionService.activeSelector;
-    const parent = selector && dom.isContainer(selector.clientEl)
+    const parent =
+      selector && dom.isContainer(selector.clientEl)
         ? selector.clientEl
         : this._el.nativeElement;
     this._renderer.appendChild(parent, element);
@@ -525,6 +544,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
       this._interactionService.interactionHost = this._el.nativeElement;
       this._selectionService.interactionHost = this._el.nativeElement;
       this._selectionService.isLassoSelectable = this.isLassoSelectable;
+      this._selectionService.isSelectable = this.isSelectable;
       this._cursor = getComputedStyle(this._el.nativeElement).cursor;
       this._deleteSelectedElementsSubscription = this._interactionService.deleteSelectedElements$.subscribe(
         () => {
@@ -539,7 +559,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
       this._addComponentSubscription = this._interactionService.addComponent$.subscribe(
         component => {
-           this.loadComponent(component, null);
+          this.loadComponent(component, null);
         }
       );
     }

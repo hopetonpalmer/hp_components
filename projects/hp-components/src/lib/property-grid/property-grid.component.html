@@ -4,11 +4,13 @@
 <ng-container *ngIf="!inspectableComponentInfo?.editorClass">
   <hpc-header>{{inspectableComponentInfo?.displayName}}</hpc-header>
   <div class="properties-container">
+    <hpc-color-picker class="color-picker"></hpc-color-picker>
     <table class="property-table">
+      <tr><ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})" ></ng-container></tr>
       <tr *ngFor="let prop of inspectableProperties; let propType=index">
         <td class="property-label">{{prop.displayName}}</td>
         <td>
-          <ng-container *ngTemplateOutlet="getTemplate(prop), context:{prop: prop, value: component[prop.propertyName]}"></ng-container>
+          <ng-container *ngComponentOutlet="getPropertyEditor(prop)" ></ng-container>
         </td>
       </tr>
     </table>
