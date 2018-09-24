@@ -5,16 +5,30 @@ import { PropertyInspectorService } from '../../property-inspector.service';
 
 
 export abstract class PropertyEditor implements IPropertyEditor {
-  get value(): any {
-    return this.component[this.propertyConfig.propertyName];
-  }
-  component: any;
+  static inspectorService: PropertyInspectorService;
+
+  components: any[];
   propertyConfig: IInspectConfig;
 
-  saveChanges(): Promise<boolean> {
-     return null;
+  styleName: string;
+  elements: HTMLElement[];
+
+  getPropertyValue(propertyName: string): any {
+    return PropertyEditor.inspectorService.getPropertyValue(propertyName);
   }
-  constructor(protected insepctorService: PropertyInspectorService) {
+
+  setStyleValue(styleName: string, value: string) {
+    PropertyEditor.inspectorService.setStyleValue(styleName, value);
+  }
+  getStyleValue(styleName: string): string {
+    return PropertyEditor.inspectorService.getStyleValue(styleName);
+  }
+
+  async setPropertyValue(propertyName: string, value: any) {
+    await PropertyEditor.inspectorService.setPropertyValueAsync(propertyName, value);
+  }
+
+  constructor() {
 
   }
 }

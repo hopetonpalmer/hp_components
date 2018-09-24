@@ -85,6 +85,17 @@ export class InteractionService implements OnDestroy {
     return null;
   }
 
+  getComponentRoot(compRef: any): HTMLElement {
+    if (compRef === this.defaultSelectedComponent) {
+      return compRef.root;
+    }
+    const comp = this.components.find(x => x.ref === compRef);
+    if (comp) {
+      return comp.el;
+    }
+    return null;
+  }
+
   removeComponentByRef(compRef: any) {
     const comp = this.components.find(x => x.ref === compRef);
     this.removeComponent(comp);
@@ -155,6 +166,7 @@ export class InteractionService implements OnDestroy {
     this._selectionService.selectElement(element as HTMLElement);
     this.interactionHost.focus();
     this._addElementSubject.next(element);
+    this.selectedElements = this._selectionService.clients;
   }
 
   addContainer(element: Element = null) {

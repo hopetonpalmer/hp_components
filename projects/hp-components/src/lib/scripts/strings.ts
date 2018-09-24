@@ -21,3 +21,11 @@ export function camelCase(value: string): string {
 export function splitToProperCase(value: string): string {
   return splitCamelCaseProper(camelCase(value));
 }
+
+export function camelToDash(value: string): string {
+  return value.replace(/([A-Z])/g, ($1) => '-' + $1.toLowerCase());
+}
+
+export function camelToUnderscore(value: string): string {
+  return value.replace(/([A-Z])/g, ($1) => '_' + $1.toLowerCase());
+}

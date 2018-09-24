@@ -1,6 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
-import { PropertyInspectorService } from '../../../property-inspector.service';
 
 @Component({
   selector: 'hpc-media-source-property-editor',
@@ -9,8 +8,8 @@ import { PropertyInspectorService } from '../../../property-inspector.service';
 })
 export class MediaSourcePropertyEditorComponent extends PropertyEditor implements OnInit {
 
-  constructor(injector: Injector) {
-     super(injector.get(PropertyInspectorService));
+  constructor() {
+     super();
    }
 
   ngOnInit() {

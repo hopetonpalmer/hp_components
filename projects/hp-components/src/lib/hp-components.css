@@ -57,3 +57,33 @@
     color: var(--hpc-property-editor-font-color);
     padding: 10px;
 }
+
+.hpc-no-color-line {
+  width: 100%;
+  border-top: 1px solid red;
+  margin-top: -1px;
+  transform: rotate(135deg);
+}
+
+.hpc-flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.hpc-checkers {
+  background-color: white;
+  background-image: url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill-opacity=".25" >\
+        <rect x="100" width="100" height="100" />\
+        <rect y="100" width="100" height="100" />\
+        </svg>');
+  background-size: 20px 20px;
+}
+
+.hpc-checkers-small {
+  background-color: white;
+  background-image: url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill-opacity=".25" >\
+        <rect x="25" width="25" height="25" />\
+        <rect y="25" width="25" height="25" />\
+        </svg>');
+  background-size: 8px 8px;
+}

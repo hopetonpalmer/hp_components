@@ -9,5 +9,6 @@ export * from './number-property-editor/number-property-editor.component';
 export * from './alignment-property-editor/alignment-property-editor.component';
 export * from './string-property-editor/string-property-editor.component';
 export * from './style-property-editor/style-property-editor.component';
+export * from './thickness-property-editor/thickness-property-editor.component';
 
 

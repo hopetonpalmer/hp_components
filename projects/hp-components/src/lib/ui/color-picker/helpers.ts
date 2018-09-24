@@ -5,7 +5,10 @@ export type AlphaChannel = 'enabled' | 'disabled' | 'always' | 'forced';
 export type OutputFormat = 'auto' | 'hex' | 'rgba' | 'hsla';
 
 export type ColorSelectionType = 'no-color' | 'solid' | 'swatch';
+
 export type ColorFillType = 'fill' | 'border';
+
+export const ColorVoid = 'rgba(0,0,0,0)';
 
 export function detectIE(): boolean | number {
   let ua = '';

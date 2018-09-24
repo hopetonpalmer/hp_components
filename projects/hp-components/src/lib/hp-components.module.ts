@@ -25,11 +25,16 @@ import { StringPropertyEditorComponent,
   FontPropertyEditorComponent,
   ColorPropertyEditorComponent,
   MediaSourcePropertyEditorComponent,
-  StylePropertyEditorComponent} from './property-grid/editors';
+  StylePropertyEditorComponent,
+  ThicknessPropertyEditorComponent} from './property-grid/editors';
 import { ColorPickerComponent } from './ui/color-picker/color-picker.component';
 import { InteractionDirective } from './interaction/interaction.directive';
 import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
 import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
+import { PropertyInspectorService } from './property-grid/property-inspector.service';
+import { AccordionComponent, ExpanderComponent } from './ui';
+import { PropertyEditor } from './property-grid/editors/property-editors/property-editor';
+
 
 
 
@@ -49,6 +54,9 @@ import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
     HeaderComponent,
     ListViewComponent,
     ItemsComponent,
+    AccordionComponent,
+    ExpanderComponent,
+
     StringPropertyEditorComponent,
     NumberPropertyEditorComponent,
     BooleanPropertyEditorComponent,
@@ -59,6 +67,8 @@ import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
     ColorPropertyEditorComponent,
     MediaSourcePropertyEditorComponent,
     StylePropertyEditorComponent,
+    ThicknessPropertyEditorComponent,
+
     ColorPickerComponent,
     InteractionDirective,
     SliderDirective,
@@ -72,15 +82,15 @@ import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
     PanelComponent,
     HeaderComponent,
     ListViewComponent,
-    HeaderComponent,
-    ColorPropertyEditorComponent
+    HeaderComponent
   ],
   providers: [
     DragService,
     SizeService,
     InteractionService,
     SelectorService,
-    ComposerService
+    ComposerService,
+    PropertyInspectorService
   ],
   entryComponents: [
     PanelComponent,
@@ -94,7 +104,12 @@ import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
     ColorPropertyEditorComponent,
     MediaSourcePropertyEditorComponent,
     StylePropertyEditorComponent,
+    ThicknessPropertyEditorComponent,
     ColorPickerComponent
   ]
 })
-export class HpComponentsModule { }
+export class HpComponentsModule {
+   constructor(private propertyInspectorService: PropertyInspectorService) {
+     PropertyEditor.inspectorService = propertyInspectorService;
+   }
+}

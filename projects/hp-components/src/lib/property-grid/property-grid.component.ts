@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, TemplateRef, QueryList, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
 import { InteractionService } from '../interaction/interaction.service';
 import { PropertyInspectorService } from './property-inspector.service';
@@ -17,8 +17,10 @@ import {StringPropertyEditorComponent,
   styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })
 export class PropertyGridComponent implements OnInit, AfterViewInit {
-
-  get component(): any {
+  /**
+   * Returns the first active component.
+   */
+  get activeComponent(): any {
     const components = this._interactionService.selectedComponents;
     if (components && components.length > 0) {
       return components[0];
@@ -26,12 +28,37 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
     return null;
   }
 
+  /**
+   * Returns the first active HTML element.
+   */
+  get activeElement(): HTMLElement {
+    const elements = this._interactionService.selectedElements;
+    if (elements && elements.length > 0) {
+      return elements[0] as HTMLElement;
+    }
+    return null;
+  }
+
+  /**
+   * Returns a style value of the first active component.
+   */
+  getActiveElementValue(styleName: string): any {
+     return this._inspectorService.getStyleValue(styleName);
+  }
+
+  /**
+   * Sets a style value for all active elements.
+  */
+  setActiveElementsValue(prop: string, value: string) {
+      this._inspectorService.setStyleValue(prop, value);
+  }
+
   get inspectableComponentInfo(): IInspectableConfig {
-    return getInspectableComponentInfo(this.component);
+    return getInspectableComponentInfo(this.activeComponent);
   }
 
   get inspectableProperties(): IInspectConfig[] {
-    return getInspectPropertyInfos(this.component);
+    return getInspectPropertyInfos(this.activeComponent);
   }
 
   getPropType(prop: IInspectConfig) {
@@ -47,9 +74,10 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
   constructor(
     private _inspectorService: PropertyInspectorService,
     private _interactionService: InteractionService,
-    private _changeDectorRef: ChangeDetectorRef) {
-      this.registerKnownInspectors();
-   }
+    private _changeDectorRef: ChangeDetectorRef
+  ) {
+    this.registerKnownInspectors();
+  }
 
   private registerKnownInspectors() {
     this._inspectorService.registerPropertyInspector('string', StringPropertyEditorComponent);
@@ -63,6 +91,11 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
     this._inspectorService.registerPropertyInspector('src', MediaSourcePropertyEditorComponent);
     this._inspectorService.registerPropertyInspector('mediaSource', MediaSourcePropertyEditorComponent);
     this._inspectorService.registerPropertyInspector('style', StylePropertyEditorComponent);
+    this.registerKnownStyleInspectors();
+  }
+
+  private registerKnownStyleInspectors() {
+    this._inspectorService.registerStyleInspector('background-color', ColorPropertyEditorComponent);
   }
 
   ngOnInit() {}

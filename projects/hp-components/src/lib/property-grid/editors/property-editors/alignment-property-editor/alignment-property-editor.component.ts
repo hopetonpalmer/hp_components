@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
+import { PropertyEditor } from '../property-editor';
 
 @Component({
   selector: 'hpc-alignment-property-editor',
   templateUrl: './alignment-property-editor.component.html',
   styleUrls: ['./alignment-property-editor.component.css']
 })
-export class AlignmentPropertyEditorComponent implements OnInit {
+export class AlignmentPropertyEditorComponent extends PropertyEditor implements OnInit {
 
-  constructor() { }
+  constructor() {
+      super();
+   }
 
   ngOnInit() {
   }

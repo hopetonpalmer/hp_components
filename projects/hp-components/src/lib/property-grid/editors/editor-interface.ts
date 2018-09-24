@@ -7,8 +7,11 @@ export interface IComponentEditor {
 }
 
 export interface IPropertyEditor {
-  value: any;
-  component: any;
+  components: any[];
+  elements: HTMLElement[];
   propertyConfig: IInspectConfig;
-  saveChanges(): Promise<boolean>;
+  setStyleValue(styleName: string, value: string);
+  getStyleValue(styleName: string): string;
+  setPropertyValue(propertyName: string, value: any);
+  getPropertyValue(propertyName: string): any;
 }

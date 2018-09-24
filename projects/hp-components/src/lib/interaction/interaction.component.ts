@@ -42,6 +42,10 @@ export class InteractionComponent implements OnInit, OnDestroy {
   private _el: ElementRef;
   private _keyDownSubject = new Subject<KeyboardEvent>();
 
+  get root(): HTMLElement {
+    return this._el.nativeElement;
+  }
+
   /**
    * Scale value to apply to the Interaction host element.  The value is applied
    * to both scaleX and scaleY of the host element.
@@ -60,13 +64,13 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * Gets or sets the minimum width of the element when drag-sized.
    */
   @Input()
-  minSizingWidth = 30;
+  minSizingWidth = 1;
 
   /**
    * Gets or sets the minimum height of the element when drag-sized.
    */
   @Input()
-  minSizingHeight = 30;
+  minSizingHeight = 1;
 
   /**
    * Determines if selectable elements can be selected by dragging around (lasso) them and releasing the pointer.

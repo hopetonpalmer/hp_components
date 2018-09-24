@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild,
    AfterViewInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { ColorPickerService } from './color-picker.service';
 import { Hsva, ColorFormats, Hsla, Rgba } from './formats';
-import { SliderDimension, SliderPosition, AlphaChannel, OutputFormat, ColorSelectionType, ColorFillType } from './helpers';
+import { SliderDimension, SliderPosition, AlphaChannel, OutputFormat, ColorSelectionType, ColorFillType, ColorVoid } from './helpers';
 import { Orientation } from '../../scripts/types';
 import { palettes, IPalette } from '../color-swatch/palette';
 
@@ -76,13 +76,26 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   private _colorSelectionType: ColorSelectionType = 'solid';
   /**
-   * Gets or sets how the color can be selected.  The options are no-color, solid or swatch.
+   * Gets or sets how the color should be selected.  The options are no-color, solid or swatch.
+   * When set to "no-color", a transparent value is returned by selectedColor.  When set to "solid",
+   * color can be selected from a color saturation box.  Setting to "swatch" allows selecting from
+   * a list of pre-defined colors.
    */
   @Input()
   set colorSelectionType(value: ColorSelectionType) {
-    this._colorSelectionType = value;
-    if (value !== 'no-color') {
-      this.visibleColorSelectionType = value;
+    if (value !== this._colorSelectionType && !this._isUpdating) {
+      if (this._colorSelectionType === 'no-color') {
+        this._colorSelectionType = value;
+        this.hslaText.a = 1;
+        this.rgbaText.a = 1;
+        this.onAlphaChange({v: 1, rgX: 1});
+      }
+      this._colorSelectionType = value;
+      if (value === 'no-color') {
+        this.selectedColor = ColorVoid;
+      } else {
+        this.visibleColorSelectionType = value;
+      }
     }
   }
 
@@ -91,22 +104,30 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
   }
 
   @Input()
-  format: ColorFormats = ColorFormats.HSLA;
+  format: ColorFormats = ColorFormats.RGBA;
 
-  private _color = '#ffffff';
+  private _selectedColor = '#ffffff';
   @Input()
-  set color(value: string) {
-    if (this._color !== value) {
-      this._color = value;
+  set selectedColor(value: string) {
+    if (!value) {
+      return;
+    }
+    if (this._selectedColor !== value) {
+      if (value !== ColorVoid) {
+        this.colorSelectionType = this.visibleColorSelectionType;
+      }
+      this._selectedColor = value;
       if (!this._isUpdating) {
         this.setColorFromString(value);
       }
-      this.colorChange.emit(value);
+      this.selectedColorChange.emit(value);
     }
   }
-  get color(): string {
-    return this._color;
+
+  get selectedColor(): string {
+    return this._selectedColor;
   }
+
 
   @Input()
   alphaChannel: AlphaChannel = 'enabled';
@@ -116,6 +137,9 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   @Input()
   sliderOrientation: Orientation = 'vertical';
+
+  @Output()
+  selectedColorChange = new EventEmitter<string>();
 
   @Output()
   colorChange = new EventEmitter<string>();
@@ -138,7 +162,7 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.sliderPos = new SliderPosition(0, 0, 0, 0);
-    this.setColorFromString(this.color);
+    this.setColorFromString(this.selectedColor);
   }
 
   ngAfterViewInit(): void {
@@ -315,7 +339,7 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
         this.alphaSliderColor =
           'rgb(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ')';
 
-        this.color = this.service.outputFormat(this._hsva, 'rgba', null);
+        this.selectedColor = this.service.outputFormat(this._hsva, 'rgba', null);
 
         this.sliderPos = new SliderPosition(
           (this._sliderH || this._hsva.h) * this._sliderDimMax.h - 8,
@@ -324,10 +348,11 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
           this._hsva.a * this._sliderDimMax.a - 8
         );
 
-        // ensure that slider does not hang too far to the left or top
+        // ensure that sliders does not hang too far to the left or top
         this.sliderPos.h = Math.max(-3, this.sliderPos.h);
         this.sliderPos.s = Math.max(-3, this.sliderPos.s);
         this.sliderPos.v = Math.max(-4, this.sliderPos.v);
+        this.sliderPos.a = Math.max(-3, this.sliderPos.a);
       }
     } finally {
       this._isUpdating = false;

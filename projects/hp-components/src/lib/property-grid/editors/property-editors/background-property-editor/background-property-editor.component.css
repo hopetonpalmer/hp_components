@@ -1,0 +1,43 @@
+.btn-fill,
+.btn-fill-border {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+  padding: 3px 8px 3px 3px;
+}
+
+.btn-fill-border {
+  margin-left: 10px;
+}
+
+.btn-fill.selected,
+.btn-fill-border.selected {
+  background-color: gray;
+}
+
+
+.selected-color, .selected-color-border {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-top: -18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.selected-color-border {
+  border: 4px solid black;
+  margin-top: 0;
+  background-color: transparent;
+}
+
+.selected-color-background {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  padding: 3px 8px 3px 3px;
+}
+

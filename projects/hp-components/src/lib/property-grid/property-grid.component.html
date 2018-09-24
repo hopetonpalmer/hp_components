@@ -4,7 +4,7 @@
 <ng-container *ngIf="!inspectableComponentInfo?.editorClass">
   <hpc-header>{{inspectableComponentInfo?.displayName}}</hpc-header>
   <div class="properties-container">
-    <hpc-color-picker class="color-picker"></hpc-color-picker>
+    <hpc-background-property-editor></hpc-background-property-editor>
     <table class="property-table">
       <tr><ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})" ></ng-container></tr>
       <tr *ngFor="let prop of inspectableProperties; let propType=index">
@@ -17,20 +17,9 @@
   </div>
 </ng-container>
 
-<ng-template #string let-prop=prop let-value=value>
-  <textarea class="property-value" [value]='value' (change)="component[prop.propertyName]=$event.target.value"></textarea>
-</ng-template>
-
-<ng-template #number let-prop=prop let-value=value>
-  <input class="property-value" type='number' [value]='value' (change)="component[prop.propertyName]=$event.target.value">
-</ng-template>
-
-<ng-template #boolean let-prop=prop let-value=value>
-   <input style="width: auto" type="checkbox" [value]='value' (change)="component[prop.propertyName]=$event.target.value">
-</ng-template>
 
 <ng-template #objectfit let-prop=prop let-value=value>
-  <select class="property-value" [value]="value" (change)="component[prop.propertyName]=$event.target.value">
+  <select class="property-value" [value]="value" (change)="activeComponent[prop.propertyName]=$event.target.value">
     <option value="contain">Stretch (maintain aspect)</option>
     <!-- <option value="cover">Stretch (clip to fit)</option> -->
     <option value="fill">Stretch to fit</option>

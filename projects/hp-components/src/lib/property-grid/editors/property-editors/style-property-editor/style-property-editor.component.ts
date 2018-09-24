@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { PropertyEditor } from '../property-editor';
 
 @Component({
   selector: 'hpc-style-property-editor',
   templateUrl: './style-property-editor.component.html',
   styleUrls: ['./style-property-editor.component.css']
 })
-export class StylePropertyEditorComponent implements OnInit {
+export class StylePropertyEditorComponent extends PropertyEditor implements OnInit {
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
   }

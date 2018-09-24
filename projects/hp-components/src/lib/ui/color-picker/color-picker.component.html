@@ -1,41 +1,25 @@
 <!-- Selected color row -->
-<!-- <div style="display: none" class="flex-row">
-
-  <div class="btn-fill" [ngClass]="{'selected': colorFillType === 'fill'}" (click)="colorFillType = 'fill'" >
-    <div class="selected-color color-type-row" [style.background-color]="colorSelectionType == 'no-color' || colorFillType === 'border' ? 'white' : color">
-       <div [hidden]="colorSelectionType !== 'no-color'" class="no-color-line"></div>
-    </div>
-    <div>Fill</div>
-  </div>
-
-
-  <div class="btn-fill-border" [ngClass]="{'selected': colorFillType === 'border'}" (click)="colorFillType = 'border'">
-    <div class="selected-color-border" [style.border-color]="colorFillType === 'fill' ? 'white' : color" ></div>
-    <div>Border</div>
-  </div>
-</div> -->
-
 <div class="header-row">
   <div *ngIf="showSelectedColor">
-    <div class="selected-color-background"></div>
-    <div class="selected-color" [style.background-color]="colorSelectionType == 'no-color' ? 'white' : color">
+    <div class="selected-color-background hpc-checkers-small"></div>
+    <div class="selected-color" [style.background-color]="colorSelectionType == 'no-color' ? 'white' : selectedColor">
       <div [hidden]="colorSelectionType !== 'no-color'" class="no-color-line"></div>
     </div>
   </div>
-  <div *ngIf="showSelectedColorCode" class="selected-color-code">{{colorSelectionType === 'no-color' ? 'No color' : color}}</div>
+  <div *ngIf="showSelectedColorCode" class="selected-color-code">{{colorSelectionType === 'no-color' ? 'No color' : selectedColor}}</div>
 </div>
 
 <!-- Color type selection row-->
 <div *ngIf="showColorSelectionTypeOptions" class="flex-row color-type-row">
   <div title="No color" class="btn-color-type no-color"
     (click)="colorSelectionType='no-color'">
-    <div class="no-color-line"></div>
+    <div class="hpc-no-color-line"></div>
   </div>
   <div title="Solid" class="btn-color-type solid"
        [ngClass]="{'selected-color-type':visibleColorSelectionType ==='solid'}"
        (click)="colorSelectionType='solid'">
   </div>
-  <div title="Swatches" class="btn-color-type swatches"
+  <div title="Swatches" class="btn-color-type swatches hpc-checkers-small"
        [ngClass]="{'selected-color-type':visibleColorSelectionType ==='swatch'}"
        (click)="colorSelectionType='swatch'">
   </div>
@@ -122,6 +106,6 @@
   [colorPalettes]="palettes"
   [activePalette]="activePalette"
   [selectedColor]="hexText"
-  (selectedColorChange)="color=$event" (click)="colorSelectionType='swatch'">
+  (selectedColorChange)="selectedColor=$event" (click)="colorSelectionType='swatch'">
 </hpc-color-swatch>
 
