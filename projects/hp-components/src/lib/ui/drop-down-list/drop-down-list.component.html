@@ -1,0 +1,11 @@
+<hpc-drop-down-button #ddButton [title]="displayMemberPath ? selectedItem[displayMemberPath] : selectedItem">
+   <div class="list-container">
+      <div *ngFor="let item of itemsSource"
+            class='list-item'
+            [ngClass]="{'item-selected': item===selectedItem}"
+            (click)="selectedItem=item; ddButton.close();">
+          {{displayMemberPath ? item[displayMemberPath] : item}}
+      </div>
+   </div>
+</hpc-drop-down-button>
+

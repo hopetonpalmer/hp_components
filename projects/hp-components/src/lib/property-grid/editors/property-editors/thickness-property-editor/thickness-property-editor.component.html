@@ -1,3 +1,17 @@
-<p>
-  thickness-property-editor works!
-</p>
+
+<div class="title">{{title}}</div>
+<div class="content">
+  <ng-content></ng-content>
+</div>
+<div class="hpc-input-container">Left
+  <hpc-pixel-input [value]="getStyleValue(getPropName('left'))" (valueChange)="setStyleValue(getPropName('left'), $event)" ></hpc-pixel-input>
+</div>
+<div class="hpc-input-container">Right
+  <hpc-pixel-input [value]="getStyleValue(getPropName('right'))" (valueChange)="setStyleValue(getPropName('right'), $event)"></hpc-pixel-input>
+</div>
+<div class="hpc-input-container">Top
+  <hpc-pixel-input [value]="getStyleValue(getPropName('top'))" (valueChange)="setStyleValue(getPropName('top'), $event)"></hpc-pixel-input>
+</div>
+<div class="hpc-input-container">Bottom
+  <hpc-pixel-input [value]="getStyleValue(getPropName('bottom'))" (valueChange)="setStyleValue(getPropName('bottom'), $event)"></hpc-pixel-input>
+</div>

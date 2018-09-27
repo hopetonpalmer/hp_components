@@ -7,6 +7,8 @@ export interface IComponentEditor {
 }
 
 export interface IPropertyEditor {
+  title: string;
+  description: string;
   components: any[];
   elements: HTMLElement[];
   propertyConfig: IInspectConfig;

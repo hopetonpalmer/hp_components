@@ -4,7 +4,7 @@ import { PanelComponent } from '../panel/panel.component';
 @Component({
   selector: 'hpc-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css', '../../hp-components.css']
+  styleUrls: ['../../hp-components.css', './header.component.css']
 })
 export class HeaderComponent implements OnInit {
   /**

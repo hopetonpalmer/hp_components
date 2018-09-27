@@ -27,11 +27,14 @@ export class VideoPlayerComponent implements OnInit {
   @Inspect({ propType: 'objectfit' })
   videoFit = 'contain';
 
+
   constructor() {
 
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('init');
+  }
 }
 
 

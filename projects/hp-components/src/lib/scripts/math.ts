@@ -21,8 +21,8 @@ export class Rect {
   get bottomRight(): Point {
     return new Point(this.right, this.bottom);
   }
-
 }
+
 export class Size {
   constructor(public height: number = 0, public width: number = 0) { }
 }

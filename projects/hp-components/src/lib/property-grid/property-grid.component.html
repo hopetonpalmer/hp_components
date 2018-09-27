@@ -5,25 +5,14 @@
   <hpc-header>{{inspectableComponentInfo?.displayName}}</hpc-header>
   <div class="properties-container">
     <hpc-background-property-editor></hpc-background-property-editor>
-    <table class="property-table">
-      <tr><ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})" ></ng-container></tr>
-      <tr *ngFor="let prop of inspectableProperties; let propType=index">
-        <td class="property-label">{{prop.displayName}}</td>
-        <td>
+    <div class="property-table">
+      <div><ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})" ></ng-container></div>
+      <div *ngFor="let prop of inspectableProperties; let propType=index">
+        <div>
           <ng-container *ngComponentOutlet="getPropertyEditor(prop)" ></ng-container>
-        </td>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-container>
 
-
-<ng-template #objectfit let-prop=prop let-value=value>
-  <select class="property-value" [value]="value" (change)="activeComponent[prop.propertyName]=$event.target.value">
-    <option value="contain">Stretch (maintain aspect)</option>
-    <!-- <option value="cover">Stretch (clip to fit)</option> -->
-    <option value="fill">Stretch to fit</option>
-    <option value="scale-down">Scale down to fit</option>
-    <!-- <option value="none">Don't strech</option> -->
-  </select>
-</ng-template>

@@ -7,11 +7,19 @@ import { PropertyInspectorService } from '../../property-inspector.service';
 export abstract class PropertyEditor implements IPropertyEditor {
   static inspectorService: PropertyInspectorService;
 
+  title: string;
+  description: string;
+  basePropName: string;
+
   components: any[];
   propertyConfig: IInspectConfig;
 
   styleName: string;
   elements: HTMLElement[];
+
+  get activeElement(): HTMLElement {
+    return PropertyEditor.inspectorService.activeElement;
+  }
 
   getPropertyValue(propertyName: string): any {
     return PropertyEditor.inspectorService.getPropertyValue(propertyName);
@@ -20,6 +28,7 @@ export abstract class PropertyEditor implements IPropertyEditor {
   setStyleValue(styleName: string, value: string) {
     PropertyEditor.inspectorService.setStyleValue(styleName, value);
   }
+
   getStyleValue(styleName: string): string {
     return PropertyEditor.inspectorService.getStyleValue(styleName);
   }

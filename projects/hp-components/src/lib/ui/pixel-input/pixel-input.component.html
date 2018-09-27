@@ -1,0 +1,2 @@
+<input type="number" [value]="numberPart" (change)="numberPart=$event.target.value">
+<hpc-drop-down-list [itemsSource]="units" [selectedItem]="unitPart" (selectedItemChange)="unitPart = $event" ></hpc-drop-down-list>

@@ -3,7 +3,7 @@
   <div class="btn-fill" [ngClass]="{'selected': colorFillType === 'fill'}" (click)="colorFillType = 'fill'" >
     <div>
       <div class="selected-color-background hpc-checkers-small"></div>
-      <div class="selected-color color-type-row" [style.background-color]="cp.colorSelectionType == 'no-color' || colorFillType === 'border' ? getStyleValue('background-color') : cp.selectedColor">
+      <div class="selected-color color-type-row" [style.background-color]="getStyleValue('backgroundColor')">
         <div [hidden]="colorSelectionType !== 'no-color'" class="hpc-no-color-line"></div>
       </div>
     </div>
@@ -12,9 +12,16 @@
 
 
   <div class="btn-fill-border" [ngClass]="{'selected': colorFillType === 'border'}" (click)="colorFillType = 'border'">
-    <div class="selected-color-border" [style.border-color]="colorFillType === 'fill' ? getStyleValue('border-color') : cp.selectedColor" ></div>
+    <!-- Shorthand borderColor not reliable on all browsers so cannot use getStyleValue here-->
+    <div class="selected-color-border" [style.border-color]="activeElement?.style.borderColor"></div>
     <div>Border</div>
   </div>
 </div>
-<hpc-color-picker #cp [showSelectedColor]=false [showSelectedColorCode]=false  [selectedColor]="getStyleValue(activeProperty)" (selectedColorChange)="setStyleValue(activeProperty, $event)"
-  class="color-picker"></hpc-color-picker>
+
+<hpc-color-picker #cp
+   [showSelectedColor]=false
+   [showSelectedColorCode]=false
+   [selectedColor]="getStyleValue(activeProperty)"
+   (selectedColorChange)="setStyleValue(activeProperty, $event)"
+   class="color-picker">
+</hpc-color-picker>

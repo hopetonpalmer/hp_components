@@ -1,0 +1,16 @@
+<div class="drop-down-button" (click)="toggleOpen()"
+   cdkOverlayOrigin
+   #trigger="cdkOverlayOrigin">
+   {{title}}
+   <ng-content select=[title]></ng-content>
+</div>
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isOpen"
+    [cdkConnectedOverlayHasBackdrop] = true
+    (backdropClick)="close()" >
+    <ng-content></ng-content>
+</ng-template>
+

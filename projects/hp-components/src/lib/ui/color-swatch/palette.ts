@@ -15,6 +15,13 @@ export const palettes = [
     ]
   },
   {
+    name: 'Tiny',
+    colors: [
+      '#F44336', '#E91E63', '#673AB7', '#3F51B5', '#00BCD4', '#4CAF50', '#FFEB3B', '#FF9800',
+      '#795548'
+    ]
+  },
+  {
     name: 'Office',
     colors: [
       '#ffffff', '#000000', '#eeece1', '#1f497d', '#4f81bd', '#c0504d', '#9bbb59', '#8064a2',

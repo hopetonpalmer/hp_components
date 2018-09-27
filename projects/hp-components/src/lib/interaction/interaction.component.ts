@@ -459,9 +459,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
   }
 
   loadComponent(component: any, data: any) {
-    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
-      component
-    );
+    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
     const componentRef = this.viewContainer.createComponent(
       componentFactory
     ) as any;

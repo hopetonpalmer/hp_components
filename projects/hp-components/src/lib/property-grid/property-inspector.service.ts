@@ -5,6 +5,7 @@ import { camelToDash } from '../scripts/strings';
 import { ColorVoid } from '../ui/color-picker/helpers';
 
 
+
 @Injectable()
 export class PropertyInspectorService {
 
@@ -85,9 +86,13 @@ export class PropertyInspectorService {
    * @returns string value
    */
   getStyleValue(styleName: string): string {
-    styleName = camelToDash(styleName);
     if (this.activeElement) {
-      return getComputedStyle(this.activeElement).getPropertyValue(styleName);
+      try {
+        const result = getComputedStyle(this.activeElement).getPropertyValue(camelToDash(styleName)) || this.activeElement.style[styleName];
+        return result;
+      } catch (error) {
+        console.error(error);
+      }
     }
     return null;
   }
@@ -103,7 +108,7 @@ export class PropertyInspectorService {
     if (elements.length === 0 ) {
       // -- Special case for interaction host element, it should not have a transparent designer
       if (styleName === 'backgroundColor' && value === ColorVoid) {
-        value = 'gray';
+        value = 'white';
       }
       elements = [this.activeElement];
     }
@@ -113,7 +118,6 @@ export class PropertyInspectorService {
   }
 
   constructor(private _interactionService: InteractionService) {}
-
 
   registerPropertyInspector(propertyTypeName: string, editorClass: any) {
     propertyTypeName = propertyTypeName.toLowerCase();

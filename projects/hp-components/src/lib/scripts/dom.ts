@@ -1,7 +1,6 @@
 import {Point, Rect, Size} from './math';
 import {Renderer2} from '@angular/core';
 
-
 export function offset(el: Element): Point {
   const box = el.getBoundingClientRect();
   const top = box.top;

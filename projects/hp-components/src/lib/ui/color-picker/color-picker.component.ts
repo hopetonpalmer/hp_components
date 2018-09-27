@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild,
-   AfterViewInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+   AfterViewInit, ChangeDetectionStrategy, Input, ChangeDetectorRef,
+   Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ColorPickerService } from './color-picker.service';
 import { Hsva, ColorFormats, Hsla, Rgba } from './formats';
 import { SliderDimension, SliderPosition, AlphaChannel, OutputFormat, ColorSelectionType, ColorFillType, ColorVoid } from './helpers';
@@ -10,11 +11,12 @@ import { palettes, IPalette } from '../color-swatch/palette';
 @Component({
   selector: 'hpc-color-picker',
   templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.css', '../../hp-components.css'],
+  styleUrls: ['./color-picker.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ColorPickerService]
 })
-export class ColorPickerComponent implements OnInit, AfterViewInit {
+export class ColorPickerComponent implements OnInit, AfterViewInit, OnDestroy {
+
   private _isUpdating = false;
   private _hsva: Hsva;
   private _fallbackColor: string;
@@ -74,6 +76,9 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
   @Input()
   showSelectedColorCode = true;
 
+  @Input()
+  isCompact = false;
+
   private _colorSelectionType: ColorSelectionType = 'solid';
   /**
    * Gets or sets how the color should be selected.  The options are no-color, solid or swatch.
@@ -128,6 +133,8 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
     return this._selectedColor;
   }
 
+  @Input()
+  showHeader = true;
 
   @Input()
   alphaChannel: AlphaChannel = 'enabled';
@@ -383,5 +390,9 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
       this.updateColorPicker(update);
     }
+  }
+
+  ngOnDestroy(): void {
+    console.log('Color picker destroyed!');
   }
 }

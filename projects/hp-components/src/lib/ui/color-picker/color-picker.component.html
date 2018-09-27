@@ -1,5 +1,6 @@
 <!-- Selected color row -->
-<div class="header-row">
+<!-- <div class="component-container"> -->
+<div *ngIf="showHeader" class="header-row">
   <div *ngIf="showSelectedColor">
     <div class="selected-color-background hpc-checkers-small"></div>
     <div class="selected-color" [style.background-color]="colorSelectionType == 'no-color' ? 'white' : selectedColor">
@@ -23,13 +24,17 @@
        [ngClass]="{'selected-color-type':visibleColorSelectionType ==='swatch'}"
        (click)="colorSelectionType='swatch'">
   </div>
+  <!--Hex color edit field-->
+  <div class="hex">#
+    <input hpcText [value]="rawHexColor" (blur)="onHexInput(null)" (keyup.enter)="onAcceptColor($event)" (newValue)="onHexInput($event)" />
+  </div>
 </div>
 
 <!--Color selection and color sliders-->
 <div class="flex-row selection-row" [ngClass]="{'hpc-hide': visibleColorSelectionType == 'swatch'}">
   <div style="width: 100%" >
     <!--Color saturartion selection gradient-->
-    <div #saturationBox class="saturation-box" hpcSlider [rgX]="1" [rgY]="1" [style.background-color]="hueSliderColor"
+    <div #saturationBox class="saturation-box" [ngClass]="{'compact': isCompact}" hpcSlider [rgX]="1" [rgY]="1" [style.background-color]="hueSliderColor"
       (newValue)="onSaturationColorChange($event)" (click)="colorSelectionType='solid'" >
       <div class="cursor" [style.top.px]="sliderPos.v" [style.left.px]="sliderPos.s"></div>
     </div>
@@ -46,12 +51,12 @@
     </div>
   </div>
 
-  <div class="edits-container">
+  <div *ngIf="!isCompact" class="edits-container">
     <!--Hex color edit field-->
-    <div class="hex">#
+    <!-- <div class="hex">#
       <input hpcText [value]="rawHexColor" (blur)="onHexInput(null)" (keyup.enter)="onAcceptColor($event)"
         (newValue)="onHexInput($event)" />
-    </div>
+    </div> -->
 
     <!--RGBA edit fields-->
     <div [hidden]="format !== 1" class="rgba-container">
@@ -101,7 +106,7 @@
 <!--Color swatches-->
 <hpc-color-swatch
   *ngIf="visibleColorSelectionType == 'swatch'"
-  class="selection-row swatch"
+  class="selection-row swatch" [ngClass]="{'compact' :isCompact}"
   [columns]=12
   [colorPalettes]="palettes"
   [activePalette]="activePalette"
@@ -109,3 +114,4 @@
   (selectedColorChange)="selectedColor=$event" (click)="colorSelectionType='swatch'">
 </hpc-color-swatch>
 
+<!-- </div> -->

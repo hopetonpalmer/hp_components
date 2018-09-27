@@ -1,9 +1,12 @@
+@import '~@angular/cdk/overlay-prebuilt.css';
+@import '~@angular/cdk/a11y-prebuilt.css';
+
 :root * {
   --hpc-h: 0;
   --hpc-s: 100%;
   --hpc-l: 50%;
 
-  --hpc-container-background: rgb(35, 36, 35);
+  --hpc-container-background: rgb(35, 36, 36);
   --hpc-container-header: rgb(63, 63, 63);
   --hpc-container-color: rgb(230, 228, 228);
   --hpc-container-main: rgb(63, 63, 63);
@@ -25,6 +28,14 @@
 
   --hpc-success-color: white;
   --hpc-success-background: rgb(84, 168, 105);
+
+  --hpc-input-background: black;
+  --hpc-input-color: white;
+
+  --hpc-property-editor-background: rgb(77, 76, 76);
+  --hpc-property-editor-color: rgb(168, 168, 168);
+  --hpc-property-editor-input-background: transparent;
+  --hpc-property-editor-input-color: white;
 }
 
 :host * {
@@ -32,7 +43,12 @@
 }
 
 .hpc-hide {
-  display: none;
+  display: none !important;
+}
+
+:host {
+  background-color: var(--hpc-container-background);
+  color: var(--hpc-container-color);
 }
 
 .hpc-stack-vert, .hpc-stack-horz, .hpc-stack-wrap {
@@ -68,6 +84,25 @@
 .hpc-flex-row {
   display: flex;
   flex-direction: row;
+}
+
+.hpc-input-container {
+  display: flex;
+  align-items: center;
+  padding: 3px 3px 3px 5px;
+  margin-bottom: 3px;
+  width: 100%;
+  background: rgb(66, 65, 65);
+  border-radius: 5px;
+}
+
+.hpc-input-container input {
+  padding: 2px;
+  color: var(--hpc-input-color);
+  border: none;
+  background: var(--hpc-input-background);
+  margin-left: auto;
+  font-size: 11px;
 }
 
 .hpc-checkers {

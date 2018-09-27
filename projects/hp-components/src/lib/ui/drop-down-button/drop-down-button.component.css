@@ -1,0 +1,13 @@
+.transparent-backdrop {
+  background: red;
+}
+
+.drop-down-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  user-select: none;
+  cursor: default;
+  padding: 2px;
+}

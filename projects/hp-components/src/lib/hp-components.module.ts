@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
+
+import { OverlayModule } from '@angular/cdk/overlay';
+import { A11yModule } from '@angular/cdk/a11y';
+import { CommonModule } from '@angular/common';
+
 import { InteractionComponent } from './interaction/interaction.component';
 import { ComposerComponent } from './composer/composer.component';
 import { TreeviewComponent } from './ui/treeview/treeview.component';
 import { TreeviewItemComponent } from './ui/treeview/treeview-item/treeview-item.component';
 import { SelectorComponent } from './selector/selector.component';
-import { CommonModule } from '@angular/common';
 import { DragService } from './services/drag.service';
 import { SizeService } from './services/size.service';
 import { InteractionService } from './interaction/interaction.service';
@@ -34,12 +38,19 @@ import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
 import { PropertyInspectorService } from './property-grid/property-inspector.service';
 import { AccordionComponent, ExpanderComponent } from './ui';
 import { PropertyEditor } from './property-grid/editors/property-editors/property-editor';
+import { DropDownListComponent } from './ui/drop-down-list/drop-down-list.component';
+import { PixelInputComponent } from './ui/pixel-input/pixel-input.component';
+import { DropDownButtonComponent } from './ui/drop-down-button/drop-down-button.component';
+import { ColorComboBoxComponent } from './ui/color-combo-box/color-combo-box.component';
+import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
 
 
 
 
 @NgModule({
   imports: [
+    OverlayModule,
+    A11yModule,
     CommonModule
   ],
   declarations: [
@@ -73,7 +84,12 @@ import { PropertyEditor } from './property-grid/editors/property-editors/propert
     InteractionDirective,
     SliderDirective,
     TextDirective,
-    ColorSwatchComponent
+    ColorSwatchComponent,
+    DropDownButtonComponent,
+    DropDownListComponent,
+    PixelInputComponent,
+    ColorComboBoxComponent,
+    ComboBoxComponent
   ],
   exports: [
     InteractionComponent,
