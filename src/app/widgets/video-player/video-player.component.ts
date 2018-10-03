@@ -14,7 +14,7 @@ export class VideoPlayerComponent implements OnInit, AfterViewInit {
 
   @Inspect({ category: 'Other', propType: 'string', editorClass: MediaSourcePropertyEditorComponent})
   @Input()
-  source = 'https://webstorage.cloud.convergent.com/Content/Cox/Video/2d58f20b-61de-4468-9124-7825f92686b9.mp4';
+  source = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
 
   @Inspect({ category: 'Other' })
