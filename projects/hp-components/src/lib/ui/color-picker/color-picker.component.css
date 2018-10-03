@@ -34,7 +34,7 @@
 .header-row {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid orange;
   padding: 0;
 }
 

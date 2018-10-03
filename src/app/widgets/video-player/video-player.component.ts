@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import 'reflect-metadata';
 import {Inspect, Inspectable, MediaSourcePropertyEditorComponent} from 'hp-components-src';
 
@@ -8,8 +8,9 @@ import {Inspect, Inspectable, MediaSourcePropertyEditorComponent} from 'hp-compo
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.css']
+
 })
-export class VideoPlayerComponent implements OnInit {
+export class VideoPlayerComponent implements OnInit, AfterViewInit {
 
   @Inspect({ category: 'Other', propType: 'string', editorClass: MediaSourcePropertyEditorComponent})
   @Input()
@@ -27,7 +28,8 @@ export class VideoPlayerComponent implements OnInit {
   @Inspect({ propType: 'objectfit' })
   videoFit = 'contain';
 
-
+  @ViewChild('video')
+  video: ElementRef;
   constructor() {
 
   }
@@ -35,6 +37,14 @@ export class VideoPlayerComponent implements OnInit {
   ngOnInit() {
     console.log('init');
   }
+
+  ngAfterViewInit() {
+    this.video.nativeElement.muted = true;
+    this.video.nativeElement.play().then(() => {
+      // this.video.nativeElement.muted = false;
+    });
+  }
+
 }
 
 

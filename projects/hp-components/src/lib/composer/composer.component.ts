@@ -17,11 +17,7 @@ export class ComposerComponent implements OnInit, AfterViewChecked {
   }
 
   registerWidgetTypes() {
-     const panelType = {
-       name: 'PanelComponent',
-       componentClass: PanelComponent
-     };
-     this._composerService.registerWidgetType(panelType);
+
   }
 
   ngAfterViewChecked() {

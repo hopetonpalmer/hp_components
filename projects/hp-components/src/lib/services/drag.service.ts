@@ -51,9 +51,12 @@ export class DragService implements OnDestroy  {
     return null;
   }
 
-  updateDropZone(draggedElement: Element, parent: Element, exclude = []): Element {
-    this.clearDropZones(parent);
-    const dropZone = this.findDropZone(draggedElement, parent, exclude);
+  updateDropZone(draggedElement: Element, interactionHost: Element, exclude = [], lastDropZone: Element = null): Element {
+    const dropZone = this.findDropZone(draggedElement, interactionHost, exclude);
+    if (lastDropZone === dropZone || dropZone === draggedElement.parentElement ) {
+      return dropZone;
+    }
+    this.clearDropZones(interactionHost);
     if (dropZone) {
       this.renderer.addClass(dropZone, 'active');
     }
@@ -67,9 +70,12 @@ export class DragService implements OnDestroy  {
     });
   }
 
-  dropElement(dropZone: Element, draggedElement: Element,  parent: Element) {
+  dropElement(dropZone: Element, draggedElement: Element, defaultDropZone: Element) {
       try {
-        dom.changeParent(draggedElement, dropZone, this.renderer);
+        dropZone = dropZone ? dropZone : defaultDropZone;
+        if (dropZone !== draggedElement.parentElement) {
+          dom.changeParent(draggedElement, dropZone, this.renderer);
+        }
       } catch (error) {
         console.log(error);
         // -- todo log error;

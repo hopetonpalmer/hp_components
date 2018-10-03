@@ -1,4 +1,5 @@
 import {Point, Rect, Size} from './math';
+import { dashToCamel } from './strings';
 import {Renderer2} from '@angular/core';
 
 export function offset(el: Element): Point {
@@ -12,7 +13,8 @@ export function pixToNum(value: string): number {
   if (!value || value.length === 0) {
     return 0;
   }
-  const newValue = value.replace('px', '').replace('em', '');
+  let newValue = value.replace('px', '').replace('em', '');
+  newValue = newValue === 'auto' ? '0' : newValue;
   return parseFloat(newValue);
 }
 
@@ -336,4 +338,37 @@ export function hasVideo(element: Element): boolean {
   return element instanceof HTMLVideoElement || childrenOf(element, true).find(f => f instanceof HTMLVideoElement) != null;
 }
 
+export function getShadowColor(shadow: string): string {
+  let color = '#000000';
+  let colorStart = shadow.toLowerCase().indexOf('rgb');
+  if (colorStart > -1) {
+    color = shadow.substr(colorStart, shadow.indexOf(')') + 1);
+  } else {
+    colorStart = shadow.indexOf('#');
+    if (colorStart > -1) {
+      color = shadow.substr(colorStart, 7);
+    }
+  }
+  return color;
+}
+
+export function getAppliedStyles(element: HTMLElement): any[] {
+  const styles = element.style; // -- not using getComputedStyle because I need to retrieve short hand values too from non-chrome browsers
+
+  const result = Array.from(styles).reduce((filtered, style) => {
+    const value = styles.getPropertyValue(style);
+    if (value) {
+      filtered.push({ 'name': dashToCamel(style), 'value': value });
+    }
+    return filtered;
+  }, []);
+
+  return result;
+}
+
+export function setStyles(element: HTMLElement, styles: any[] ) {
+    styles.forEach(style => {
+        element.style[style.name] = style.value;
+    });
+}
 

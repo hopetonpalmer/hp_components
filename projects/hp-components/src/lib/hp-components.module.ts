@@ -43,16 +43,21 @@ import { PixelInputComponent } from './ui/pixel-input/pixel-input.component';
 import { DropDownButtonComponent } from './ui/drop-down-button/drop-down-button.component';
 import { ColorComboBoxComponent } from './ui/color-combo-box/color-combo-box.component';
 import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
+// tslint:disable-next-line:max-line-length
+import { ShadowPropertyEditorComponent } from './property-grid/editors/property-editors/shadow-property-editor/shadow-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { BorderPropertyEditorComponent } from './property-grid/editors/property-editors/border-property-editor/border-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { PosandsizePropertyEditorComponent } from './property-grid/editors/property-editors/posandsize-property-editor/posandsize-property-editor.component';
+import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
+
+
 
 
 
 
 @NgModule({
-  imports: [
-    OverlayModule,
-    A11yModule,
-    CommonModule
-  ],
+  imports: [OverlayModule, A11yModule, CommonModule],
   declarations: [
     InteractionComponent,
     ComposerComponent,
@@ -89,7 +94,13 @@ import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
     DropDownListComponent,
     PixelInputComponent,
     ColorComboBoxComponent,
-    ComboBoxComponent
+    ComboBoxComponent,
+    ShadowPropertyEditorComponent,
+    BorderPropertyEditorComponent,
+    PosandsizePropertyEditorComponent,
+    TabComponent,
+    TabItemComponent,
+    TabStripComponent
   ],
   exports: [
     InteractionComponent,
@@ -98,7 +109,8 @@ import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
     PanelComponent,
     HeaderComponent,
     ListViewComponent,
-    HeaderComponent
+    HeaderComponent,
+    TabStripComponent
   ],
   providers: [
     DragService,
@@ -125,7 +137,7 @@ import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
   ]
 })
 export class HpComponentsModule {
-   constructor(private propertyInspectorService: PropertyInspectorService) {
-     PropertyEditor.inspectorService = propertyInspectorService;
-   }
+  constructor(private propertyInspectorService: PropertyInspectorService) {
+    PropertyEditor.inspectorService = propertyInspectorService;
+  }
 }

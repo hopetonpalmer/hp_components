@@ -1,0 +1,6 @@
+@import "../../editor-styles.css";
+
+.hpc-expander-content {
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 6px;
+}

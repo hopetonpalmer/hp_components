@@ -1,13 +1,26 @@
-.transparent-backdrop {
-  background: red;
-}
+@import "../../hp-components.css";
+
 
 .drop-down-button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  user-select: none;
+  cursor: pointer;
+}
+
+.section {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  user-select: none;
-  cursor: default;
-  padding: 2px;
+}
+
+.button-content {
+  padding: 0 5px;
+  margin-left: auto;
+}
+
+.selection-box {
+  width: 100%;
+  height: 100%;
+  min-height: 20px;
 }

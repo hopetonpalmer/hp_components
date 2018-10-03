@@ -7,7 +7,7 @@ type location = 'left' | 'top' | 'right' | 'bottom';
 @Component({
   selector: 'hpc-thickness-property-editor',
   templateUrl: './thickness-property-editor.component.html',
-  styleUrls: ['./thickness-property-editor.component.css', '../../../../hp-components.css']
+  styleUrls: ['./thickness-property-editor.component.css']
 })
 export class ThicknessPropertyEditorComponent extends PropertyEditor implements OnInit {
   @Input()

@@ -1,10 +1,13 @@
 <ng-container *ngIf="!inspectableComponentInfo?.editorClass">
-  <ng-container #viewContainer></ng-container>
-</ng-container>
-<ng-container *ngIf="!inspectableComponentInfo?.editorClass">
-  <hpc-header>{{inspectableComponentInfo?.displayName}}</hpc-header>
+  <hpc-header>{{headerCaption}}</hpc-header>
   <div class="properties-container">
-    <hpc-background-property-editor></hpc-background-property-editor>
+  <hpc-expander #defaultExpander [isExpanded]=true>
+     <div class="hpc-flex-row" header>
+       <hpc-tab-strip #tabStrip [itemsSource]="['Color','Text']" (itemClick)="defaultExpander.isExpanded=true" ></hpc-tab-strip>
+     </div>
+     <hpc-background-property-editor *ngIf="tabStrip.selectedItem === 'Color'"></hpc-background-property-editor>
+     <hpc-font-property-editor *ngIf="tabStrip.selectedItem === 'Text'"></hpc-font-property-editor>
+  </hpc-expander>
     <div class="property-table">
       <div><ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})" ></ng-container></div>
       <div *ngFor="let prop of inspectableProperties; let propType=index">

@@ -1,3 +1,8 @@
+.selector-button-container {
+  display: flex;
+  margin-left: 5px;
+}
+
 .btn-fill,
 .btn-fill-border {
   cursor: pointer;
@@ -42,7 +47,8 @@
 }
 
 .color-picker {
-  padding: 10px 0 0 0;
+  padding: 10px 0 0 5px;
+  background-color: transparent
 }
 
 

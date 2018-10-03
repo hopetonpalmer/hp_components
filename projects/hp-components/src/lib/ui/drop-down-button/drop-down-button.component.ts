@@ -10,9 +10,6 @@ export class DropDownButtonComponent implements OnInit {
   @Output()
   openChange = new EventEmitter<boolean>();
 
-  @Input()
-  title: string;
-
   private _isOpen = false;
   get isOpen(): boolean {
     return this._isOpen;

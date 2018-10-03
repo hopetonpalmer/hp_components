@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Renderer2, HostListener, OnDestroy } from '@angular/core';
 import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
 import { InteractionService } from '../interaction/interaction.service';
 import { PropertyInspectorService } from './property-inspector.service';
@@ -9,6 +9,8 @@ import {StringPropertyEditorComponent,
   FontPropertyEditorComponent,
   MediaSourcePropertyEditorComponent,
   StylePropertyEditorComponent} from './editors/';
+import { properCase } from '../scripts/strings';
+import { Observable, Subscription } from 'rxjs';
 
 
 @Component({
@@ -16,7 +18,10 @@ import {StringPropertyEditorComponent,
   templateUrl: './property-grid.component.html',
   styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })
-export class PropertyGridComponent implements OnInit, AfterViewInit {
+export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  _selectedElementsSubscriber: Subscription;
+
   /**
    * Returns the first active component.
    */
@@ -61,6 +66,17 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
     return getInspectPropertyInfos(this.activeComponent);
   }
 
+  get headerCaption(): string {
+    let result = '';
+    if (this.inspectableComponentInfo) {
+      result = this.inspectableComponentInfo.displayName;
+    }
+    if (!result && this.activeElement) {
+      result = properCase(this.activeElement.nodeName);
+    }
+    return result;
+  }
+
   getPropType(prop: IInspectConfig) {
     return prop.propType;
   }
@@ -98,7 +114,20 @@ export class PropertyGridComponent implements OnInit, AfterViewInit {
     this._inspectorService.registerStyleInspector('background-color', ColorPropertyEditorComponent);
   }
 
-  ngOnInit() {}
+  @HostListener ('mouseenter', ['$event'])
+  mouseClick(event: MouseEvent) {
+    this._inspectorService.canAcceptChanges = true;
+  }
+
+  ngOnInit() {
+    this._selectedElementsSubscriber = this._interactionService.selectedElements$.subscribe(() => {
+      this._inspectorService.canAcceptChanges = false;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._selectedElementsSubscriber.unsubscribe();
+  }
 
   ngAfterViewInit() {
     this._changeDectorRef.detectChanges();

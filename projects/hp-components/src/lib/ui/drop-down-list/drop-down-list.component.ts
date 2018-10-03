@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'hpc-drop-down-list',
   templateUrl: './drop-down-list.component.html',
-  styleUrls: ['./drop-down-list.component.css', '../../hp-components.css']
+  styleUrls: ['./drop-down-list.component.css']
 })
 export class DropDownListComponent implements OnInit {
   @Input()

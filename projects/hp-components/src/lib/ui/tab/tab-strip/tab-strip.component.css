@@ -1,0 +1,23 @@
+@import "../../../hp-components.css";
+
+:host {
+  background: transparent;
+  height: 100%;
+}
+
+.item {
+  cursor: pointer;
+  color: var(--hpc-disable-color);
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  height: 100%;
+  margin: 0 5px;
+  padding: 0 2px 5px;
+  transition: border-color .5s;
+}
+
+.selected {
+  color: var(--hpc-container-color);
+  border-bottom-color: var(--hpc-selected-border-color);
+}

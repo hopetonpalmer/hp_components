@@ -1,11 +1,18 @@
-import {Injectable, Renderer2, OnDestroy} from '@angular/core';
+import {Injectable, Renderer2, OnDestroy, Type} from '@angular/core';
 import { Subject, Observable, BehaviorSubject} from 'rxjs';
 import { SelectorService } from '../selector/selector.service';
 import * as dom from '../scripts/dom';
+import { PersistenceService, StorageType } from '../services/persistence.service';
+import { uuid } from 'lodash-uuid';
+import * as shortid from 'shortid';
+
+
 
 @Injectable()
 export class InteractionService implements OnDestroy {
-  defaultSelectedComponent: any;
+  hostComponent: any;
+
+  private _componentTypes: Map<string, Type<any>>;
 
   private _deleteElementSubject = new Subject<Element>();
   deleteElement$ = this._deleteElementSubject.asObservable();
@@ -28,7 +35,7 @@ export class InteractionService implements OnDestroy {
   private _selectedComponents = [];
   get selectedComponents(): any[] {
     if (!this.hasSelectedElements) {
-      return [this.defaultSelectedComponent];
+      return [this.hostComponent];
     }
     return this._selectedComponents;
   }
@@ -58,6 +65,7 @@ export class InteractionService implements OnDestroy {
     this._selectedComponents = selectedComponents;
     this._selectedComponentsSubject.next(selectedComponents);
   }
+
   get hasSelectedElements(): boolean {
     return this._selectedElements && this._selectedElements.length > 0;
   }
@@ -75,7 +83,7 @@ export class InteractionService implements OnDestroy {
   renderer: Renderer2;
   interactionHost: HTMLElement;
 
-  constructor(private _selectionService: SelectorService) {}
+  constructor(private _selectionService: SelectorService, private _persistenceService: PersistenceService) {}
 
   findComponentRef(el: Element) {
     const comp = this.components.find(x => x.el === el);
@@ -86,8 +94,8 @@ export class InteractionService implements OnDestroy {
   }
 
   getComponentRoot(compRef: any): HTMLElement {
-    if (compRef === this.defaultSelectedComponent) {
-      return compRef.root;
+    if (compRef === this.hostComponent) {
+      return compRef.rootElement;
     }
     const comp = this.components.find(x => x.ref === compRef);
     if (comp) {
@@ -148,13 +156,17 @@ export class InteractionService implements OnDestroy {
       const element = children[index];
       this.renderer.removeChild(this.interactionHost, element);
     }
+    this.hostComponent.viewContainer.clear();
   }
 
-  addElement(element: Element = null) {
+  addElement(element: HTMLElement = null, select = true): HTMLElement {
     if (!element) {
-      element = this.renderer.createElement('div');
+      element = this.renderer.createElement('div') as HTMLElement;
       this.renderer.addClass(element, 'hpc-new-element');
     }
+
+    element.id = shortid.generate();
+    element['componentType'] = '';
     this.renderer.setStyle(element, 'box-sizing', 'border-box');
     this.renderer.setStyle(element, 'position', 'absolute');
     const selector = this._selectionService.activeSelector;
@@ -163,13 +175,16 @@ export class InteractionService implements OnDestroy {
         ? selector.clientEl
         : this.interactionHost;
     this.renderer.appendChild(parent, element);
-    this._selectionService.selectElement(element as HTMLElement);
-    this.interactionHost.focus();
     this._addElementSubject.next(element);
-    this.selectedElements = this._selectionService.clients;
+    if (select) {
+      this._selectionService.selectElement(element as HTMLElement);
+      this.interactionHost.focus();
+      this.selectedElements = this._selectionService.clients;
+    }
+    return element;
   }
 
-  addContainer(element: Element = null) {
+  addContainer(element: HTMLElement = null) {
     if (!element) {
       element = this.renderer.createElement('div');
       this.renderer.addClass(element, 'hpc-new-element');
@@ -180,6 +195,7 @@ export class InteractionService implements OnDestroy {
   }
 
   addComponent(componentType: any) {
+    this.hostComponent.loadComponent(componentType, null);
     this._addComponentSubject.next(componentType);
   }
 
@@ -193,9 +209,71 @@ export class InteractionService implements OnDestroy {
     this.selectedElements = this._selectionService.clients;
   }
 
+  save(key: string, storageType: StorageType = StorageType.local) {
+     const elements = dom.childrenOf(this.hostComponent.rootElement, true) as HTMLElement[];
+     const dataItems = [];
+     if (elements && elements.length) {
+       elements.forEach(element => {
+          if (!element.parentElement || !element.parentElement['componentType']) {
+            const styles = dom.getAppliedStyles(element);
+            const data = {
+              'id': element.id,
+              'parentId': element.parentElement ? element.parentElement.id : '',
+              'componentType': element['componentType'],
+              'styles': styles,
+              'classes': element.className
+            };
+            dataItems.push(data);
+          }
+       });
+     }
+    this._persistenceService.set(key, dataItems, storageType);
+  }
+
+  load(key: string, storageType: StorageType = StorageType.local) {
+     const loadedElements: HTMLElement[] = [];
+     this.deleteAll();
+     const dataItems = this._persistenceService.get(key, storageType);
+     if (dataItems) {
+       dataItems.forEach(item => {
+          let el: HTMLElement = null;
+          if (item.componentType) {
+             const componentClass = this._componentTypes.get(item.componentType);
+             if (componentClass) {
+               el = this.hostComponent.loadComponent(componentClass, null, false).element;
+             } else {
+               console.error(item.componentType + ' is not registered!');
+             }
+          } else {
+             el = this.addElement(null, false);
+          }
+          if (el) {
+            el.id = item.id;
+            dom.setStyles(el, item.styles);
+            el.className = item.classes;
+            loadedElements.push(el);
+          }
+       });
+
+       dataItems.forEach(item => {
+         if (item.parentId) {
+           const parent = loadedElements.find(x => x.id === item.parentId);
+           const child = loadedElements.find(x => x.id === item.id);
+           if (parent) {
+             parent.appendChild(child);
+           }
+         }
+       });
+     }
+  }
+
+  registerComponentTypes(componentTypes: Map<string, Type<any>>) {
+     this._componentTypes = componentTypes;
+  }
+
   ngOnDestroy(): void {
     this.renderer = null;
     this._components = [];
-    this.defaultSelectedComponent = null;
+    this.hostComponent = null;
   }
 }

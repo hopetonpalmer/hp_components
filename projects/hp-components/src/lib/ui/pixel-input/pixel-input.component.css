@@ -1,11 +1,16 @@
 :host  {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  border: var(--hpc-container-border);
+  padding: 1px;
 }
 
 input {
-  width: 50px;
-  margin-left: 5px;
-  padding: 4px;
+  height: 100%;
+  width: 100%;
 }
+
+hpc-drop-down-list {
+  width: 24px;
+}
+

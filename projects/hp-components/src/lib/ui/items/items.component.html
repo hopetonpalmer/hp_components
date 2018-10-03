@@ -2,12 +2,14 @@
   <ng-container *ngTemplateOutlet="itemsPanelTemplate; context:{$implicit: itemsSource}"></ng-container>
 </div>
 <ng-template #defaultItemsPanel>
-  <div *ngFor="let item of itemsSource">
-    <div *ngIf="itemTemplate; else defaultItemTemplate">
-      <ng-container *ngTemplateOutlet="itemTemplate; context:{$implicit: item}"></ng-container>
+  <div class="item" [ngClass]="{'hpc-stack-v': orientation === 'vertical', 'hpc-stack-h': orientation === 'horizontal'}">
+    <div (click)="selelectedItem=item" *ngFor="let item of itemsSource">
+      <div *ngIf="itemTemplate; else defaultItemTemplate">
+        <ng-container *ngTemplateOutlet="itemTemplate; context:{$implicit: item}"></ng-container>
+      </div>
+      <ng-template #defaultItemTemplate>
+        {{displayMemberPath ? item[displayMemberPath] : item}}
+      </ng-template>
     </div>
-    <ng-template #defaultItemTemplate>
-       <div>{{item[displayMemberPath]}}</div>
-    </ng-template>
   </div>
 </ng-template>

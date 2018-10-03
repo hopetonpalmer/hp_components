@@ -1,0 +1,10 @@
+<div [ngClass]="{'hpc-stack-v': orientation === 'vertical', 'hpc-stack-h': orientation === 'horizontal'}">
+  <div class="item" [ngClass]="{'selected': isSelected(item)}" (click)="itemClicked($event, item)" *ngFor="let item of itemsSource">
+    <div *ngIf="itemTemplate; else defaultItemTemplate">
+      <ng-container *ngTemplateOutlet="itemTemplate; context:{$implicit: item}"></ng-container>
+    </div>
+    <ng-template #defaultItemTemplate>
+      {{displayMemberPath ? item[displayMemberPath] : item}}
+    </ng-template>
+  </div>
+</div>

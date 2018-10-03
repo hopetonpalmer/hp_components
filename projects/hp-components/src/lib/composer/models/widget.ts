@@ -1,5 +1,5 @@
 import { Property } from '../../property-grid/models/property';
-import { ComponentDef } from '@angular/core/src/render3';
+import { Type } from '@angular/core';
 
 
 export interface IWidget {
@@ -10,9 +10,9 @@ export interface IWidget {
 }
 
 export interface IWidgetType {
-  name: string;
   description?: string;
   icon?: string;
-  componentClass: any;
+  componentClassName: string;
+  componentClass: Type<any>;
 }
 

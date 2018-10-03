@@ -1,11 +1,18 @@
 
 :host {
-  display: grid;
-  grid-template-columns:  1fr auto;
-  min-width: 50px;
+  display: flex;
+  align-items: center;
+  min-width: 30px;
+
+  border: var(--hpc-container-border);
+  padding: 1px;
+}
+
+:host:first-child {
+  flex: 1;
 }
 
 .picker-container {
    width: 200px;
-   border: 1px solid gray;
+   border: var(--hpc-container-border);
 }

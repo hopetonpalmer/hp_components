@@ -1,0 +1,13 @@
+<hpc-expander>
+  <div header class="hpc-editor-title">{{title}}</div>
+  <div class="hpc-expander-content">
+    <label>Left</label>
+    <label>Top</label>
+    <label>Height</label>
+    <label>Width</label>
+    <hpc-pixel-input [value]="getStyleValue('left')" (valueChange)="setStyleValue('left', $event)"></hpc-pixel-input>
+    <hpc-pixel-input [value]="getStyleValue('top')" (valueChange)="setStyleValue('top', $event)"></hpc-pixel-input>
+    <hpc-pixel-input [value]="getStyleValue('height')" (valueChange)="setStyleValue('height', $event)"></hpc-pixel-input>
+    <hpc-pixel-input [value]="getStyleValue('width')" (valueChange)="setStyleValue('width', $event)"></hpc-pixel-input>
+  </div>
+</hpc-expander>

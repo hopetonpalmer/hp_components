@@ -13,12 +13,14 @@ export class PropertyInspectorService {
   propertyInspectorMap = new Map<string, any>();
   componentInspectorMap = new Map<any, any>();
 
+  canAcceptChanges = true;
+
   /**
    * Gets the first active component from the selectedComponents array.
    * @returns * value
    */
   get activeComponent(): any {
-    const components = this._interactionService.selectedComponents;
+    const components = this.interactionService.selectedComponents;
     if (components && components.length > 0) {
       return components[0];
     }
@@ -47,8 +49,11 @@ export class PropertyInspectorService {
    */
   setPropertyValueAsync(propertyName: string, value: any): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
+      if (!this.canAcceptChanges) {
+         reject('Cannot accept changes!');
+      }
       try {
-        const components = this._interactionService.selectedComponents;
+        const components = this.interactionService.selectedComponents;
         if (components) {
           components.forEach(component => {
             component[propertyName] = value;
@@ -67,12 +72,12 @@ export class PropertyInspectorService {
    * @returns HTMLElement value
    */
   get activeElement(): HTMLElement {
-    if (!this._interactionService.hasSelectedElements) {
+    if (!this.interactionService.hasSelectedElements) {
        if (this.activeComponent) {
-         return this._interactionService.getComponentRoot(this.activeComponent);
+         return this.interactionService.getComponentRoot(this.activeComponent);
        }
     }
-    const elements = this._interactionService.selectedElements;
+    const elements = this.interactionService.selectedElements;
     if (elements && elements.length > 0) {
       return elements[0] as HTMLElement;
     }
@@ -104,7 +109,10 @@ export class PropertyInspectorService {
    * @param string value
    */
   setStyleValue(styleName: string, value: string) {
-    let elements = this._interactionService.selectedElements;
+    if (!this.canAcceptChanges) {
+      return;
+    }
+    let elements = this.interactionService.selectedElements;
     if (elements.length === 0 ) {
       // -- Special case for interaction host element, it should not have a transparent designer
       if (styleName === 'backgroundColor' && value === ColorVoid) {
@@ -117,7 +125,7 @@ export class PropertyInspectorService {
     });
   }
 
-  constructor(private _interactionService: InteractionService) {}
+  constructor(public interactionService: InteractionService) {}
 
   registerPropertyInspector(propertyTypeName: string, editorClass: any) {
     propertyTypeName = propertyTypeName.toLowerCase();

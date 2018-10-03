@@ -1,0 +1,23 @@
+@import "../../hp-components.css";
+
+:host {
+  display: flex;
+}
+
+.hpc-expander-content {
+  display: grid;
+  grid-row-gap: 3px;
+  padding: 5px;
+  border: var(--hpc-container-border);
+  grid-column-gap: 6px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.hpc-editor-title {
+
+}
+
+.hpc-editor-content-container {
+
+}

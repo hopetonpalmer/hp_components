@@ -1,0 +1,8 @@
+@import "../../editor-styles.css";
+
+ :host {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+}

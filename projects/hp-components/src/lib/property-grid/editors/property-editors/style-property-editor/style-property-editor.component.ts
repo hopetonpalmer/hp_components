@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 
 @Component({
@@ -12,17 +12,8 @@ export class StylePropertyEditorComponent extends PropertyEditor implements OnIn
     super();
   }
 
-  get borderColor(): string {
-     const result = this.getStyleValue('borderColor');
-     return result;
-  }
-
-  set borderColor(value: string) {
-    // (selectedColorChange) = "setStyleValue('borderColor', $event)"
-    this.setStyleValue('borderColor', value);
-  }
-
   ngOnInit() {
+
   }
 
 }

@@ -1,11 +1,13 @@
 <hpc-composer>
     <div menu>
+      <button (click)="interactionService.save('interaction-data')">Save</button>
+      <button>Save As</button>
+      <button style="margin-right: 10px" (click)="interactionService.load('interaction-data')">Open...</button>
       <button (click)="interactionService.addElement()">New Element</button>
       <button (click)="interactionService.addContainer()">New Container</button>
       <button (click)="addImageComponent()">Image Component</button>
       <button (click)="addVideoPlayer()">Video Player</button>
-      <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.deleteSelectedElements()">Delete
-        Selected</button>
+      <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.deleteSelectedElements()">Delete Selected</button>
       <button (click)="interactionService.deleteAll()">Delete All</button>
       <button [disabled]="!interactionService.canSelectElements" (click)="interactionService.selectAll()">Select All</button>
       <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.unSelectAll()">Unselect All</button>

@@ -144,7 +144,26 @@
      z-index: 10000;
    }
 
-   .hpc-dropzone.active {
-     border: 2px dashed white;
-   }
+@keyframes hpc-flicker-Dropzone {
+  0% {
+    background: rgba(13, 101, 122, 0.60);
+  }
+
+  50% {
+    background: rgba(13, 101, 122, .90);
+  }
+
+  100% {
+    background: rgba(13, 101, 122, .60);
+  }
+}
+
+
+.hpc-dropzone.active {
+  -moz-animation: hpc-flicker-Dropzone 1s infinite;
+  -o-animation: hpc-flicker-Dropzone 1s infinite;
+  -webkit-animation: hpc-flicker-Dropzone 1s infinite;
+  animation: hpc-flicker-Dropzone 1s infinite;
+}
+
 

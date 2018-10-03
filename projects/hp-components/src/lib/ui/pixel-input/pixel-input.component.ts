@@ -11,6 +11,21 @@ export class PixelInputComponent implements OnInit {
   private _unitPart = '';
   private _numberPart = 0;
 
+  @Input()
+  percentOption = false;
+
+  private _units = ['px', 'pt', '%'];
+  set units(value: string[]) {
+     this._units = value;
+  }
+
+  get units() {
+     if (!this.percentOption) {
+       return this._units.filter(x => x !== '%');
+     }
+     return this._units;
+  }
+
   get numberPart(): number {
     return this._numberPart;
   }
@@ -22,6 +37,9 @@ export class PixelInputComponent implements OnInit {
   }
 
   get unitPart(): string {
+    if (this._numberPart && !this._unitPart) {
+      return 'px';
+    }
     return this._unitPart;
   }
   set unitPart(value: string) {
@@ -33,7 +51,10 @@ export class PixelInputComponent implements OnInit {
 
   @Input()
   set value(value: string) {
-    if (value.indexOf(' ') > -1) {
+    if (!value) {
+      value = '0';
+    }
+    if (value && value.indexOf(' ') > -1) {
       return;
     }
     if (value && value !== this.value) {
@@ -53,8 +74,6 @@ export class PixelInputComponent implements OnInit {
 
   @Output()
   valueChange = new EventEmitter<string>();
-
-  units = ['px', 'pt', '%'];
 
   ngOnInit() {}
 }

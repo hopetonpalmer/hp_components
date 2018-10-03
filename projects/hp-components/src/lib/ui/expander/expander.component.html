@@ -1,3 +1,12 @@
-<p>
-  expander works!
-</p>
+<div class="expander" (click)="toggleExpanded()" >
+  <div class="header-content">
+    <ng-content select=[header]></ng-content>
+  </div>
+  <div class="arrow" [ngClass]="{'hpc-arrow-up': isExpanded, 'hpc-arrow-down': animateClose || !isExpanded}" ></div>
+</div>
+<div class="content" [ngClass]="{'expanded': isExpanded, 'contracted': animateClose}">
+  <div class="inner-content" *ngIf="isExpanded">
+    <ng-content></ng-content>
+  </div>
+</div>
+

@@ -26,6 +26,10 @@ export function camelToDash(value: string): string {
   return value.replace(/([A-Z])/g, ($1) => '-' + $1.toLowerCase());
 }
 
+export function dashToCamel(value: string): string {
+  return value.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
+
 export function camelToUnderscore(value: string): string {
   return value.replace(/([A-Z])/g, ($1) => '_' + $1.toLowerCase());
 }

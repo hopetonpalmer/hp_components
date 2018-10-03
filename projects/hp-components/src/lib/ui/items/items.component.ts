@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Orientation } from '../../scripts/types';
 
 export type ITemplateSelector = (item: any) => TemplateRef<any>;
 
@@ -15,6 +16,8 @@ export type ITemplateSelector = (item: any) => TemplateRef<any>;
    If an ItemsPanelTemplate is not specified, the default is used.
  */
 export class ItemsComponent implements OnInit {
+  private _selectedItem: any;
+
   /**
    * Gets or sets an array used to generate the content of the ItemsComponent
    */
@@ -52,7 +55,62 @@ export class ItemsComponent implements OnInit {
   @Input()
   itemTemplateSelector: ITemplateSelector;
 
+  /**
+   * Gets or sets the flow orientation of items.
+   */
+  @Input()
+  orientation: Orientation = 'vertical';
+
+  /**
+   * Sets the current selected item
+   */
+  @Input()
+  set selectedItem(value: any) {
+    if (value !== this._selectedItem) {
+      this._selectedItem = value;
+      this.doSelectItem(value);
+    }
+  }
+
+  /**
+   * Gets the current selected item
+  */
+  get selectedItem(): any {
+    if (!this._selectedItem && this.itemsSource.length) {
+      this._selectedItem = this.itemsSource[0];
+    }
+    return this._selectedItem;
+  }
+
+  /**
+   * Raised when the selectedItem changes.
+   */
+  @Output()
+  selectedItemChange = new EventEmitter<any>();
+
+  @Output()
+  itemClick = new EventEmitter<{event: PointerEvent, item: any}>();
+
+  /**
+   * Determines if an item is selected by comparing it against the selectedItem.
+   * @param item - An item from the itemsSource
+   * @returns boolean
+   */
+  isSelected(item: any): boolean {
+    return item === this.selectedItem;
+  }
+
+  itemClicked(event: PointerEvent, item: any) {
+    event.stopPropagation();
+    this.selectedItem = item;
+    this.itemClick.emit({event: event, item: item});
+  }
+
   constructor() {}
+
+  protected doSelectItem(item: any) {
+    this.selectedItemChange.emit(item);
+  }
 
   ngOnInit() {}
 }

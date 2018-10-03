@@ -1,12 +1,7 @@
+<hpc-posandsize-property-editor class="editor" ></hpc-posandsize-property-editor>
+<hpc-border-property-editor class="editor"></hpc-border-property-editor>
+<hpc-thickness-property-editor class="editor" [title]="'Margins'" [basePropName]="'margin'"></hpc-thickness-property-editor>
+<hpc-thickness-property-editor class="editor" [title]="'Padding'" [basePropName]="'padding'"></hpc-thickness-property-editor>
+<hpc-shadow-property-editor class="editor"></hpc-shadow-property-editor>
 
-<hpc-thickness-property-editor class="editor" [title]="'Border'" [basePropName]="'border'">
-  <div class="border-editor-content">
-      <hpc-color-combo-box [(selectedColor)]="activeElement?.style.borderColor" ></hpc-color-combo-box>
-      <div class="hpc-input-container">All
-        <!-- <hpc-pixel-input [value]="getStyleValue('borderWidth')" (valueChange)="setStyleValue('borderWidth', $event)"></hpc-pixel-input> -->
-        <hpc-pixel-input [(value)]="activeElement?.style.borderWidth"></hpc-pixel-input>
-      </div>
-  </div>
-</hpc-thickness-property-editor>
-<!-- <hpc-thickness-property-editor class="editor" [title]="'Margins'" [basePropName]="'margin'"></hpc-thickness-property-editor>
-<hpc-thickness-property-editor class="editor" [title]="'Padding'" [basePropName]="'padding'"></hpc-thickness-property-editor> -->
+

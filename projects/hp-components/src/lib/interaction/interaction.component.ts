@@ -12,6 +12,7 @@ import { InteractionService } from './interaction.service';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { ComposerService } from '../composer/composer.service';
 import { Inspectable, Inspect } from '../decorator';
+import * as shortid from 'shortid';
 
 
 export type ICancellable = ( value: any )  => boolean;
@@ -25,6 +26,7 @@ export type ICancellable = ( value: any )  => boolean;
   templateUrl: './interaction.component.html',
   styleUrls: ['./interaction.component.css', '../hp-components.css'],
   encapsulation: ViewEncapsulation.None
+
 })
 export class InteractionComponent implements OnInit, OnDestroy {
   private _isMouseDown = false;
@@ -42,7 +44,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
   private _el: ElementRef;
   private _keyDownSubject = new Subject<KeyboardEvent>();
 
-  get root(): HTMLElement {
+  get rootElement(): HTMLElement {
     return this._el.nativeElement;
   }
 
@@ -287,7 +289,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
         this._lastDropZone = this._dragService.updateDropZone(
           this._selectionService.activeSelector.overlay,
           this._el.nativeElement,
-          [this._selectionService.activeSelector.clientEl]
+          [this._selectionService.activeSelector.clientEl],
+          this._lastDropZone
         );
       }
       this._lastMousePos = mousePos;
@@ -458,12 +461,14 @@ export class InteractionComponent implements OnInit, OnDestroy {
     this._interactionService.selectedElements = this._selectionService.clients;
   }
 
-  loadComponent(component: any, data: any) {
+  loadComponent(component: any, data: any, select = true): {component: any, element: HTMLElement} {
     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
     const componentRef = this.viewContainer.createComponent(
       componentFactory
     ) as any;
     const el = componentRef.location.nativeElement;
+    el.id = shortid.generate();
+    el['componentType'] = component.name;
     el.className = 'hpc-widget hpc-composite ' + el.className;
     this._renderer.setStyle(el, 'box-sizing', 'border-box');
     this._renderer.setStyle(el, 'position', 'absolute');
@@ -474,8 +479,11 @@ export class InteractionComponent implements OnInit, OnDestroy {
       this._renderer.setStyle(root, 'width', '100%');
     }
     this._interactionService.components.push({ el: el, ref: componentRef });
-    this._selectionService.selectElement(el);
-    this._interactionService.selectedElements = this._selectionService.clients;
+    if (select) {
+      this._selectionService.selectElement(el);
+      this._interactionService.selectedElements = this._selectionService.clients;
+    }
+    return {component: componentRef, element: el};
   }
 
   /**
@@ -542,7 +550,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._el.nativeElement && this._renderer) {
-      this._interactionService.defaultSelectedComponent = this;
+      this._interactionService.hostComponent = this;
       this._interactionService.interactionHost = this._el.nativeElement;
       this._selectionService.interactionHost = this._el.nativeElement;
       this._selectionService.isLassoSelectable = this.isLassoSelectable;
@@ -561,7 +569,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
       this._addComponentSubscription = this._interactionService.addComponent$.subscribe(
         component => {
-          this.loadComponent(component, null);
+          // this.loadComponent(component, null);
         }
       );
     }

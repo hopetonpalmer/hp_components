@@ -7,22 +7,21 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ColorComboBoxComponent implements OnInit {
 
-  _selectedColor: any;
+  _selectedColor: string;
   @Input()
-  set selectedColor(value: any) {
+  set selectedColor(value: string) {
     if (this._selectedColor !== value) {
       this._selectedColor = value;
       this.selectedColorChange.emit(value);
     }
   }
 
-  get selectedColor(): any {
+  get selectedColor(): string {
     return this._selectedColor;
   }
 
   @Output()
   selectedColorChange = new EventEmitter<string>();
-
 
   constructor() { }
 

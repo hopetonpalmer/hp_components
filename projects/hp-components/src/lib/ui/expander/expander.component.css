@@ -1,0 +1,41 @@
+@import "../../hp-components.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--hpc-container-header-background);
+  color: var(--hpc-container-header-color);
+}
+.header-content {
+/*   cursor: default;
+  width: 100%;
+  flex: 1; */
+}
+.content {
+  overflow: hidden;
+}
+.inner-content {
+  margin: 10px;
+}
+.expander {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+.expander:hover {
+  background-color: var(--hpc-hover-background);
+  color: var(--hpc-hover-color);
+}
+.expanded {
+  max-height: 750px;
+  transition: max-height 0.25s ease-in;
+}
+.contracted {
+  max-height: 0;
+  transition: max-height 150ms ease-out;
+}
+.arrow {
+  margin-left: auto;
+}

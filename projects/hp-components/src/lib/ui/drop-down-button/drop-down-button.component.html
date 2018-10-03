@@ -1,8 +1,13 @@
 <div class="drop-down-button" (click)="toggleOpen()"
    cdkOverlayOrigin
    #trigger="cdkOverlayOrigin">
-   {{title}}
-   <ng-content select=[title]></ng-content>
+   <div class="selection-box section"><ng-content select=[selection-box]></ng-content></div>
+   <div class="button-content section">
+      <div class="section" #headerRef>
+        <ng-content select=[header]></ng-content>
+      </div>
+      <div class="section" *ngIf="headerRef.children.length === 0" class="hpc-arrow-down"></div>
+   </div>
 </div>
 
 <ng-template

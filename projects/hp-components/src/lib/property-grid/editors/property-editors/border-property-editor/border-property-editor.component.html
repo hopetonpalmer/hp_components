@@ -1,0 +1,19 @@
+<hpc-expander>
+  <div header class="hpc-editor-title">{{title}}</div>
+  <div class="hpc-child-container">
+    <div class="hpc-expander-content">
+      <label>Size</label>
+      <label>Corner</label>
+      <label>Style</label>
+      <label>Color</label>
+      <hpc-pixel-input [value]="getStyleValue('borderWidth')" (valueChange)="setStyleValue('borderWidth', $event)"></hpc-pixel-input>
+      <hpc-pixel-input [percentOption]=true [value]="getStyleValue('borderRadius')" (valueChange)="setStyleValue('borderRadius', $event)"></hpc-pixel-input>
+      <hpc-drop-down-list [itemsSource]="['dotted','dashed','solid','double','groove','ridge','inset','outset','none']"
+        [selectedItem]="getStyleValue('borderStyle')" (selectedItemChange)="setStyleValue('borderStyle', $event)">
+      </hpc-drop-down-list>
+    <hpc-color-combo-box [selectedColor]="getStyleValue('borderColor')" (selectedColorChange)="setStyleValue('borderColor', $event)"></hpc-color-combo-box>
+    </div>
+    <hpc-thickness-property-editor class="editor" [title]="'Border Sizes'" [basePropName]="'border'"></hpc-thickness-property-editor>
+  </div>
+</hpc-expander>
+

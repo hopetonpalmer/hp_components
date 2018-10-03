@@ -1,0 +1,16 @@
+
+<hpc-expander>
+  <div header class="hpc-editor-title">{{title}}</div>
+  <div class="hpc-expander-content">
+    <label>X</label>
+    <label>Y</label>
+    <label>Blur</label>
+    <label>Spread</label>
+    <label>Color</label>
+    <hpc-pixel-input [value]="hOffset" (valueChange)="updateElement('hOffset', $event)" ></hpc-pixel-input>
+    <hpc-pixel-input [value]="vOffset" (valueChange)="updateElement('vOffset', $event)"></hpc-pixel-input>
+    <hpc-pixel-input [value]="blur" (valueChange)="updateElement('blur', $event)"></hpc-pixel-input>
+    <hpc-pixel-input [value]="spread" (valueChange)="updateElement('spread', $event)"></hpc-pixel-input>
+    <hpc-color-combo-box [selectedColor]="color" (selectedColorChange)="updateElement('color', $event)"></hpc-color-combo-box>
+  </div>
+</hpc-expander>
