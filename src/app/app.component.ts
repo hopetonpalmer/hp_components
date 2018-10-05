@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterViewInit, Type } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterViewInit, Type, ChangeDetectorRef } from '@angular/core';
 import { InteractionService, ComposerService } from 'hp-components-src';
 import { VideoPlayerComponent } from './widgets/video-player/video-player.component';
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
@@ -16,7 +16,7 @@ import { MystringPropertyEditorComponent } from './widgets/editors/mystring-prop
 export class AppComponent implements OnInit, AfterViewInit {
 
   title = 'hp-components-app';
-  constructor(public interactionService: InteractionService,
+  constructor(private cdRef: ChangeDetectorRef, public interactionService: InteractionService,
      public composerService: ComposerService,
      public inspectorService: PropertyInspectorService) {}
 
@@ -41,6 +41,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.interactionService.load('interaction-data');
+    this.cdRef.detectChanges();
   }
 }
 

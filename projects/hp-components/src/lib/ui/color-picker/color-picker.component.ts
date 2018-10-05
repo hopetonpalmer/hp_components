@@ -393,6 +393,6 @@ export class ColorPickerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('Color picker destroyed!');
+    // console.log('Color picker destroyed!');
   }
 }

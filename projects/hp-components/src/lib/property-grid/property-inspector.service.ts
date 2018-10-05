@@ -121,8 +121,21 @@ export class PropertyInspectorService {
       elements = [this.activeElement];
     }
     elements.forEach((element: HTMLElement) => {
-      element.style[styleName] = value;
+      if ((element.style[styleName]) !== value) {
+        element.style[styleName] = value;
+      }
     });
+  }
+
+  setElementPropValue(propName: string, value: string) {
+    if (!this.canAcceptChanges) {
+      return;
+    }
+    this.activeElement[propName] = value;
+  }
+
+  getElementPropValue(propName: string): string {
+    return this.activeElement[propName];
   }
 
   constructor(public interactionService: InteractionService) {}

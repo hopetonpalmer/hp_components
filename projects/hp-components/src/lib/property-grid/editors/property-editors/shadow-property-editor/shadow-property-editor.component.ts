@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 import * as dom from '../../../../scripts/dom';
 
+export type ShadowType = 'box' | 'text';
 
 @Component({
   selector: 'hpc-shadow-property-editor',
@@ -12,11 +13,22 @@ export class ShadowPropertyEditorComponent extends PropertyEditor {
 
   title = 'Shadow';
 
+  // -- future feature - support of a collection of shadows separated by comma
+  shadows = [''];
+
   @Input() hOffset = '';
   @Input() vOffset = '';
   @Input() blur = '';
   @Input() spread = '';
   @Input() color = 'black';
+  @Input() shadowType: ShadowType = 'box';
+
+  get propName(): string {
+    if (this.shadowType === 'box') {
+      return 'boxShadow';
+    }
+    return 'textShadow';
+  }
 
   get shadow(): string {
     let result = 'none';
@@ -36,7 +48,9 @@ export class ShadowPropertyEditorComponent extends PropertyEditor {
       this.hOffset = parts[0] ? parts[0] : '0';
       this.vOffset = parts[1] ? parts[1] : '0';
       this.blur = parts[2] ? parts[2] : '0';
-      this.spread = parts[3] ? parts[3] : '0';
+      if (this.shadowType === 'box') {
+         this.spread = parts[3] ? parts[3] : '0';
+      }
       this.color = color;
     } else {
       this.hOffset = '';
@@ -53,19 +67,19 @@ export class ShadowPropertyEditorComponent extends PropertyEditor {
 
 
   elementChanged() {
-    let shadow = this.activeElement.style.boxShadow;
+    let shadow = this.getStyleValue(this.propName);
     if (shadow === 'none') {
       shadow = '';
     }
     this.shadow = shadow;
   }
 
-  updateElement(part: string = null, value: string = '') {
+  updateShadow(part: string = null, value: string = '') {
     if (part) {
       this[part] = value;
     }
     if (this.activeElement) {
-      this.activeElement.style.boxShadow = this.shadow;
+      this.setStyleValue(this.propName, this.shadow);
     }
   }
 }

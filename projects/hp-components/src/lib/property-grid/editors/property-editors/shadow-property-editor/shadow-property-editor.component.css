@@ -1,8 +1,11 @@
 @import "../../editor-styles.css";
 
-.hpc-expander-content {
+.hpc-expander-content, .textShadow {
   grid-template-columns: repeat(5, 1fr);
-  grid-column-gap: 6px;
+  grid-column-gap: 4px;
 }
 
+.textShadow {
+  grid-template-columns: repeat(4, 1fr);
+}
 

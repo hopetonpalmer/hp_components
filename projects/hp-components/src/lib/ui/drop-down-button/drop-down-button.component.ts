@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'hpc-drop-down-button',
@@ -6,14 +6,22 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./drop-down-button.component.css']
 })
 export class DropDownButtonComponent implements OnInit {
+  get isOpen(): boolean {
+    return this._isOpen;
+  }
+
+  get popupWidth(): string {
+    return this.parent.nativeElement.clientWidth + 'px';
+  }
+
+  constructor() { }
 
   @Output()
   openChange = new EventEmitter<boolean>();
 
   private _isOpen = false;
-  get isOpen(): boolean {
-    return this._isOpen;
-  }
+
+  @ViewChild('parent') parent: ElementRef;
 
   open() {
     this._isOpen = true;
@@ -32,7 +40,6 @@ export class DropDownButtonComponent implements OnInit {
       this.open();
     }
   }
-  constructor() { }
 
   ngOnInit() {
   }

@@ -14,7 +14,7 @@ export class PixelInputComponent implements OnInit {
   @Input()
   percentOption = false;
 
-  private _units = ['px', 'pt', '%'];
+  private _units = ['px', 'pt', 'rem', '%'];
   set units(value: string[]) {
      this._units = value;
   }
@@ -61,6 +61,7 @@ export class PixelInputComponent implements OnInit {
       const num = value
         .replace('px', '')
         .replace('pt', '')
+        .replace('rem', '')
         .replace('%', '');
       this._numberPart = parseInt(num, 10);
       this._unitPart = value.replace(num, '');

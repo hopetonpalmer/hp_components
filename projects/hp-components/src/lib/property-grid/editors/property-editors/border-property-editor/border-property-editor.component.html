@@ -11,9 +11,9 @@
       <hpc-drop-down-list [itemsSource]="['dotted','dashed','solid','double','groove','ridge','inset','outset','none']"
         [selectedItem]="getStyleValue('borderStyle')" (selectedItemChange)="setStyleValue('borderStyle', $event)">
       </hpc-drop-down-list>
-    <hpc-color-combo-box [selectedColor]="getStyleValue('borderColor')" (selectedColorChange)="setStyleValue('borderColor', $event)"></hpc-color-combo-box>
+      <hpc-color-combo-box [selectedColor]="getStyleValue('borderColor')" (selectedColorChange)="setStyleValue('borderColor', $event)"></hpc-color-combo-box>
     </div>
-    <hpc-thickness-property-editor class="editor" [title]="'Border Sizes'" [basePropName]="'border'"></hpc-thickness-property-editor>
+    <hpc-thickness-property-editor class="editor" [propSuffix]="'Width'"  [title]="'Border Sizes'" [basePropName]="'border'"></hpc-thickness-property-editor>
   </div>
 </hpc-expander>
 

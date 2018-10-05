@@ -20,7 +20,7 @@ export class ThicknessPropertyEditorComponent extends PropertyEditor implements 
   basePropName: string;
 
   @Input()
-  propSuffix = 'Width';
+  propSuffix = '';
 
   left = 0;
   top = 0;

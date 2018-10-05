@@ -249,8 +249,8 @@ export class InteractionService implements OnDestroy {
           }
           if (el) {
             el.id = item.id;
-            dom.setStyles(el, item.styles);
             el.className = item.classes;
+            dom.setStyles(el, item.styles);
             loadedElements.push(el);
           }
        });

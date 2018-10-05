@@ -43,6 +43,15 @@ export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestr
     return PropertyEditor.inspectorService.getStyleValue(styleName);
   }
 
+  setElementPropValue(styleName: string, value: string) {
+    PropertyEditor.inspectorService.setElementPropValue(styleName, value);
+  }
+
+  getElementPropValue(styleName: string): string {
+    return PropertyEditor.inspectorService.getElementPropValue(styleName);
+  }
+
+
   async setPropertyValue(propertyName: string, value: any) {
     await PropertyEditor.inspectorService.setPropertyValueAsync(propertyName, value);
   }

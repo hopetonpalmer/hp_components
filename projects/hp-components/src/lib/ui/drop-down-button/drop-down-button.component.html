@@ -1,4 +1,4 @@
-<div class="drop-down-button" (click)="toggleOpen()"
+<div #parent class="drop-down-button" (click)="toggleOpen()"
    cdkOverlayOrigin
    #trigger="cdkOverlayOrigin">
    <div class="selection-box section"><ng-content select=[selection-box]></ng-content></div>
@@ -16,6 +16,8 @@
     [cdkConnectedOverlayOpen]="isOpen"
     [cdkConnectedOverlayHasBackdrop] = true
     (backdropClick)="close()" >
-    <ng-content></ng-content>
+    <div [style.min-width]= "popupWidth">
+      <ng-content></ng-content>
+    </div>
 </ng-template>
 
