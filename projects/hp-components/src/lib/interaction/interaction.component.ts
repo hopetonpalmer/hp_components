@@ -51,12 +51,11 @@ export class InteractionComponent
     return this._interactionElement.nativeElement;
   }
 
+  private _scale = 1;
   /**
    * Scale value to apply to the Interaction host element.  The value is applied
    * to both scaleX and scaleY of the host element.
    */
-  @Inspect({ displayName: 'Design Scale', propType: 'number' })
-  private _scale = 1;
   @Input()
   set scale(value: number) {
     if (value !== this._scale) {
@@ -304,9 +303,7 @@ export class InteractionComponent
   }
 
   mouseWheel(e: MouseWheelEvent) {
-     if (e.deltaY % 5 === 0) {
-       this.scale = this.scale + (e.deltaY / 1000);
-     }
+    this.scale = this.scale + (e.deltaY / 1000);
   }
 
   /**
