@@ -9,8 +9,16 @@
       transform-origin: 0 0;
    }
 
+   .hpc-interaction-host.animate {
+      transition: transform .2s ease-in;
+   }
+
    .zoom-container {
-     overflow: hidden;
+      overflow: hidden;
+    }
+
+    .zoom-container.animate {
+      transition: height .2s ease-in, width .2s ease-in;
     }
 
    .hpc-new-element, .hpc-widget {

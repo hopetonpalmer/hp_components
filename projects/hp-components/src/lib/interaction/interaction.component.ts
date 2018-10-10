@@ -21,7 +21,7 @@ export type ICancellable = ( value: any )  => boolean;
 /**
  * Handles selection, sizing, deletions, and dragging interactions with any child Element.
  */
-@Inspectable({ displayName: 'Design Surface' })
+@Inspectable({ displayName: 'Screen' })
 @Component({
   selector: 'hpc-interaction',
   templateUrl: './interaction.component.html',
@@ -105,6 +105,9 @@ export class InteractionComponent
    */
   @Input()
   isCheckersBackground = false;
+
+  @Input()
+  animateZoom = false;
 
   @Output()
   resizedElement = new EventEmitter<Element>();
