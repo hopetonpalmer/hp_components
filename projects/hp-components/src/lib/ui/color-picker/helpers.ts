@@ -143,5 +143,8 @@ export class SliderPosition {
 }
 
 export class SliderDimension {
+  get isEmpty(): boolean {
+    return (this.h + this.s + this.v + this.a) === 0;
+  }
   constructor(public h: number, public s: number, public v: number, public a: number) {}
 }
