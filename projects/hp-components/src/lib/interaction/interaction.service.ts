@@ -3,7 +3,6 @@ import { Subject, Observable, BehaviorSubject} from 'rxjs';
 import { SelectorService } from '../selector/selector.service';
 import * as dom from '../scripts/dom';
 import { PersistenceService, StorageType } from '../services/persistence.service';
-import { uuid } from 'lodash-uuid';
 import * as shortid from 'shortid';
 
 
@@ -95,7 +94,7 @@ export class InteractionService implements OnDestroy {
 
   getComponentRoot(compRef: any): HTMLElement {
     if (compRef === this.hostComponent) {
-      return compRef.rootElement;
+      return compRef.interactionElement;
     }
     const comp = this.components.find(x => x.ref === compRef);
     if (comp) {
@@ -210,7 +209,7 @@ export class InteractionService implements OnDestroy {
   }
 
   save(key: string, storageType: StorageType = StorageType.local) {
-     const elements = dom.childrenOf(this.hostComponent.rootElement, true) as HTMLElement[];
+     const elements = dom.childrenOf(this.hostComponent.interactionElement, true) as HTMLElement[];
      const dataItems = [];
      if (elements && elements.length) {
        elements.forEach(element => {

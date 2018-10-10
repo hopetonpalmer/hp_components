@@ -1,7 +1,7 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
   Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy,
-   ViewContainerRef, ComponentFactoryResolver
+   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked
 } from '@angular/core';
 import { DragService } from '../services/drag.service';
 import { SizeService } from '../services/size.service';
@@ -9,10 +9,11 @@ import { SelectorService, SelectionState, NudgeType } from '../selector/selector
 import * as dom from '../scripts/dom';
 import { Point } from '../scripts/math';
 import { InteractionService } from './interaction.service';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { Subject, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { ComposerService } from '../composer/composer.service';
 import { Inspectable, Inspect } from '../decorator';
 import * as shortid from 'shortid';
+import { ResizeObserver } from 'resize-observer';
 
 
 export type ICancellable = ( value: any )  => boolean;
@@ -26,9 +27,9 @@ export type ICancellable = ( value: any )  => boolean;
   templateUrl: './interaction.component.html',
   styleUrls: ['./interaction.component.css', '../hp-components.css'],
   encapsulation: ViewEncapsulation.None
-
 })
-export class InteractionComponent implements OnInit, OnDestroy {
+export class InteractionComponent
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   private _isMouseDown = false;
   private _mouseDownPos = new Point();
   private _lastMousePos: Point;
@@ -38,14 +39,16 @@ export class InteractionComponent implements OnInit, OnDestroy {
   private _addElementSubscription: Subscription;
   private _addComponentSubscription: Subscription;
 
+  @ViewChild('zoomContainer')
+  private _zoomContainer: ElementRef;
   @ViewChild('viewContainer', { read: ViewContainerRef })
   viewContainer;
-  @ViewChild('interactionContainer')
-  private _el: ElementRef;
+  @ViewChild('interactionHost')
+  private _interactionElement: ElementRef;
   private _keyDownSubject = new Subject<KeyboardEvent>();
 
-  get rootElement(): HTMLElement {
-    return this._el.nativeElement;
+  get interactionElement(): HTMLElement {
+    return this._interactionElement.nativeElement;
   }
 
   /**
@@ -53,8 +56,19 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * to both scaleX and scaleY of the host element.
    */
   @Inspect({ displayName: 'Design Scale', propType: 'number' })
+  private _scale = 1;
   @Input()
-  scale = 1;
+  set scale(value: number) {
+    if (value !== this._scale) {
+      this._scale = value;
+      this.sizeToScale();
+      this.scaleChange.emit(value);
+    }
+  }
+
+  get scale(): number {
+    return this._scale;
+  }
 
   /**
    * Determins if elements span when sized or dragged
@@ -102,6 +116,8 @@ export class InteractionComponent implements OnInit, OnDestroy {
   movedElements = new EventEmitter<Element[]>();
   @Output()
   selectElement = new EventEmitter<Element>();
+  @Output()
+  scaleChange = new EventEmitter<number>();
 
   @Input()
   canDelete: ICancellable = () => true
@@ -111,23 +127,24 @@ export class InteractionComponent implements OnInit, OnDestroy {
 
   @Inspect({ propType: 'number' })
   set height(value: number) {
-    this._renderer.setStyle(this._el.nativeElement, 'height', value + 'px');
+    this._renderer.setStyle(this.interactionElement, 'height', value + 'px');
   }
   get height(): number {
-    const bounds = dom.elementBounds(this._el.nativeElement as Element);
+    const bounds = dom.elementBounds(this.interactionElement as Element);
     return bounds.height;
   }
 
   @Inspect({ propType: 'number' })
   set width(value: number) {
-    this._renderer.setStyle(this._el.nativeElement, 'width', value + 'px');
+    this._renderer.setStyle(this.interactionElement, 'width', value + 'px');
   }
   get width(): number {
-    const bounds = dom.elementBounds(this._el.nativeElement as Element);
+    const bounds = dom.elementBounds(this.interactionElement as Element);
     return bounds.width;
   }
 
   constructor(
+    private _root: ElementRef,
     private _renderer: Renderer2,
     private _componentFactoryResolver: ComponentFactoryResolver,
     protected _composerService: ComposerService,
@@ -288,7 +305,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
         mousePos = mouseChange[1];
         this._lastDropZone = this._dragService.updateDropZone(
           this._selectionService.activeSelector.overlay,
-          this._el.nativeElement,
+          this.interactionElement,
           [this._selectionService.activeSelector.clientEl],
           this._lastDropZone
         );
@@ -310,7 +327,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
     this._isMouseDown = true;
     this._mouseDownPos = this.getRelativePointerPos(e);
     this._lastMousePos = this._mouseDownPos;
-    if (e.target === this._el.nativeElement) {
+    if (e.target === this.interactionElement) {
       this._selectionService.createlassoSelector(
         this._mouseDownPos.x,
         this._mouseDownPos.y
@@ -340,9 +357,9 @@ export class InteractionComponent implements OnInit, OnDestroy {
       } else if (this._selectionService.state === SelectionState.Sizable) {
         this.resizeSelectedElements();
       }
-      this._dragService.clearDropZones(this._el.nativeElement);
+      this._dragService.clearDropZones(this.interactionElement);
     }
-    this._renderer.setStyle(this._el.nativeElement, 'cursor', this._cursor);
+    this._renderer.setStyle(this.interactionElement, 'cursor', this._cursor);
     this._lastDropZone = null;
     this._interactionService.selectedElements = this._selectionService.clients;
   }
@@ -358,7 +375,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
         this._dragService.dropElement(
           this._lastDropZone,
           selector.clientEl,
-          this._el.nativeElement
+          this.interactionElement
         );
       }
     });
@@ -373,9 +390,9 @@ export class InteractionComponent implements OnInit, OnDestroy {
     const pointerPos = new Point(e.pageX, e.pageY);
     const selector = this._selectionService.selectorAtPoint(pointerPos);
     if (selector && dom.elementDraggable(selector.clientEl)) {
-      this._renderer.setStyle(this._el.nativeElement, 'cursor', 'move');
+      this._renderer.setStyle(this.interactionElement, 'cursor', 'move');
     } else {
-      this._renderer.setStyle(this._el.nativeElement, 'cursor', 'default');
+      this._renderer.setStyle(this.interactionElement, 'cursor', 'default');
     }
   }
 
@@ -461,8 +478,14 @@ export class InteractionComponent implements OnInit, OnDestroy {
     this._interactionService.selectedElements = this._selectionService.clients;
   }
 
-  loadComponent(component: any, data: any, select = true): {component: any, element: HTMLElement} {
-    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
+  loadComponent(
+    component: any,
+    data: any,
+    select = true
+  ): { component: any; element: HTMLElement } {
+    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
+      component
+    );
     const componentRef = this.viewContainer.createComponent(
       componentFactory
     ) as any;
@@ -483,7 +506,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
       this._selectionService.selectElement(el);
       this._interactionService.selectedElements = this._selectionService.clients;
     }
-    return {component: componentRef, element: el};
+    return { component: componentRef, element: el };
   }
 
   /**
@@ -494,7 +517,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
     const parent =
       selector && dom.isContainer(selector.clientEl)
         ? selector.clientEl
-        : this._el.nativeElement;
+        : this.interactionElement;
     this._renderer.appendChild(parent, element);
   }
 
@@ -503,7 +526,7 @@ export class InteractionComponent implements OnInit, OnDestroy {
    * @param e PointerEvent
    */
   getRelativePointerPos(e: PointerEvent) {
-    return dom.getRelativePointerPos(e, this._el.nativeElement, this.scale);
+    return dom.getRelativePointerPos(e, this.interactionElement, this.scale);
   }
 
   /**
@@ -549,13 +572,13 @@ export class InteractionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this._el.nativeElement && this._renderer) {
+    if (this.interactionElement && this._renderer) {
       this._interactionService.hostComponent = this;
-      this._interactionService.interactionHost = this._el.nativeElement;
-      this._selectionService.interactionHost = this._el.nativeElement;
+      this._interactionService.interactionHost = this.interactionElement;
+      this._selectionService.interactionHost = this.interactionElement;
       this._selectionService.isLassoSelectable = this.isLassoSelectable;
       this._selectionService.isSelectable = this.isSelectable;
-      this._cursor = getComputedStyle(this._el.nativeElement).cursor;
+      this._cursor = getComputedStyle(this.interactionElement).cursor;
       this._deleteSelectedElementsSubscription = this._interactionService.deleteSelectedElements$.subscribe(
         () => {
           this.deleteSelectedElements();
@@ -572,6 +595,47 @@ export class InteractionComponent implements OnInit, OnDestroy {
           // this.loadComponent(component, null);
         }
       );
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    // this.sizeToScale();
+  }
+
+  ngAfterViewInit(): void {
+     this.sizeToScale();
+     const ro = new ResizeObserver(() => {
+        this.sizeToScale();
+     });
+     ro.observe(this._root.nativeElement.parentElement);
+  }
+
+  private sizeToScale() {
+    if (this._root) {
+      const root = this._root.nativeElement;
+      const height = root.parentElement.clientHeight;
+      const width = root.parentElement.clientWidth;
+      const zoomMargin = 40;
+      const zoomHeight = this.interactionElement.clientHeight * this.scale + zoomMargin;
+      const zoomWidth  = this.interactionElement.clientWidth * this.scale + zoomMargin;
+
+      // -- Set the root element to the actual size of its parent;
+      root.style.width = width + 'px';
+      root.style.height = height + 'px';
+      root.style.position = 'absolute';
+      root.style.display = zoomHeight < height && zoomWidth < width ? 'flex' : 'block';
+      root.style.alignItems = 'center';
+      root.style.justifyContent = 'center';
+      root.style.overflow = 'auto';
+
+      // -- Make the zoom container the actual scaled size plus a margin;
+      const zoomEl = this._zoomContainer.nativeElement;
+      zoomEl.style.height = zoomHeight + 'px';
+      zoomEl.style.width = zoomWidth + 'px';
+
+      // -- Give the interaction element a 10px margin top and left
+      this.interactionElement.style.marginTop = zoomMargin / 2 + 'px';
+      this.interactionElement.style.marginLeft = zoomMargin / 2 + 'px';
     }
   }
 

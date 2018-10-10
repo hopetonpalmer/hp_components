@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -37,7 +37,6 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
 import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
 import { PropertyInspectorService } from './property-grid/property-inspector.service';
 import { AccordionComponent, ExpanderComponent } from './ui';
-import { PropertyEditor } from './property-grid/editors/property-editors/property-editor';
 import { DropDownListComponent } from './ui/drop-down-list/drop-down-list.component';
 import { PixelInputComponent } from './ui/pixel-input/pixel-input.component';
 import { DropDownButtonComponent } from './ui/drop-down-button/drop-down-button.component';
@@ -50,10 +49,8 @@ import { BorderPropertyEditorComponent } from './property-grid/editors/property-
 // tslint:disable-next-line:max-line-length
 import { PosandsizePropertyEditorComponent } from './property-grid/editors/property-editors/posandsize-property-editor/posandsize-property-editor.component';
 import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
-
-
-
-
+import { PersistenceService } from './services/persistence.service';
+import { setInjectorRef } from './scripts/lib-injector';
 
 
 @NgModule({
@@ -118,6 +115,7 @@ import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
     InteractionService,
     SelectorService,
     ComposerService,
+    PersistenceService,
     PropertyInspectorService
   ],
   entryComponents: [
@@ -137,7 +135,7 @@ import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
   ]
 })
 export class HpComponentsModule {
-  constructor(private propertyInspectorService: PropertyInspectorService) {
-    PropertyEditor.inspectorService = propertyInspectorService;
+  constructor(injector: Injector) {
+    setInjectorRef(injector);
   }
 }

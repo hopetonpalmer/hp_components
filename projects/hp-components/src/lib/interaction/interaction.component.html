@@ -1,8 +1,12 @@
-<div class="hpc-interaction-host" #interactionContainer tabindex="0" (dragstart)="dragStart()" (pointerdown)="pointerDown($event)" (pointerup)="pointerUp($event)"
-  (pointermove)="pointerMove($event)" (keydown)="keyDown($event)" (keyup)="keyUp($event)" (keypress)="keyPress($event)"
-  [style.transform]="'scale('+scale+')'" [ngClass]="{'hpc-checkers': isCheckersBackground}" class="hpc-interaction-host">
-  <ng-content skipChildLookup=true></ng-content>
-  <ng-container skipChildLookup="true" #viewContainer></ng-container>
+<div class="zoom-container" #zoomContainer>
+  <div class="hpc-interaction-host" #interactionHost tabindex="0" (dragstart)="dragStart()" (pointerdown)="pointerDown($event)"
+    (pointerup)="pointerUp($event)" (pointermove)="pointerMove($event)" (keydown)="keyDown($event)" (keyup)="keyUp($event)"
+    (keypress)="keyPress($event)" [style.transform]="'scale('+scale+')'" [ngClass]="{'hpc-checkers': isCheckersBackground}"
+    class="hpc-interaction-host">
+    <ng-content skipChildLookup=true></ng-content>
+    <ng-container skipChildLookup="true" #viewContainer></ng-container>
+  </div>
 </div>
+
 
 

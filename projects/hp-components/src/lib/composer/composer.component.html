@@ -1,20 +1,22 @@
 <div class="composer_container">
     <div *ngIf="headerVisible" class="header-row">
-       <ng-content select="[header]"></ng-content>
+      <div class="composer-menu-container">
+        <ng-content select="[menu]"></ng-content>
+      </div>
+      <ng-content select="[header]"></ng-content>
     </div>
-    <div class= "body-row">
+    <!-- <div class= "body-row"> -->
       <div class="composer_container-widgets">
           <ng-content select="[widgets]"></ng-content>
       </div>
-      <div class="composer-main-container">
-        <div class="composer-menu-container">
-           <ng-content select="[menu]"></ng-content>
-        </div>
-        <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [scale]=0.65> </hpc-interaction>
+      <div class="composer-content">
+          <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [scale]="zoom" > </hpc-interaction>
       </div>
       <div class="composer_container-properties">
         <hpc-property-grid></hpc-property-grid>
       </div>
-    </div>
+    <!-- </div> -->
 </div>
+
+
 

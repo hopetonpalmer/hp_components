@@ -1,26 +1,40 @@
-import { Component, OnInit, Input, AfterViewChecked, ViewChildren, QueryList, ElementRef, ContentChildren } from '@angular/core';
-import { ComposerService } from './composer.service';
-import { PanelComponent } from '../ui/panel/panel.component';
+import { Component, OnInit, Input, AfterViewInit, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'hpc-composer',
   templateUrl: './composer.component.html',
   styleUrls: ['./composer.component.css', '../hp-components.css']
 })
-export class ComposerComponent implements OnInit, AfterViewChecked {
+export class ComposerComponent implements OnInit, AfterViewInit {
 
-  @Input() headerVisible = true;
-  constructor(private _composerService: ComposerService) { }
+  zoomChange = new EventEmitter<number>();
+
+  private _zoom = 0.65;
+  @Input()
+  set zoom(value: number) {
+    if (this._zoom !== value) {
+      this._zoom = value;
+      this.zoomChange.emit(value);
+    }
+  }
+
+  get zoom(): number {
+    return this._zoom;
+  }
+
+  @Input()
+  headerVisible = true;
+
+
+  constructor() {}
 
   ngOnInit() {
     this.registerWidgetTypes();
   }
 
-  registerWidgetTypes() {
+  registerWidgetTypes() {}
 
-  }
-
-  ngAfterViewChecked() {
+  ngAfterViewInit() {
 
   }
 }

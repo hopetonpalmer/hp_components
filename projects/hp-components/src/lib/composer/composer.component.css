@@ -1,16 +1,24 @@
 :host /deep/ .hpc-interaction-host {
   height: 1080px;
   width: 1920px;
-  transform-origin: left top;
-  margin-left: 22px;
-  margin-top: 2%;
+ /*  margin-left: 22px;
+  margin-top: 2%; */
 }
 
 
-.composer_container {
+.xcomposer_container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
+}
+
+.composer_container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr;
 }
 
 .composer_container > * {
@@ -31,17 +39,19 @@
   background-color: var(--hpc-container-background);
 }
 
-.composer-main-container {
-  overflow: auto;
+.composer-content {
+  /* overflow: auto; */
   background-color: var(--hpc-container-main);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+ /*  display: flex;
+  flex-direction: column; */
   flex: 1;
+ /*  align-items: center;
+  justify-content: center;
+  box-sizing: content-box */
 }
 
-.composer-menu-container {
 
+.composer-menu-container {
   color: white;
   padding: 10px;
   min-height: 75px;
@@ -49,6 +59,7 @@
 }
 
 .header-row {
+  grid-column: 1 / span 3;
   display: flex;
   flex-wrap: wrap;
   height: 75px;

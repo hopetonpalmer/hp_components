@@ -6,16 +6,11 @@ export enum StorageType {
   Server
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+
+@Injectable()
 export class PersistenceService {
 
   constructor() { }
-
-  static get hasStorageSupport(): boolean {
-    return typeof (Storage) !== 'undefined';
-  }
 
   set(key: string, value: any, storageType: StorageType) {
     if (typeof(value) === 'object' ) {
@@ -23,12 +18,12 @@ export class PersistenceService {
     }
     switch (storageType) {
         case StorageType.Session:
-          if (PersistenceService.hasStorageSupport) {
+          if (hasStorageSupport) {
             sessionStorage.setItem(key, value);
           }
           break;
         case StorageType.local:
-          if (PersistenceService.hasStorageSupport) {
+          if (hasStorageSupport) {
             localStorage.setItem(key, value);
           }
           break;
@@ -39,12 +34,12 @@ export class PersistenceService {
      let result = null;
     switch (storageType) {
       case StorageType.Session:
-        if (PersistenceService.hasStorageSupport) {
+        if (hasStorageSupport) {
           result = sessionStorage.getItem(key);
         }
         break;
       case StorageType.local:
-        if (PersistenceService.hasStorageSupport) {
+        if (hasStorageSupport) {
           result = localStorage.getItem(key);
         }
         break;
@@ -55,3 +50,5 @@ export class PersistenceService {
     return result;
   }
 }
+
+export const hasStorageSupport = typeof (Storage) !== 'undefined';

@@ -1,9 +1,17 @@
    :host {
      box-sizing: border-box;
-     position: absolute;
      height: 100%;
      width: 100%;
    }
+
+   .hpc-interaction-host {
+      overflow: hidden;
+      transform-origin: 0 0;
+   }
+
+   .zoom-container {
+     overflow: hidden;
+    }
 
    .hpc-new-element, .hpc-widget {
      background-color: #808080;

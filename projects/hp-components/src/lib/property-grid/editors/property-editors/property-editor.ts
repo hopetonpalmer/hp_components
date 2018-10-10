@@ -3,11 +3,12 @@ import { IInspectConfig } from '../../../decorator';
 import { PropertyInspectorService } from '../../property-inspector.service';
 import { OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import { InjectorRef } from '../../../scripts/lib-injector';
 
 
 
 export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestroy, AfterViewInit {
-  static inspectorService: PropertyInspectorService;
+  inspectorService: PropertyInspectorService;
 
   _isLoaded = false;
 
@@ -28,42 +29,42 @@ export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestr
   private _elementChangeSubscription: Subscription;
 
   get activeElement(): HTMLElement {
-    return PropertyEditor.inspectorService.activeElement;
+    return this.inspectorService.activeElement;
   }
 
   getPropertyValue(propertyName: string): any {
-    return PropertyEditor.inspectorService.getPropertyValue(propertyName);
+    return this.inspectorService.getPropertyValue(propertyName);
   }
 
   setStyleValue(styleName: string, value: string) {
-     PropertyEditor.inspectorService.setStyleValue(styleName, value);
+     this.inspectorService.setStyleValue(styleName, value);
   }
 
   getStyleValue(styleName: string): string {
-    return PropertyEditor.inspectorService.getStyleValue(styleName);
+    return this.inspectorService.getStyleValue(styleName);
   }
 
   setElementPropValue(styleName: string, value: string) {
-    PropertyEditor.inspectorService.setElementPropValue(styleName, value);
+    this.inspectorService.setElementPropValue(styleName, value);
   }
 
   getElementPropValue(styleName: string): string {
-    return PropertyEditor.inspectorService.getElementPropValue(styleName);
+    return this.inspectorService.getElementPropValue(styleName);
   }
 
 
   async setPropertyValue(propertyName: string, value: any) {
-    await PropertyEditor.inspectorService.setPropertyValueAsync(propertyName, value);
+    await this.inspectorService.setPropertyValueAsync(propertyName, value);
   }
 
   constructor() {
-
+    this.inspectorService = InjectorRef.get(PropertyInspectorService);
   }
 
   elementChanged() {}
 
   ngOnInit(): void {
-     this._elementChangeSubscription = PropertyEditor.inspectorService.interactionService.selectedElements$.subscribe(() => {
+     this._elementChangeSubscription = this.inspectorService.interactionService.selectedElements$.subscribe(() => {
         this.elementChanged();
      });
   }

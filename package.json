@@ -31,6 +31,7 @@
     "core-js": "^2.5.4",
     "hp-components": "file:dist/hp-components/hp-components-0.1.4.tgz",
     "lodash-uuid": "0.0.3",
+    "resize-observer": "^1.0.0-alpha.1",
     "rxjs": "~6.2.0",
     "shortid": "^2.2.13",
     "zone.js": "~0.8.26"

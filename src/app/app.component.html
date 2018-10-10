@@ -1,5 +1,5 @@
-<hpc-composer>
-    <div menu>
+<hpc-composer #composer>
+    <div menu style="display: flex">
       <button (click)="interactionService.save('interaction-data')">Save</button>
       <button>Save As</button>
       <button style="margin-right: 10px" (click)="interactionService.load('interaction-data')">Open...</button>
@@ -11,5 +11,10 @@
       <button (click)="interactionService.deleteAll()">Delete All</button>
       <button [disabled]="!interactionService.canSelectElements" (click)="interactionService.selectAll()">Select All</button>
       <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.unSelectAll()">Unselect All</button>
+      <label style="display: flex; align-items: center; margin-left:20px">
+        Zoom:
+        <input #zoom type=range min="0.25" max="2" step="0.05" [value]="composer.zoom" (change)="composer.zoom = $event.target.value" style="margin-left: 5px" >
+        <span>{{(zoom.value*100).toFixed()}}%</span>
+      </label>
     </div>
 </hpc-composer>
