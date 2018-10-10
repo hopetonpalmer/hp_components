@@ -3,6 +3,7 @@
   background-color: var(--hpc-container-background);
   color: var(--hpc-container-color);
   font-size: 0.75em;
+  user-select: none;
 }
 
 .property-table {

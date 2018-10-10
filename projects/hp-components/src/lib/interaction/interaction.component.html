@@ -4,6 +4,7 @@
       [ngClass]="{'hpc-checkers': isCheckersBackground, 'animate': animateZoom}"
       #interactionHost tabindex="0"
       (dragstart)="dragStart()"
+      (wheel)="mouseWheel($event)"
       (pointerdown)="pointerDown($event)"
       (pointerup)="pointerUp($event)"
       (pointermove)="pointerMove($event)"

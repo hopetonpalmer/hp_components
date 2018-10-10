@@ -60,7 +60,15 @@ export class InteractionComponent
   @Input()
   set scale(value: number) {
     if (value !== this._scale) {
-      this._scale = value;
+      let scale = parseFloat(value.toString());
+      if (scale < this.scaleMin) {
+        scale = this.scaleMin;
+        value = scale;
+      } else if (scale > this.scaleMax) {
+        scale = this.scaleMax;
+        value = scale;
+      }
+      this._scale = scale;
       this.sizeToScale();
       this.scaleChange.emit(value);
     }
@@ -69,6 +77,14 @@ export class InteractionComponent
   get scale(): number {
     return this._scale;
   }
+
+
+  @Input()
+  scaleMin = 0.25;
+
+  @Input()
+  scaleMax = 2;
+
 
   /**
    * Determins if elements span when sized or dragged
@@ -107,7 +123,7 @@ export class InteractionComponent
   isCheckersBackground = false;
 
   @Input()
-  animateZoom = false;
+  animateZoom = true;
 
   @Output()
   resizedElement = new EventEmitter<Element>();
@@ -285,6 +301,12 @@ export class InteractionComponent
   dragStart() {
     // -- prevent default drag
     return false;
+  }
+
+  mouseWheel(e: MouseWheelEvent) {
+     if (e.deltaY % 5 === 0) {
+       this.scale = this.scale + (e.deltaY / 1000);
+     }
   }
 
   /**

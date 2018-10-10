@@ -10,7 +10,7 @@
    }
 
    .hpc-interaction-host.animate {
-      transition: transform .2s ease-in;
+      transition: transform .1s ease-in;
    }
 
    .zoom-container {
@@ -18,7 +18,7 @@
     }
 
     .zoom-container.animate {
-      transition: height .2s ease-in, width .2s ease-in;
+      transition: height .1s ease-in, width .1s ease-in;
     }
 
    .hpc-new-element, .hpc-widget {

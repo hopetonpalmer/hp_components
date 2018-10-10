@@ -10,7 +10,7 @@
           <ng-content select="[widgets]"></ng-content>
       </div>
       <div class="composer-content">
-          <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [scale]="zoom" > </hpc-interaction>
+          <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [(scale)]="zoom" > </hpc-interaction>
       </div>
       <div class="composer_container-properties">
         <hpc-property-grid></hpc-property-grid>
