@@ -263,6 +263,7 @@ export class InteractionService implements OnDestroy {
            }
          }
        });
+       this.selectedElements = [];
      }
   }
 
