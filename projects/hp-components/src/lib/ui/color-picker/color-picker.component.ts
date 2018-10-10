@@ -8,6 +8,7 @@ import { Orientation } from '../../scripts/types';
 import { palettes, IPalette } from '../color-swatch/palette';
 
 
+
 @Component({
   selector: 'hpc-color-picker',
   templateUrl: './color-picker.component.html',
@@ -173,9 +174,16 @@ export class ColorPickerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.setSliderDimMax();
-    this.updateColorPicker();
-    this.cdRef.detectChanges();
+   // this.setSliderDimMax();
+   // this.updateColorPicker();
+   // this.cdRef.detectChanges();
+
+   // -- Not sure why, but the sliders are not fully sized at this point
+   // -- SetTimout with with 0 wait time fixes the issue
+    setTimeout(() => {
+      this.updateColorPicker();
+      this.cdRef.detectChanges();
+    }, 0);
   }
 
   saturationStartDrag() {}
@@ -306,9 +314,10 @@ export class ColorPickerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateColorPicker();
   }
 
-  private updateColorPicker(updateColorLabels: boolean = true): void {
+  updateColorPicker(updateColorLabels: boolean = true): void {
     this._isUpdating = true;
     try {
+      this.setSliderDimMax();
       if (this._sliderDimMax) {
         const hsla = this.service.hsva2hsla(this._hsva);
         const rgba = this.service.denormalizeRGBA(
