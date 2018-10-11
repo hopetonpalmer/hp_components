@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
-import { ThrowStmt } from '@angular/compiler';
 
 
 @Component({

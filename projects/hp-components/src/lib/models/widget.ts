@@ -1,4 +1,4 @@
-import { Property } from '../../property-grid/models/property';
+import { Property } from '../property-grid/models/property';
 import { Type } from '@angular/core';
 
 

@@ -30,6 +30,9 @@ import { StringPropertyEditorComponent,
   ColorPropertyEditorComponent,
   MediaSourcePropertyEditorComponent,
   StylePropertyEditorComponent,
+  ShadowPropertyEditorComponent,
+  BorderPropertyEditorComponent,
+  PosandsizePropertyEditorComponent,
   ThicknessPropertyEditorComponent} from './property-grid/editors';
 import { ColorPickerComponent } from './ui/color-picker/color-picker.component';
 import { InteractionDirective } from './interaction/interaction.directive';
@@ -42,15 +45,10 @@ import { PixelInputComponent } from './ui/pixel-input/pixel-input.component';
 import { DropDownButtonComponent } from './ui/drop-down-button/drop-down-button.component';
 import { ColorComboBoxComponent } from './ui/color-combo-box/color-combo-box.component';
 import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
-// tslint:disable-next-line:max-line-length
-import { ShadowPropertyEditorComponent } from './property-grid/editors/property-editors/shadow-property-editor/shadow-property-editor.component';
-// tslint:disable-next-line:max-line-length
-import { BorderPropertyEditorComponent } from './property-grid/editors/property-editors/border-property-editor/border-property-editor.component';
-// tslint:disable-next-line:max-line-length
-import { PosandsizePropertyEditorComponent } from './property-grid/editors/property-editors/posandsize-property-editor/posandsize-property-editor.component';
 import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
 import { PersistenceService } from './services/persistence.service';
 import { setInjectorRef } from './scripts/lib-injector';
+import { WidgetGridComponent } from './widget-grid/widget-grid.component';
 
 
 @NgModule({
@@ -97,7 +95,8 @@ import { setInjectorRef } from './scripts/lib-injector';
     PosandsizePropertyEditorComponent,
     TabComponent,
     TabItemComponent,
-    TabStripComponent
+    TabStripComponent,
+    WidgetGridComponent
   ],
   exports: [
     InteractionComponent,

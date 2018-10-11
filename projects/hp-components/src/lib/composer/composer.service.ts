@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { IWidget, IWidgetType } from './models/widget';
+import { IWidget, IWidgetType } from '../models/widget';
 import { map } from 'rxjs/operators';
 import { InteractionService } from '../interaction/interaction.service';
 
