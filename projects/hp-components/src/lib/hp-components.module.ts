@@ -49,6 +49,7 @@ import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
 import { PersistenceService } from './services/persistence.service';
 import { setInjectorRef } from './scripts/lib-injector';
 import { WidgetGridComponent } from './widget-grid/widget-grid.component';
+import { AutoScrollDirective } from './directives/auto-scroll.directive';
 
 
 @NgModule({
@@ -96,7 +97,8 @@ import { WidgetGridComponent } from './widget-grid/widget-grid.component';
     TabComponent,
     TabItemComponent,
     TabStripComponent,
-    WidgetGridComponent
+    WidgetGridComponent,
+    AutoScrollDirective
   ],
   exports: [
     InteractionComponent,

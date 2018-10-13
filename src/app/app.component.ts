@@ -30,13 +30,37 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
-    this.composerService.registerWidgetType({'componentClassName': 'ImageViewerComponent', 'componentClass': ImageViewerComponent});
-    this.composerService.registerWidgetType({'componentClassName': 'VideoPlayerComponent', 'componentClass': VideoPlayerComponent});
+    const widgets = [
+      { name: 'Text', group: 'General', componentClass: ImageViewerComponent },
+      { name: 'Date', group: 'General', componentClass: VideoPlayerComponent },
+      { name: 'Clock', group: 'General', componentClass: VideoPlayerComponent },
+      { name: 'RSS Feed', group: 'General', componentClass: ImageViewerComponent },
+      { name: 'QR Code', group: 'General', componentClass: VideoPlayerComponent },
 
-    const componentTypes = new Map<string, Type<any>>();
-    componentTypes.set('ImageViewerComponent', ImageViewerComponent);
-    componentTypes.set('VideoPlayerComponent', VideoPlayerComponent);
-    this.interactionService.registerComponentTypes(componentTypes);
+      { name: 'Image', group: 'Media', componentClass: ImageViewerComponent },
+      { name: 'Video', group: 'Media', componentClass: VideoPlayerComponent },
+      { name: 'Media RSS', group: 'Media', componentClass: ImageViewerComponent },
+
+      { name: 'Facebook', group: 'Social', componentClass: ImageViewerComponent },
+      { name: 'Twitter', group: 'Social', componentClass: VideoPlayerComponent },
+      { name: 'Periscope', group: 'Social', componentClass: ImageViewerComponent },
+      { name: 'Youtube', group: 'Social', componentClass: VideoPlayerComponent },
+
+      { name: 'Welcome', group: 'Corporate Comms', componentClass: ImageViewerComponent },
+      { name: 'Career Opportunities', group: 'Corporate Comms', componentClass: VideoPlayerComponent },
+      { name: 'Employee Recognition', group: 'Corporate Comms', componentClass: ImageViewerComponent },
+      { name: 'Employee Birthday', group: 'Corporate Comms', componentClass: ImageViewerComponent },
+
+      { name: 'Div', group: 'HTML Element', componentClass: HTMLDivElement },
+      { name: 'Span', group: 'HTML Element', componentClass: HTMLSpanElement },
+      { name: 'Label', group: 'HTML Element', componentClass: HTMLLabelElement },
+      { name: 'Image', group: 'HTML Element', componentClass: HTMLImageElement },
+      { name: 'Video', group: 'HTML Element', componentClass: HTMLVideoElement },
+      { name: 'Text Area', group: 'HTML Element', componentClass: HTMLTextAreaElement },
+      { name: 'Script', group: 'HTML Element', componentClass: HTMLScriptElement }
+
+    ];
+    this.composerService.registerWidgets(widgets);
   }
 
   ngAfterViewInit(): void {

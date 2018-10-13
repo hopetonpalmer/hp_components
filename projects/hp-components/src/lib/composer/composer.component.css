@@ -6,14 +6,14 @@
 }
 
 
-.xcomposer_container {
+.composer_container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   height: 100%;
 }
 
-.composer_container {
+.xcomposer_container {
   width: 100%;
   height: 100%;
   display: grid;
@@ -22,15 +22,13 @@
 }
 
 .composer_container > * {
-  --hpc-container-header: rgb(63, 63, 63);
+/*   --hpc-container-header: rgb(63, 63, 63);
   --hpc-container-header-color: rgb(29, 202, 38);
-  --hpc-container-main: rgb(63, 63, 63);
+  --hpc-container-main: rgb(63, 63, 63); */
 }
 
 .composer_container-widgets {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
+  width: 305px;
   background-color: var(--hpc-container-background);
 }
 
@@ -40,14 +38,8 @@
 }
 
 .composer-content {
-  /* overflow: auto; */
   background-color: var(--hpc-container-main);
- /*  display: flex;
-  flex-direction: column; */
   flex: 1;
- /*  align-items: center;
-  justify-content: center;
-  box-sizing: content-box */
 }
 
 

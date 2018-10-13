@@ -1,3 +1,18 @@
-<p>
-  accordion works!
-</p>
+<div *ngIf="itemsPanelTemplate; else defaultItemsPanel">
+  <ng-container *ngTemplateOutlet="itemsPanelTemplate; context:{$implicit: itemsSource}"></ng-container>
+</div>
+<ng-template #defaultItemsPanel>
+  <div class="item" [ngClass]="{'hpc-stack-v': orientation === 'vertical','hpc-stack-h': orientation === 'horizontal', 'wrap-content': wrapContent}">
+    <div (click)="itemClicked(item)" *ngFor="let item of itemsSource">
+      <div *ngIf="itemTemplate; else defaultItemTemplate">
+        <ng-container *ngTemplateOutlet="itemTemplate; context:{$implicit: item}"></ng-container>
+      </div>
+      <ng-template #defaultItemTemplate>
+        <hpc-expander [isExpanded]="multiExpand ? expander.isExpanded : selectedItem === item" #expander [caption]="displayMemberPath ? item[displayMemberPath] : item">
+          <ng-container *ngTemplateOutlet="contentTemplate; context:{$implicit: item}"></ng-container>
+        </hpc-expander>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
+

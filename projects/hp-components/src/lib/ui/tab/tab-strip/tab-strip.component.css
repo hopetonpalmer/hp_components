@@ -7,7 +7,7 @@
 
 .item {
   cursor: pointer;
-  color: var(--hpc-disable-color);
+  color: var(--hpc-inactive-color);
   align-items: center;
   justify-content: center;
   border: 2px solid transparent;

@@ -62,6 +62,12 @@ export class ItemsComponent implements OnInit {
   orientation: Orientation = 'vertical';
 
   /**
+ * Gets or sets whether content is wrapped to fit its parrent.
+ */
+  @Input()
+  wrapContent = false;
+
+  /**
    * Sets the current selected item
    */
   @Input()
@@ -89,7 +95,7 @@ export class ItemsComponent implements OnInit {
   selectedItemChange = new EventEmitter<any>();
 
   @Output()
-  itemClick = new EventEmitter<{event: PointerEvent, item: any}>();
+  itemClick = new EventEmitter<any>();
 
   /**
    * Determines if an item is selected by comparing it against the selectedItem.
@@ -100,10 +106,10 @@ export class ItemsComponent implements OnInit {
     return item === this.selectedItem;
   }
 
-  itemClicked(event: PointerEvent, item: any) {
+  itemClicked(item: any) {
     event.stopPropagation();
     this.selectedItem = item;
-    this.itemClick.emit({event: event, item: item});
+    this.itemClick.emit(item);
   }
 
   constructor() {}

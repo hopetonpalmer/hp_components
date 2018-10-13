@@ -1,6 +1,6 @@
 import {Point, Rect, Size} from './math';
 import { dashToCamel } from './strings';
-import {Renderer2} from '@angular/core';
+import {Renderer2, Type} from '@angular/core';
 
 export function offset(el: Element): Point {
   const box = el.getBoundingClientRect();
@@ -149,7 +149,7 @@ export function parentTree(element: Element, lastClass: string = 'hpc-interactio
   return result;
 }
 
-export function parentByClass(element: Element, className: string): Element {
+export function parentByClass(element: Element, className: string): HTMLElement {
   const parent = element.parentElement;
   if (parent == null) {
     return null;
@@ -202,6 +202,12 @@ export function assignPosition(renderer: Renderer2, source: Element, target: Ele
   const pos = elementPos(source);
   renderer.setStyle(target, 'top', pos.y + 'px');
   renderer.setStyle(target, 'left', pos.x + 'px');
+}
+
+export function assignSize(renderer: Renderer2, source: Element, target: Element) {
+  const sourceSize = elementSize(source);
+  renderer.setStyle(target, 'height', sourceSize.height + 'px');
+  renderer.setStyle(target, 'width', sourceSize.width + 'px');
 }
 
 export function setElementRect(renderer: Renderer2, rect: Rect, element: Element) {
@@ -310,7 +316,7 @@ export function isComposite(element: Element): boolean {
   return element.classList.contains('hpc-composite');
 }
 
-export function compositeParent(element: Element): Element {
+export function compositeParent(element: Element): HTMLElement {
   return parentByClass(element, 'hpc-composite');
 }
 
@@ -366,9 +372,18 @@ export function getAppliedStyles(element: HTMLElement): any[] {
   return result;
 }
 
+export function getStyleValue(style: string, element: HTMLElement): string {
+   return window.getComputedStyle(element).getPropertyValue(style);
+}
+
 export function setStyles(element: HTMLElement, styles: any[] ) {
     styles.forEach(style => {
         element.style[style.name] = style.value;
     });
 }
 
+export function createDomElement<T>(classType: Type<HTMLBaseElement>): T {
+  const instance = Object.create(classType.prototype);
+  instance.constructor.apply(instance);
+  return <T>instance;
+}

@@ -4,6 +4,7 @@ import { SelectorService } from '../selector/selector.service';
 import * as dom from '../scripts/dom';
 import { PersistenceService, StorageType } from '../services/persistence.service';
 import * as shortid from 'shortid';
+import { createElement } from '@angular/core/src/view/element';
 
 
 
@@ -11,7 +12,7 @@ import * as shortid from 'shortid';
 export class InteractionService implements OnDestroy {
   hostComponent: any;
 
-  private _componentTypes: Map<string, Type<any>>;
+  private _componentTypes: Type<any>[];
 
   private _deleteElementSubject = new Subject<Element>();
   deleteElement$ = this._deleteElementSubject.asObservable();
@@ -158,16 +159,18 @@ export class InteractionService implements OnDestroy {
     this.hostComponent.viewContainer.clear();
   }
 
-  addElement(element: HTMLElement = null, select = true): HTMLElement {
+  addElement(element: HTMLElement = null, select = true, tagName: string = 'div', isReloading = false): HTMLElement {
     if (!element) {
-      element = this.renderer.createElement('div') as HTMLElement;
+      element = this.renderer.createElement(tagName) as HTMLElement;
       this.renderer.addClass(element, 'hpc-new-element');
     }
 
     element.id = shortid.generate();
     element['componentType'] = '';
-    this.renderer.setStyle(element, 'box-sizing', 'border-box');
-    this.renderer.setStyle(element, 'position', 'absolute');
+    if (!isReloading) {
+      this.renderer.setStyle(element, 'box-sizing', 'border-box');
+      this.renderer.setStyle(element, 'position', 'absolute');
+    }
     const selector = this._selectionService.activeSelector;
     const parent =
       selector && dom.isContainer(selector.clientEl)
@@ -198,6 +201,19 @@ export class InteractionService implements OnDestroy {
     this._addComponentSubject.next(componentType);
   }
 
+  addWidget(klass: Type<any>) {
+     if (klass.name.startsWith('HTML')) {
+       const tagName = klass.name.replace('HTML', '').replace('Element', '').toLowerCase();
+       if (tagName === 'div') {
+         this.addContainer();
+       } else {
+         this.addElement(null, true, tagName);
+       }
+     } else {
+        this.addComponent(klass);
+     }
+  }
+
   selectAll() {
     this._selectionService.selectAll();
     this.selectedElements = this._selectionService.clients;
@@ -219,6 +235,7 @@ export class InteractionService implements OnDestroy {
               'id': element.id,
               'parentId': element.parentElement ? element.parentElement.id : '',
               'componentType': element['componentType'],
+              'tagName': element.tagName,
               'styles': styles,
               'classes': element.className
             };
@@ -237,14 +254,14 @@ export class InteractionService implements OnDestroy {
        dataItems.forEach(item => {
           let el: HTMLElement = null;
           if (item.componentType) {
-             const componentClass = this._componentTypes.get(item.componentType);
+             const componentClass = this._componentTypes.find(x => x.name === item.componentType);
              if (componentClass) {
                el = this.hostComponent.loadComponent(componentClass, null, false).element;
              } else {
                console.error(item.componentType + ' is not registered!');
              }
           } else {
-             el = this.addElement(null, false);
+             el = this.addElement(null, false, item['tagName'], true);
           }
           if (el) {
             el.id = item.id;
@@ -267,7 +284,7 @@ export class InteractionService implements OnDestroy {
      }
   }
 
-  registerComponentTypes(componentTypes: Map<string, Type<any>>) {
+  registerComponentTypes(componentTypes: Type<any>[]) {
      this._componentTypes = componentTypes;
   }
 

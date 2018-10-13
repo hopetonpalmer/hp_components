@@ -1,1 +1,41 @@
-@import "../hp-components.css"
+@import "../hp-components.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--hpc-container-background);
+  color: var(--hpc-container-color);
+  font-size: 0.75em;
+  user-select: none;
+  height: 100%;
+}
+
+.widget-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  font-size: 0.8em
+}
+
+.widget-item:hover .widget-icon {
+   border-color: var(--hpc-hover-border-color);
+}
+
+.widget-icon {
+   border: var(--hpc-container-border);
+   height: 50px;
+   width: 55px;
+   margin-bottom: 5px;
+   transition: border .5s;
+}
+
+.widget-name {
+  max-width: 55px;
+  height: 20px;
+}
+
+
+

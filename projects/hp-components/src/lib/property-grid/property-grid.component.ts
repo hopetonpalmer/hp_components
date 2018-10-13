@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Renderer2, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, HostListener, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
 import { InteractionService } from '../interaction/interaction.service';
 import { PropertyInspectorService } from './property-inspector.service';
@@ -88,6 +88,7 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
+    private _cdRef: ChangeDetectorRef,
     private _inspectorService: PropertyInspectorService,
     private _interactionService: InteractionService,
     private _changeDectorRef: ChangeDetectorRef
@@ -122,6 +123,7 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this._selectedElementsSubscriber = this._interactionService.selectedElements$.subscribe(() => {
       this._inspectorService.canAcceptChanges = false;
+      // this._cdRef.detectChanges();
     });
   }
 

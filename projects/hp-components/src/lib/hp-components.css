@@ -6,17 +6,18 @@
   --hpc-s: 100%;
   --hpc-l: 50%;
 
-  --hpc-container-background: rgb(35, 36, 36);
+  --hpc-container-background: rgb(73, 73, 73);
   --hpc-container-color: rgb(230, 228, 228);
   --hpc-container-main: rgb(63, 63, 63);
   --hpc-container-border: 1px solid rgb(107, 106, 106);
-  --hpc-container-header-background: rgb(56, 56, 56);
-  --hpc-container-header-color: rgb(218, 218, 218);
+  --hpc-container-header-background: rgb(97, 96, 96);
+  --hpc-container-header-color: rgb(255, 255, 255);
   --hpc-disable-color: gray;
+  --hpc-inactive-color: rgb(182, 182, 182);
 
 
-  --hpc-header-background: rgb(67, 138, 219);
-  --hpc-header-color: rgb(230, 228, 228);
+  --hpc-header-background: rgb(56, 56, 56);
+  --hpc-header-color: rgb(255, 255, 255);
   --hpc-header-padding: 10px;
 
   --hpc-selected-border-color: orange;
@@ -24,6 +25,7 @@
   --hpc-selected-background: orange;
   --hpc-selected-color: white;
 
+  --hpc-hover-border-color: orange;
   --hpc-hover-background: rgb(32, 32, 32);
   --hpc-hover-color: white;
 
@@ -49,7 +51,7 @@
   --hpc-property-editor-input-background: transparent;
   --hpc-property-editor-input-color: white;
 
-  --hpc-arrow-color: gray;
+  --hpc-arrow-color: rgb(255, 255, 255);
   --hpc-arrow-hover: rgb(61, 93, 196);
 }
 
@@ -238,4 +240,12 @@
         <rect y="25" width="25" height="25" />\
         </svg>');
   background-size: 8px 8px;
+}
+
+.hpc-checkers-tiny-image {
+  background-image: url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill-opacity=".25" >\
+        <rect x="25" width="25" height="25" />\
+        <rect y="25" width="25" height="25" />\
+        </svg>');
+  background-size: 6px 6px;
 }

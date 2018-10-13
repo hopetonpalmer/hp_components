@@ -1,28 +1,30 @@
 <ng-container *ngIf="!inspectableComponentInfo?.editorClass">
   <hpc-header>{{headerCaption}}</hpc-header>
-  <div class="properties-container">
+  <div class="settings-container">
     <hpc-expander #defaultExpander [isExpanded]=true>
-      <div class="hpc-flex-row" header>
-        <hpc-tab-strip #tabStrip1 [itemsSource]="['Color','Text']" (itemClick)="defaultExpander.isExpanded=true" ></hpc-tab-strip>
-      </div>
-      <hpc-background-property-editor *ngIf="tabStrip1.selectedItem === 'Color'"></hpc-background-property-editor>
-      <hpc-font-property-editor *ngIf="tabStrip1.selectedItem === 'Text'"></hpc-font-property-editor>
+        <div class="hpc-flex-row" header>
+          <hpc-tab-strip #tabStrip1 [itemsSource]="['Color','Text']" (itemClick)="defaultExpander.isExpanded=true"></hpc-tab-strip>
+        </div>
+        <hpc-background-property-editor *ngIf="tabStrip1.selectedItem === 'Color'"></hpc-background-property-editor>
+        <hpc-font-property-editor *ngIf="tabStrip1.selectedItem === 'Text'"></hpc-font-property-editor>
     </hpc-expander>
-    <hpc-expander #props_styles [isExpanded]=true>
-      <div class="hpc-flex-row" header>
-        <hpc-tab-strip #tabStrip2 [itemsSource]="['Properties','Styles']" (itemClick)="props_styles.isExpanded=true"></hpc-tab-strip>
-      </div>
-      <div [hidden]="tabStrip2.selectedItem !== 'Properties'" class="property-table">
-        <div *ngFor="let prop of inspectableProperties; let propType=index">
-          <div>
-            <ng-container *ngComponentOutlet="getPropertyEditor(prop)"></ng-container>
+
+    <div style="flex: 1; height: 100%">
+      <hpc-expander [animate]=false hpcAutoScroll [target]="'.content'" [offsetY]=78  #props_styles [isExpanded]=true>
+        <div class="hpc-flex-row" header>
+          <hpc-tab-strip #tabStrip2 [itemsSource]="['Properties','Styles']" (itemClick)="props_styles.isExpanded=true"></hpc-tab-strip>
+        </div>
+        <div [hidden]="tabStrip2.selectedItem !== 'Properties'" class="prop-style">
+          <div *ngFor="let prop of inspectableProperties; let propType=index">
+              <ng-container *ngComponentOutlet="getPropertyEditor(prop)"></ng-container>
           </div>
         </div>
-      </div>
-      <div [hidden]="tabStrip2.selectedItem !== 'Styles'" class="property-table">
-        <ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})"></ng-container>
-      </div>
-    </hpc-expander>
+        <div [hidden]="tabStrip2.selectedItem !== 'Styles'" class="prop-style">
+          <ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})"></ng-container>
+        </div>
+      </hpc-expander>
+    </div>
+
   </div>
 </ng-container>
 

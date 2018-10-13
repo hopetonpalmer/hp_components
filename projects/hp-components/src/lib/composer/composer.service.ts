@@ -1,29 +1,43 @@
 import { Injectable, Type } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { IWidget, IWidgetType } from '../models/widget';
-import { map } from 'rxjs/operators';
+import { IWidget } from '../models/widget';
 import { InteractionService } from '../interaction/interaction.service';
 
+export interface IWidgetGroup {
+  group: string;
+  widgets: IWidget[];
+}
 
 @Injectable()
 export class ComposerService {
-  private _widgetsBehaviorSubject = new BehaviorSubject<IWidget>(null);
+  private _widgetsBehaviorSubject = new BehaviorSubject<IWidget[]>([]);
   widgets$ = this._widgetsBehaviorSubject.asObservable();
 
-  private _widgetTypesBehaviorSubject = new BehaviorSubject<IWidgetType[]>([]);
-  widgetTypes$ = this._widgetTypesBehaviorSubject.asObservable();
+  private _widgetGroupsBehaviorSubject = new BehaviorSubject<IWidgetGroup[]>([]);
+  widgetGroups$ = this._widgetGroupsBehaviorSubject.asObservable();
 
-  get registeredWidgetTypes(): IWidgetType[] {
-    const result = [];
-    this.widgetTypes$.forEach(t => result.push(t)); // .pipe(map(widgetTypes => widgetTypes))
+  private _registeredWidgets: IWidget[] = [];
+  get registeredWidgets(): IWidget[] {
+    return this._registeredWidgets;
+  }
+
+  get widgetsByGroupMap(): Map<string, IWidget[]> {
+    const result = this.registeredWidgets.reduce((m, widget) => m.set(widget.group,
+       [...(m.get(widget.group) || []), widget]), new Map<string, IWidget[]>());
+    return result;
+  }
+
+  getWidgetGroups(): IWidgetGroup[] {
+    const groupMap = Array.from(this.widgetsByGroupMap);
+    const result = groupMap.reduce((a, item) => [...a, { group: item[0], widgets: item[1] }], []);
     return result;
   }
 
   constructor(public interactionService: InteractionService) {}
 
   getRegisteredComponentClass(className: string): Type<any> {
-    const widgetType = this.registeredWidgetTypes.find(
-      x => x.componentClassName === className
+    const widgetType = this.registeredWidgets.find(
+      x => x.componentClass.name === className
     );
     if (widgetType) {
       return widgetType.componentClass;
@@ -31,18 +45,14 @@ export class ComposerService {
     return null;
   }
 
-  getWidgets(): Observable<IWidget> {
-    this._widgetsBehaviorSubject.next(null);
-    return this._widgetsBehaviorSubject.asObservable();
+  registerWidgets(widgets: IWidget[]) {
+    this._registeredWidgets = widgets;
+    this._widgetsBehaviorSubject.next(widgets);
+    this._widgetGroupsBehaviorSubject.next(this.getWidgetGroups());
+    this.registerComponentTypes();
   }
 
-  registerWidgetTypes(widgetTypes: IWidgetType[]) {
-    this._widgetTypesBehaviorSubject.next(widgetTypes);
-  }
-
-  registerWidgetType(widgetType: IWidgetType) {
-    this._widgetTypesBehaviorSubject.next(
-      Object.assign([widgetType], this.registeredWidgetTypes)
-    );
+  private registerComponentTypes() {
+    this.interactionService.registerComponentTypes(this.registeredWidgets.map(w => w.componentClass));
   }
 }

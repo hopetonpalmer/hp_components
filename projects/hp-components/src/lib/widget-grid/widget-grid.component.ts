@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, TemplateRef, Input } from '@angular/core';
+import { IWidget } from '../models/widget';
+import { ComposerService } from '../composer/composer.service';
+import { InteractionService } from '../interaction/interaction.service';
+
 
 @Component({
   selector: 'hpc-widget-grid',
@@ -7,9 +11,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WidgetGridComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  headerCaption = 'Widgets';
+
+  @Input()
+  itemTemplate: TemplateRef<any>;
+
+  constructor(public composerService: ComposerService, public iteractionService: InteractionService) { }
 
   ngOnInit() {
+
   }
 
+  createWidget(item: IWidget) {
+     this.iteractionService.addWidget(item.componentClass);
+  }
 }

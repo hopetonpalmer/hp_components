@@ -7,10 +7,14 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } fro
   styleUrls: ['./expander.component.css']
 })
 export class ExpanderComponent implements OnInit {
+  @Input()
+  caption: string;
+
+  @Input()
+  animate = true;
 
   @Output()
   isExpandedChange = new EventEmitter<boolean>();
-
   animateClose = false;
 
   private _isExpanded = false;
@@ -18,8 +22,8 @@ export class ExpanderComponent implements OnInit {
   set isExpanded(value: boolean) {
     if (value !== this._isExpanded) {
       this.animateClose = value === false;
-      if (this.animateClose) {
-        const animationTime = 150;
+      if (this.animateClose && this.animate) {
+        const animationTime = 0; // 150;
         setTimeout(() => {
           this._isExpanded = value;
           this.isExpandedChange.emit(value);
@@ -28,6 +32,7 @@ export class ExpanderComponent implements OnInit {
       } else {
         this._isExpanded = value;
         this.isExpandedChange.emit(value);
+        this._cdRef.detectChanges();
       }
     }
   }

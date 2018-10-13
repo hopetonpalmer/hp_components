@@ -7,7 +7,7 @@ import { DragService } from '../services/drag.service';
 export interface ISelector {
   selectorEl: Element;
   overlay: Element;
-  clientEl: Element;
+  clientEl: HTMLElement;
 }
 
 export enum SelectionState {
@@ -151,11 +151,11 @@ export class SelectorService implements OnDestroy {
     this.clearSelectors();
     const children = this.selectableElements;
     children.forEach(child => {
-        this.selectElement(child, false);
+        this.selectElement(child as HTMLElement, false);
     });
   }
 
-  selectElement(element: Element, clearFirst = true, isSizable = true) {
+  selectElement(element: HTMLElement, clearFirst = true, isSizable = true) {
     if (!this.isSelectable) {
        return;
     }
@@ -194,12 +194,12 @@ export class SelectorService implements OnDestroy {
     }
     const rect = dom.elementBounds(element);
     const selectorEl = this.createSelector(
-      rect.left,
-      rect.top,
+      element.offsetLeft,
+      element.offsetTop,
       element.parentElement
     );
     selectorEl['isSelector'] = true;
-    dom.assignBoundingRect(this.renderer, element, selectorEl);
+    dom.assignSize(this.renderer, element, selectorEl);
     this.renderer.addClass(selectorEl, 'hpc-element-selector');
     selector = { clientEl: element, selectorEl: selectorEl, overlay: null };
     this._selectors.push(selector);
@@ -322,7 +322,7 @@ export class SelectorService implements OnDestroy {
     const clients = this.clients;
     this.clearSelectors();
     clients.forEach(client => {
-      this.selectElement(client, false, this.shouldAllowSizing);
+      this.selectElement(client as HTMLElement, false, this.shouldAllowSizing);
     });
   }
 

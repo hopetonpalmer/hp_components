@@ -1,7 +1,7 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
   Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy,
-   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked
+   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked, HostBinding, HostListener
 } from '@angular/core';
 import { DragService } from '../services/drag.service';
 import { SizeService } from '../services/size.service';
@@ -304,6 +304,13 @@ export class InteractionComponent
 
   mouseWheel(e: MouseWheelEvent) {
     this.scale = this.scale + (e.deltaY / 1000);
+  }
+
+  @HostListener('click', ['$event'])
+  hostClicked(event: Event) {
+    if (event.target === this._root.nativeElement) {
+      this._interactionService.unSelectAll();
+    }
   }
 
   /**

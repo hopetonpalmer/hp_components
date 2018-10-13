@@ -1,3 +1,7 @@
 .item {
   align-items: center;
 }
+
+.wrap-content {
+  flex-wrap: wrap;
+}
