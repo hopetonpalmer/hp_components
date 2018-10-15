@@ -1,13 +1,16 @@
-import { Property } from '../property-grid/models/property';
 import { Type } from '@angular/core';
 
 
-export interface IWidget {
+export interface IWidgetType {
   name: string;
   description?: string;
   icon?: string;
-  group: string;
   componentClass: Type<any>;
 }
 
+export interface IWidgetTypeGroup {
+  group: string;
+  icon: string;
+  widgets: IWidgetType[];
+}
 

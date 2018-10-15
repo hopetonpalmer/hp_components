@@ -8,9 +8,7 @@
       <label>Color</label>
       <hpc-pixel-input [value]="getStyleValue('borderWidth')" (valueChange)="setStyleValue('borderWidth', $event)"></hpc-pixel-input>
       <hpc-pixel-input [percentOption]=true [value]="getStyleValue('borderRadius')" (valueChange)="setStyleValue('borderRadius', $event)"></hpc-pixel-input>
-      <hpc-drop-down-list [itemsSource]="['dotted','dashed','solid','double','groove','ridge','inset','outset','none']"
-        [selectedItem]="getStyleValue('borderStyle')" (selectedItemChange)="setStyleValue('borderStyle', $event)">
-      </hpc-drop-down-list>
+      <hpc-combo-box [itemsSource]="borderStyles" [selectedItem]="getStyleValue('borderStyle')" (selectedItemChange)="setStyleValue('borderStyle', $event)"></hpc-combo-box>
       <hpc-color-combo-box [selectedColor]="getStyleValue('borderColor')" (selectedColorChange)="setStyleValue('borderColor', $event)"></hpc-color-combo-box>
     </div>
     <hpc-thickness-property-editor class="editor" [propSuffix]="'Width'"  [title]="'Border Sizes'" [basePropName]="'border'"></hpc-thickness-property-editor>

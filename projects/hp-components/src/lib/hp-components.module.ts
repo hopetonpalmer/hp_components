@@ -50,6 +50,7 @@ import { PersistenceService } from './services/persistence.service';
 import { setInjectorRef } from './scripts/lib-injector';
 import { WidgetGridComponent } from './widget-grid/widget-grid.component';
 import { AutoScrollDirective } from './directives/auto-scroll.directive';
+import { PreviewService } from './composer/preview.service';
 
 
 @NgModule({
@@ -117,7 +118,8 @@ import { AutoScrollDirective } from './directives/auto-scroll.directive';
     SelectorService,
     ComposerService,
     PersistenceService,
-    PropertyInspectorService
+    PropertyInspectorService,
+    PreviewService
   ],
   entryComponents: [
     PanelComponent,

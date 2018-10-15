@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, TemplateRef, Input } from '@angular/core';
-import { IWidget } from '../models/widget';
+import { IWidgetType } from '../models/widget-type';
 import { ComposerService } from '../composer/composer.service';
 import { InteractionService } from '../interaction/interaction.service';
 
@@ -23,7 +23,7 @@ export class WidgetGridComponent implements OnInit {
 
   }
 
-  createWidget(item: IWidget) {
+  createWidget(item: IWidgetType) {
      this.iteractionService.addWidget(item.componentClass);
   }
 }

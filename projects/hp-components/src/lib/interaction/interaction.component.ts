@@ -1,7 +1,7 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
   Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy,
-   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked, HostBinding, HostListener
+   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked, HostBinding, HostListener, ChangeDetectorRef
 } from '@angular/core';
 import { DragService } from '../services/drag.service';
 import { SizeService } from '../services/size.service';
@@ -14,6 +14,7 @@ import { ComposerService } from '../composer/composer.service';
 import { Inspectable, Inspect } from '../decorator';
 import * as shortid from 'shortid';
 import { ResizeObserver } from 'resize-observer';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 
 
 export type ICancellable = ( value: any )  => boolean;
@@ -26,6 +27,7 @@ export type ICancellable = ( value: any )  => boolean;
   selector: 'hpc-interaction',
   templateUrl: './interaction.component.html',
   styleUrls: ['./interaction.component.css', '../hp-components.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
 export class InteractionComponent
@@ -77,13 +79,11 @@ export class InteractionComponent
     return this._scale;
   }
 
-
   @Input()
   scaleMin = 0.25;
 
   @Input()
   scaleMax = 2;
-
 
   /**
    * Determins if elements span when sized or dragged
@@ -163,6 +163,7 @@ export class InteractionComponent
 
   constructor(
     private _root: ElementRef,
+    private _cdRef: ChangeDetectorRef,
     private _renderer: Renderer2,
     private _componentFactoryResolver: ComponentFactoryResolver,
     protected _composerService: ComposerService,
@@ -303,7 +304,7 @@ export class InteractionComponent
   }
 
   mouseWheel(e: MouseWheelEvent) {
-    this.scale = this.scale + (e.deltaY / 1000);
+    this.scale = this.scale + e.deltaY / 1000;
   }
 
   @HostListener('click', ['$event'])
@@ -311,6 +312,16 @@ export class InteractionComponent
     if (event.target === this._root.nativeElement) {
       this._interactionService.unSelectAll();
     }
+  }
+
+  @HostListener('pointerup', ['$event'])
+  hostPointerUp(event: PointerEvent) {
+     this.pointerUp(event);
+  }
+
+  @HostListener('pointermove', ['$event'])
+  hostPointerMove(event: PointerEvent) {
+     this.pointerMove(event);
   }
 
   /**
@@ -535,6 +546,7 @@ export class InteractionComponent
       this._selectionService.selectElement(el);
       this._interactionService.selectedElements = this._selectionService.clients;
     }
+    this._cdRef.detectChanges();
     return { component: componentRef, element: el };
   }
 
@@ -632,11 +644,11 @@ export class InteractionComponent
   }
 
   ngAfterViewInit(): void {
-     this.sizeToScale();
-     const ro = new ResizeObserver(() => {
-        this.sizeToScale();
-     });
-     ro.observe(this._root.nativeElement.parentElement);
+    this.sizeToScale();
+    const ro = new ResizeObserver(() => {
+      this.sizeToScale();
+    });
+    ro.observe(this._root.nativeElement.parentElement);
   }
 
   private sizeToScale() {
@@ -645,28 +657,45 @@ export class InteractionComponent
       const height = root.parentElement.clientHeight;
       const width = root.parentElement.clientWidth;
       const zoomMargin = 40;
-      const zoomHeight = this.interactionElement.clientHeight * this.scale + zoomMargin;
-      const zoomWidth  = this.interactionElement.clientWidth * this.scale + zoomMargin;
+      const zoomHeight =
+        this.interactionElement.clientHeight * this.scale + zoomMargin;
+      const zoomWidth =
+        this.interactionElement.clientWidth * this.scale + zoomMargin;
 
       // -- Set the root element to the actual size of its parent;
       root.style.width = width + 'px';
       root.style.height = height + 'px';
       root.style.position = 'absolute';
-      root.style.display = zoomHeight < height && zoomWidth < width ? 'flex' : 'block';
-      root.style.alignItems = 'center';
-      root.style.justifyContent = 'center';
-      root.style.overflow = 'auto';
+      root.style.display = zoomHeight > height && zoomWidth > width ? 'block' : 'flex';
 
-      // -- Make the zoom container the actual scaled size plus a margin;
+      if (zoomWidth < width && zoomHeight < height) {
+        root.style.justifyContent = 'center' ;
+        root.style.alignItems = 'center';
+      } else if (zoomWidth > zoomHeight) {
+        root.style.justifyContent = height > zoomHeight ? 'center' : '';
+        root.style.alignItems = width > zoomWidth ? 'center' : '';
+        root.style.flexDirection = zoomWidth > width ? 'column' : 'row';
+      } else {
+        root.style.alignItems = width < zoomWidth ? 'center' : '';
+        root.style.justifyContent = height < zoomHeight ? 'center' : '';
+        root.style.flexDirection = zoomHeight > height ? 'row' : 'column';
+      }
+
+      root.style.overflow = 'auto';
+      root.style.minWidth = width + 'px';
+
+
+      // -- Make the zoom container the actual scaled size plus zoomMargin;
       const zoomEl = this._zoomContainer.nativeElement;
       zoomEl.style.height = zoomHeight + 'px';
       zoomEl.style.width = zoomWidth + 'px';
 
-      // -- Give the interaction element a 10px margin top and left
+      // -- Give the interaction element margins of half the zoomMargin
       this.interactionElement.style.marginTop = zoomMargin / 2 + 'px';
       this.interactionElement.style.marginLeft = zoomMargin / 2 + 'px';
     }
   }
+
 
   ngOnDestroy(): void {
     this.viewContainer.clear();

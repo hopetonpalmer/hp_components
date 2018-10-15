@@ -387,3 +387,13 @@ export function createDomElement<T>(classType: Type<HTMLBaseElement>): T {
   instance.constructor.apply(instance);
   return <T>instance;
 }
+
+export function centerFlexChild (child: HTMLElement) {
+   const parent = child.parentElement;
+   if (parent && parent.style.display === 'flex') {
+     const parentSize = elementSize(parent);
+     const childSize = elementSize(child);
+     child.style.alignSelf = parentSize.width > childSize.width ? 'center' : '';
+     child.style.justifySelf = parentSize.height > childSize.height ? 'center' : '';
+   }
+}
