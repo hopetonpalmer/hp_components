@@ -1,7 +1,6 @@
-<div class="zoom-container" [ngClass]="{'animate': animateZoom}" #zoomContainer>
-  <div
-      class="hpc-interaction-host"
-      [ngClass]="{'hpc-checkers': isCheckersBackground, 'animate': animateZoom}"
+<div #zoomContainer class="zoom-container" [ngClass]="{'hpc-checkers': isCheckersBackground, 'animate': animateZoom}">
+  <div class="hpc-interaction-host"
+      [ngClass]= "{'animate': animateZoom}"
       #interactionHost tabindex="0"
       (dragstart)="dragStart()"
       (pointerdown)="pointerDown($event)"

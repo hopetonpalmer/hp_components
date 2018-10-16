@@ -1,6 +1,5 @@
 import { Type } from '@angular/core';
 
-
 export interface IWidgetType {
   name: string;
   description?: string;
@@ -13,4 +12,7 @@ export interface IWidgetTypeGroup {
   icon: string;
   widgets: IWidgetType[];
 }
+
+
+
 

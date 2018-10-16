@@ -656,11 +656,9 @@ export class InteractionComponent
       const root = this._root.nativeElement;
       const height = root.parentElement.clientHeight;
       const width = root.parentElement.clientWidth;
-      const zoomMargin = 40;
-      const zoomHeight =
-        this.interactionElement.clientHeight * this.scale + zoomMargin;
-      const zoomWidth =
-        this.interactionElement.clientWidth * this.scale + zoomMargin;
+      const zoomMargin = 0;
+      const zoomHeight = this.interactionElement.clientHeight * this.scale + zoomMargin;
+      const zoomWidth = this.interactionElement.clientWidth * this.scale + zoomMargin;
 
       // -- Set the root element to the actual size of its parent;
       root.style.width = width + 'px';
@@ -685,14 +683,16 @@ export class InteractionComponent
       root.style.minWidth = width + 'px';
 
 
-      // -- Make the zoom container the actual scaled size plus zoomMargin;
+      // -- Make the zoom container the actual scaled pixel size;
       const zoomEl = this._zoomContainer.nativeElement;
       zoomEl.style.height = zoomHeight + 'px';
       zoomEl.style.width = zoomWidth + 'px';
+      zoomEl.style.margin = '20px';
+      zoomEl.style.display = 'inline-block';
 
       // -- Give the interaction element margins of half the zoomMargin
-      this.interactionElement.style.marginTop = zoomMargin / 2 + 'px';
-      this.interactionElement.style.marginLeft = zoomMargin / 2 + 'px';
+      // this.interactionElement.style.marginTop = zoomMargin / 2 + 'px';
+      // this.interactionElement.style.marginLeft = zoomMargin / 2 + 'px';
     }
   }
 

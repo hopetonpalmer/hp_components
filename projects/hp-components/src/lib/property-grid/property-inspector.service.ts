@@ -114,10 +114,6 @@ export class PropertyInspectorService {
     }
     let elements = this.interactionService.selectedElements;
     if (elements.length === 0 ) {
-      // -- Special case for interaction host element, it should not have a transparent designer
-      if (styleName === 'backgroundColor' && value === ColorVoid) {
-        value = 'white';
-      }
       elements = [this.activeElement];
     }
     elements.forEach((element: HTMLElement) => {

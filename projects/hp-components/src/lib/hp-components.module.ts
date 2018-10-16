@@ -51,6 +51,10 @@ import { setInjectorRef } from './scripts/lib-injector';
 import { WidgetGridComponent } from './widget-grid/widget-grid.component';
 import { AutoScrollDirective } from './directives/auto-scroll.directive';
 import { PreviewService } from './composer/preview.service';
+import { IframeComponent } from './widgets/iframe/iframe.component';
+import { HostedAppComponent } from './widgets/hosted-app/hosted-app.component';
+import { RemoteAppComponent } from './widgets/remote-app/remote-app.component';
+import { WidgetDirective } from './widgets/widget.directive';
 
 
 @NgModule({
@@ -99,7 +103,11 @@ import { PreviewService } from './composer/preview.service';
     TabItemComponent,
     TabStripComponent,
     WidgetGridComponent,
-    AutoScrollDirective
+    AutoScrollDirective,
+    IframeComponent,
+    HostedAppComponent,
+    RemoteAppComponent,
+    WidgetDirective
   ],
   exports: [
     InteractionComponent,
@@ -134,7 +142,10 @@ import { PreviewService } from './composer/preview.service';
     MediaSourcePropertyEditorComponent,
     StylePropertyEditorComponent,
     ThicknessPropertyEditorComponent,
-    ColorPickerComponent
+    ColorPickerComponent,
+    IframeComponent,
+    HostedAppComponent,
+    RemoteAppComponent
   ]
 })
 export class HpComponentsModule {

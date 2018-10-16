@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, EventEmitter } from '@angular/core';
+import { IframeComponent, RemoteAppComponent } from '../widgets';
+import { ComposerService } from './composer.service';
 
 @Component({
   selector: 'hpc-composer',
@@ -26,13 +28,24 @@ export class ComposerComponent implements OnInit, AfterViewInit {
   headerVisible = true;
 
 
-  constructor() {}
+  constructor(public composerService: ComposerService) {}
 
   ngOnInit() {
     this.registerWidgetTypes();
   }
 
-  registerWidgetTypes() {}
+  registerWidgetTypes() {
+    const widgets = [
+      {
+        group: 'General', icon: '',
+        widgets: [
+          { name: 'IFrame', componentClass: IframeComponent },
+          { name: 'Remoted Web App', componentClass: RemoteAppComponent }
+        ]
+      }
+    ];
+    this.composerService.registerWidgetGroups(widgets, true);
+  }
 
   ngAfterViewInit() {
 
