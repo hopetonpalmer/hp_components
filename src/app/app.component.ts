@@ -74,7 +74,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         ]
       },
     ];
-    this.composerService.registerWidgetGroups(widgets);
+    this.composerService.registerWidgetGroups(widgets, true);
   }
 
   ngAfterViewInit(): void {

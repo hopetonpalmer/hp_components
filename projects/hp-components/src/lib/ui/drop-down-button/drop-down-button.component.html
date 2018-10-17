@@ -15,6 +15,7 @@
     [cdkConnectedOverlayOrigin]="trigger"
     [cdkConnectedOverlayOpen]="isOpen"
     [cdkConnectedOverlayHasBackdrop] = true
+    [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
     (backdropClick)="close()" >
     <div [style.min-width]= "popupWidth">
       <ng-content></ng-content>

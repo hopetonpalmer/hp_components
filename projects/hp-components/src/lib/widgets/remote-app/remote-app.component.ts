@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PopupService } from '../../ui/popup/popup.service';
 
 @Component({
   selector: 'hpc-remote-app',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RemoteAppComponent implements OnInit {
 
-  constructor() { }
+  constructor( private popupDialog: PopupService) { }
 
   ngOnInit() {
   }
 
+  loadPopup() {
+    const dialogRef = this.popupDialog.open();
+  }
 }

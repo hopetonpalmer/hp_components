@@ -7,7 +7,8 @@ import { InjectorRef } from '../../../scripts/lib-injector';
 
 
 
-export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestroy, AfterViewInit {
+export abstract class PropertyEditor
+  implements IPropertyEditor, OnInit, OnDestroy, AfterViewInit {
   inspectorService: PropertyInspectorService;
 
   _isLoaded = false;
@@ -32,12 +33,8 @@ export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestr
     return this.inspectorService.activeElement;
   }
 
-  getPropertyValue(propertyName: string): any {
-    return this.inspectorService.getPropertyValue(propertyName);
-  }
-
   setStyleValue(styleName: string, value: string) {
-     this.inspectorService.setStyleValue(styleName, value);
+    this.inspectorService.setStyleValue(styleName, value);
   }
 
   getStyleValue(styleName: string): string {
@@ -52,6 +49,9 @@ export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestr
     return this.inspectorService.getElementPropValue(styleName);
   }
 
+  getPropertyValue(propertyName: string): any {
+    return this.inspectorService.getPropertyValue(propertyName);
+  }
 
   async setPropertyValue(propertyName: string, value: any) {
     await this.inspectorService.setPropertyValueAsync(propertyName, value);
@@ -64,9 +64,11 @@ export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestr
   elementChanged() {}
 
   ngOnInit(): void {
-     this._elementChangeSubscription = this.inspectorService.interactionService.selectedElements$.subscribe(() => {
+    this._elementChangeSubscription = this.inspectorService.interactionService.selectedElements$.subscribe(
+      () => {
         this.elementChanged();
-     });
+      }
+    );
   }
 
   ngAfterViewInit(): void {
@@ -74,8 +76,8 @@ export abstract class PropertyEditor implements IPropertyEditor, OnInit, OnDestr
   }
 
   ngOnDestroy(): void {
-     if (this._elementChangeSubscription) {
-       this._elementChangeSubscription.unsubscribe();
-     }
+    if (this._elementChangeSubscription) {
+      this._elementChangeSubscription.unsubscribe();
+    }
   }
 }

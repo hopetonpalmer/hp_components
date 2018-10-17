@@ -1,6 +1,5 @@
 import { Inspectable, Inspect } from '../decorator';
-import { ElementRef, Component } from '@angular/core';
-import { InjectorRef } from '../scripts/lib-injector';
+import { ElementRef} from '@angular/core';
 
 export interface IWidget {
   widgetName: string;
@@ -10,10 +9,6 @@ export interface IWidget {
 }
 
 @Inspectable()
-@Component({
-  selector: 'hpc-widget',
-  styleUrls: ['./widget.css']
-})
 export abstract class WidgetBaseComponent implements IWidget {
 
   @Inspect()

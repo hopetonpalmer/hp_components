@@ -3,17 +3,22 @@ import { BehaviorSubject } from 'rxjs';
 import { InteractionService } from '../interaction/interaction.service';
 import { camelToDash } from '../scripts/strings';
 import { ColorVoid } from '../ui/color-picker/helpers';
+import { IInspectConfig } from 'hp-components/public_api';
 
 
 
 @Injectable()
 export class PropertyInspectorService {
-
   styleInspectorMap = new Map<string, any>();
   propertyInspectorMap = new Map<string, any>();
   componentInspectorMap = new Map<any, any>();
 
   canAcceptChanges = true;
+
+  /**
+   * Gets or sets the property inspector config for the editor that is currently being requested.
+  */
+  activeEditorFor: IInspectConfig;
 
   /**
    * Gets the first active component from the selectedComponents array.
@@ -50,7 +55,7 @@ export class PropertyInspectorService {
   setPropertyValueAsync(propertyName: string, value: any): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (!this.canAcceptChanges) {
-         reject('Cannot accept changes!');
+        reject('Cannot accept changes!');
       }
       try {
         const components = this.interactionService.selectedComponents;
@@ -73,9 +78,9 @@ export class PropertyInspectorService {
    */
   get activeElement(): HTMLElement {
     if (!this.interactionService.hasSelectedElements) {
-       if (this.activeComponent) {
-         return this.interactionService.getComponentRoot(this.activeComponent);
-       }
+      if (this.activeComponent) {
+        return this.interactionService.getComponentRoot(this.activeComponent);
+      }
     }
     const elements = this.interactionService.selectedElements;
     if (elements && elements.length > 0) {
@@ -93,7 +98,10 @@ export class PropertyInspectorService {
   getStyleValue(styleName: string): string {
     if (this.activeElement) {
       try {
-        const result = getComputedStyle(this.activeElement).getPropertyValue(camelToDash(styleName)) || this.activeElement.style[styleName];
+        const result =
+          getComputedStyle(this.activeElement).getPropertyValue(
+            camelToDash(styleName)
+          ) || this.activeElement.style[styleName];
         return result;
       } catch (error) {
         console.error(error);
@@ -113,11 +121,11 @@ export class PropertyInspectorService {
       return;
     }
     let elements = this.interactionService.selectedElements;
-    if (elements.length === 0 ) {
+    if (elements.length === 0) {
       elements = [this.activeElement];
     }
     elements.forEach((element: HTMLElement) => {
-      if ((element.style[styleName]) !== value) {
+      if (element.style[styleName] !== value) {
         element.style[styleName] = value;
       }
     });

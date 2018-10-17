@@ -526,9 +526,7 @@ export class InteractionComponent
     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
       component
     );
-    const componentRef = this.viewContainer.createComponent(
-      componentFactory
-    ) as any;
+    const componentRef = this.viewContainer.createComponent(componentFactory);
     const el = componentRef.location.nativeElement;
     el.id = shortid.generate();
     el['componentType'] = component.name;

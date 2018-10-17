@@ -82,6 +82,7 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getPropertyEditor(prop: IInspectConfig): any {
+    this._inspectorService.activeEditorFor = prop;
     return prop.editorClass
       ? prop.editorClass
       : this._inspectorService.getPropertyEditor(prop.propType);

@@ -15,6 +15,11 @@
   --hpc-disable-color: gray;
   --hpc-inactive-color: rgb(182, 182, 182);
 
+  --hpc-panel-background:  white;
+  --hpc-panel-color: rgb(36, 36, 36);
+  --hpc-panel-header-background: rgb(63, 63, 63);
+  --hpc-panel-header-color: white;
+  --hpc-panel-border-color: gray;
 
   --hpc-header-background: rgb(56, 56, 56);
   --hpc-header-color: rgb(255, 255, 255);
@@ -89,6 +94,13 @@
 
 .hpc-child-container {
 
+}
+
+.hpc-popup :host {
+  background: var(--hpc-panel-background);
+  color: var(--hpc-panel-color);
+  border: 1px solid var(--hpc-panel-barder-color);
+  padding: 10px;
 }
 
 .hpc-property-grid {

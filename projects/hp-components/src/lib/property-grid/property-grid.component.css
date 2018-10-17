@@ -22,6 +22,15 @@
   width: 100%;
 }
 
+.component-property {
+  display: grid;
+  grid-template-columns: auto;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid gray;
+  margin-bottom: 5px;
+}
+
 .settings-container {
   display: flex;
   flex-direction: column;

@@ -55,6 +55,8 @@ import { IframeComponent } from './widgets/iframe/iframe.component';
 import { HostedAppComponent } from './widgets/hosted-app/hosted-app.component';
 import { RemoteAppComponent } from './widgets/remote-app/remote-app.component';
 import { WidgetDirective } from './widgets/widget.directive';
+import { PopupComponent } from './ui/popup/popup.component';
+import { PopupService } from './ui/popup/popup.service';
 
 
 @NgModule({
@@ -107,7 +109,8 @@ import { WidgetDirective } from './widgets/widget.directive';
     IframeComponent,
     HostedAppComponent,
     RemoteAppComponent,
-    WidgetDirective
+    WidgetDirective,
+    PopupComponent
   ],
   exports: [
     InteractionComponent,
@@ -127,7 +130,8 @@ import { WidgetDirective } from './widgets/widget.directive';
     ComposerService,
     PersistenceService,
     PropertyInspectorService,
-    PreviewService
+    PreviewService,
+    PopupService
   ],
   entryComponents: [
     PanelComponent,
@@ -145,7 +149,8 @@ import { WidgetDirective } from './widgets/widget.directive';
     ColorPickerComponent,
     IframeComponent,
     HostedAppComponent,
-    RemoteAppComponent
+    RemoteAppComponent,
+    PopupComponent
   ]
 })
 export class HpComponentsModule {

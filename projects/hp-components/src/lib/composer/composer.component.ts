@@ -39,8 +39,20 @@ export class ComposerComponent implements OnInit, AfterViewInit {
       {
         group: 'General', icon: '',
         widgets: [
-          { name: 'IFrame', componentClass: IframeComponent },
-          { name: 'Remoted Web App', componentClass: RemoteAppComponent }
+          { name: 'IFrame', componentClass: IframeComponent }
+        ]
+      },
+      {
+        group: 'Web Apps', icon: '',
+        widgets: [
+          { name: 'Player Hosted App', componentClass: IframeComponent },
+          { name: 'Server Hosted App', componentClass: RemoteAppComponent }
+        ]
+      },
+      {
+        group: 'My Widgets', icon: '',
+        widgets: [
+
         ]
       }
     ];

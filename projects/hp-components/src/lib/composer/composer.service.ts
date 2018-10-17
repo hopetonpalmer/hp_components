@@ -54,11 +54,15 @@ export class ComposerService {
     this.registerComponentTypes();
   } */
 
-  registerWidetGroup(widgetGroup: IWidgetTypeGroup) {
+  registerWidetGroup(widgetGroup: IWidgetTypeGroup, merge = false) {
      const group = this._widgetGroups.find(x => x.group === widgetGroup.group);
      if (group) {
-       const groupIndex = this._widgetGroups.indexOf(group);
-       this._widgetGroups.splice(groupIndex, 1, widgetGroup);
+       if (merge) {
+         group.widgets = [...widgetGroup.widgets, ...group.widgets];
+       } else  {
+         const groupIndex = this._widgetGroups.indexOf(group);
+         this._widgetGroups.splice(groupIndex, 1, widgetGroup);
+       }
      } else {
        this._widgetGroups.push(widgetGroup);
      }
@@ -71,7 +75,7 @@ export class ComposerService {
     this._bulkRegistering = true;
     if (merge) {
        widgetGroups.forEach(group => {
-         this.registerWidetGroup(group);
+         this.registerWidetGroup(group, merge);
        });
     } else {
        this._widgetGroups = widgetGroups;

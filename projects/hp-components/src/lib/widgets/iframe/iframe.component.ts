@@ -1,15 +1,24 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { WidgetBaseComponent } from '../widget';
-import { InjectorRef } from '../../scripts/lib-injector';
 
 
 @Component({
   selector: 'hpc-iframe',
-  templateUrl: './iframe.component.html',
-  styleUrls: ['./iframe.component.css']
+  template: `<iframe #iframe><iframe>`,
+  styles: ['iframe { border: 0; }']
 })
 export class IframeComponent extends WidgetBaseComponent
   implements OnInit, AfterViewInit {
+
+  private _contentHeight: string;
+  private _contentWidth: string;
+  private _scrollable: boolean;
+  private _wmode = 'transparent';
+  private _queryString: string;
+  private _source =  'http://cmsfdxdev.s3.amazonaws.com/fdx/assets/apps/corp-comm/Company%20News/index.html';
+
+  isConfigurable: boolean;
+
   get contentHeight() {
     return this._contentHeight;
   }
@@ -71,18 +80,6 @@ export class IframeComponent extends WidgetBaseComponent
   constructor(elRef: ElementRef) {
     super(elRef);
   }
-  isConfigurable: boolean;
-
-  private _contentHeight: string;
-
-  private _contentWidth: string;
-
-  private _scrollable: boolean;
-  private _wmode = 'transparent';
-
-  private _queryString: string;
-
-  private _source = 'http://cmsfdxdev.s3.amazonaws.com/fdx/assets/apps/corp-comm/Company%20News/index.html';
 
   @ViewChild('iframe')
   private _iframe: ElementRef;

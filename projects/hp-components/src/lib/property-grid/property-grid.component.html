@@ -15,7 +15,8 @@
           <hpc-tab-strip #tabStrip2 [itemsSource]="['Properties','Styles']" (itemClick)="props_styles.isExpanded=true"></hpc-tab-strip>
         </div>
         <div [hidden]="tabStrip2.selectedItem !== 'Properties'" class="prop-style">
-          <div *ngFor="let prop of inspectableProperties; let propType=index">
+          <div class="component-property" *ngFor="let prop of inspectableProperties; let propType=index">
+              <div class="property-label">{{prop.displayName}}</div>
               <ng-container *ngComponentOutlet="getPropertyEditor(prop)"></ng-container>
           </div>
         </div>
