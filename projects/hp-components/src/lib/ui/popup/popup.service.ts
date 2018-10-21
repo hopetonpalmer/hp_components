@@ -29,7 +29,7 @@ export class PopupService {
     // -- Returns a PortalHost
     const overlayRef = this.createOverlay(popupConfig);
 
-    // -- Instantiale remote control
+    // -- Instantiate remote control
     const popupRef = new PopupRef(overlayRef);
 
     const overlayComponent = this.attachDialogContainer(overlayRef, popupConfig, popupRef);

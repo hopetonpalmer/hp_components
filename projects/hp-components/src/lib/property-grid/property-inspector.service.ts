@@ -15,10 +15,6 @@ export class PropertyInspectorService {
 
   canAcceptChanges = true;
 
-  /**
-   * Gets or sets the property inspector config for the editor that is currently being requested.
-  */
-  activeEditorFor: IInspectConfig;
 
   /**
    * Gets the first active component from the selectedComponents array.

@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
+    // this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
     const widgets = [
       {
         group: 'General', icon: '',

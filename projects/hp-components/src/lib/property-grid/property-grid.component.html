@@ -14,13 +14,10 @@
         <div class="hpc-flex-row" header>
           <hpc-tab-strip #tabStrip2 [itemsSource]="['Properties','Styles']" (itemClick)="props_styles.isExpanded=true"></hpc-tab-strip>
         </div>
-        <div [hidden]="tabStrip2.selectedItem !== 'Properties'" class="prop-style">
-          <div class="component-property" *ngFor="let prop of inspectableProperties; let propType=index">
-              <div class="property-label">{{prop.displayName}}</div>
-              <ng-container *ngComponentOutlet="getPropertyEditor(prop)"></ng-container>
-          </div>
+        <div [hidden]="tabStrip2.selectedItem !== 'Properties'" class="component-props">
+          <ng-container #componentProps ></ng-container>
         </div>
-        <div [hidden]="tabStrip2.selectedItem !== 'Styles'" class="prop-style">
+        <div #styleProps [hidden]="tabStrip2.selectedItem !== 'Styles'" class="syle-props">
           <ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})"></ng-container>
         </div>
       </hpc-expander>

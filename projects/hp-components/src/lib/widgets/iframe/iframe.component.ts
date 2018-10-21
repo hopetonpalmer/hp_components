@@ -4,18 +4,19 @@ import { WidgetBaseComponent } from '../widget';
 
 @Component({
   selector: 'hpc-iframe',
-  template: `<iframe #iframe><iframe>`,
-  styles: ['iframe { border: 0; }']
+  template: `
+      <iframe hpc-segment class="hpc-fill-parent" #iframe></iframe>
+  `,
+  styles: ['iframe {border: 0; }']
 })
 export class IframeComponent extends WidgetBaseComponent
   implements OnInit, AfterViewInit {
-
   private _contentHeight: string;
   private _contentWidth: string;
   private _scrollable: boolean;
   private _wmode = 'transparent';
   private _queryString: string;
-  private _source =  'http://cmsfdxdev.s3.amazonaws.com/fdx/assets/apps/corp-comm/Company%20News/index.html';
+  private _source = 'http://cmsfdxdev.s3.amazonaws.com/fdx/assets/apps/corp-comm/Company%20News/index.html';
 
   isConfigurable: boolean;
 

@@ -107,10 +107,11 @@ export class ItemsComponent implements OnInit {
   }
 
   itemClicked(item: any) {
-    event.stopPropagation();
+    // event.stopPropagation();
     this.selectedItem = item;
     this.itemClick.emit(item);
   }
+
 
   constructor() {}
 

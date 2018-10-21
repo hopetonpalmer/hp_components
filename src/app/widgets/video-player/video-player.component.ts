@@ -17,14 +17,6 @@ export class VideoPlayerComponent implements OnInit, AfterViewInit {
   source = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
 
-  @Inspect({ category: 'Other' })
-  @Input()
-  height: number;
-
-  @Inspect({ category: 'Other' })
-  @Input()
-  width: number;
-
   @Inspect({ propType: 'objectfit' })
   videoFit = 'contain';
 

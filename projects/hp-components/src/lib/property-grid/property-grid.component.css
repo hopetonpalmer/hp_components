@@ -6,7 +6,7 @@
 
 }
 
-.prop-style {
+.style-props, .component-props {
   margin-top: 1px;
   padding: 1px 0 ;
   box-sizing: border-box;

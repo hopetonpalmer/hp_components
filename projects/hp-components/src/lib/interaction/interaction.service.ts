@@ -229,7 +229,9 @@ export class InteractionService implements OnDestroy {
      const dataItems = [];
      if (elements && elements.length) {
        elements.forEach(element => {
-          if (!element.parentElement || !element.parentElement['componentType']) {
+         const parent = element.parentElement;
+         if (!parent || (!element.classList.contains('hpc-segment')
+          && !parent['componentType'] && !parent.classList.contains('hpc-segment'))) {
             const styles = dom.getAppliedStyles(element);
             const data = {
               'id': element.id,

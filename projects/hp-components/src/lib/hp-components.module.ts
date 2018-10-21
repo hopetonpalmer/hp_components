@@ -57,6 +57,8 @@ import { RemoteAppComponent } from './widgets/remote-app/remote-app.component';
 import { WidgetDirective } from './widgets/widget.directive';
 import { PopupComponent } from './ui/popup/popup.component';
 import { PopupService } from './ui/popup/popup.service';
+import { SegmentComponent } from './widgets/segment.component';
+
 
 
 @NgModule({
@@ -110,7 +112,8 @@ import { PopupService } from './ui/popup/popup.service';
     HostedAppComponent,
     RemoteAppComponent,
     WidgetDirective,
-    PopupComponent
+    PopupComponent,
+    SegmentComponent
   ],
   exports: [
     InteractionComponent,

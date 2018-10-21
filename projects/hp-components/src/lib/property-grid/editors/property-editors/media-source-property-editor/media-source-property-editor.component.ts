@@ -1,18 +1,17 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 
 @Component({
-  selector: 'hpc-media-source-property-editor',
-  templateUrl: './media-source-property-editor.component.html',
-  styleUrls: ['./media-source-property-editor.component.css']
+  selector: 'hpc-number-property-editor',
+  template: `
+  <div class="hpc-simple-editor">
+    <span>{{propertyConfig.displayName}}</span>
+    <textarea [value]="getPropertyValue()" (change)="setPropertyValue($event.target.value)"></textarea>
+  </div>`,
+  styleUrls: ['../../editor-styles.css']
 })
-export class MediaSourcePropertyEditorComponent extends PropertyEditor implements OnInit {
-
+export class MediaSourcePropertyEditorComponent extends PropertyEditor {
   constructor() {
-     super();
-   }
-
-  ngOnInit() {
+    super();
   }
-
 }

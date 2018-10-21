@@ -9,12 +9,14 @@ import { SelectorService, SelectionState, NudgeType } from '../selector/selector
 import * as dom from '../scripts/dom';
 import { Point } from '../scripts/math';
 import { InteractionService } from './interaction.service';
-import { Subject, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { Subject, Observable, Subscription, BehaviorSubject, fromEvent } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 import { ComposerService } from '../composer/composer.service';
 import { Inspectable, Inspect } from '../decorator';
 import * as shortid from 'shortid';
 import { ResizeObserver } from 'resize-observer';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+
 
 
 export type ICancellable = ( value: any )  => boolean;
@@ -44,7 +46,7 @@ export class InteractionComponent
   @ViewChild('zoomContainer')
   private _zoomContainer: ElementRef;
   @ViewChild('viewContainer', { read: ViewContainerRef })
-  viewContainer;
+  viewContainer: ViewContainerRef;
   @ViewChild('interactionHost')
   private _interactionElement: ElementRef;
   private _keyDownSubject = new Subject<KeyboardEvent>();
@@ -146,6 +148,7 @@ export class InteractionComponent
   @Inspect({ propType: 'number' })
   set height(value: number) {
     this._renderer.setStyle(this.interactionElement, 'height', value + 'px');
+    this.sizeToScale();
   }
   get height(): number {
     const bounds = dom.elementBounds(this.interactionElement as Element);
@@ -155,6 +158,7 @@ export class InteractionComponent
   @Inspect({ propType: 'number' })
   set width(value: number) {
     this._renderer.setStyle(this.interactionElement, 'width', value + 'px');
+    this.sizeToScale();
   }
   get width(): number {
     const bounds = dom.elementBounds(this.interactionElement as Element);
@@ -176,7 +180,8 @@ export class InteractionComponent
     this._sizeService.renderer = this._renderer;
     this._dragService.renderer = this._renderer;
     this._interactionService.renderer = this._renderer;
-    this._keyDownSubject.subscribe(e => this.keyDownHandler(e));
+    // this._keyDownSubject.asObservable().pipe(map(event => event.target.value),
+    // debounceTime(400)) .subscribe(e => this.keyDownHandler(e));
   }
 
   /**
@@ -204,7 +209,8 @@ export class InteractionComponent
    * @param e KeyboardEvent
    */
   keyDown(e: KeyboardEvent) {
-    this._keyDownSubject.next(e);
+    // this._keyDownSubject.next(e);
+    this.keyDownHandler(e);
   }
 
   keyDownHandler(e: KeyboardEvent) {
@@ -518,14 +524,8 @@ export class InteractionComponent
     this._interactionService.selectedElements = this._selectionService.clients;
   }
 
-  loadComponent(
-    component: any,
-    data: any,
-    select = true
-  ): { component: any; element: HTMLElement } {
-    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
-      component
-    );
+  loadComponent(component: any, data: any, select = true ) {
+    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
     const componentRef = this.viewContainer.createComponent(componentFactory);
     const el = componentRef.location.nativeElement;
     el.id = shortid.generate();
@@ -533,16 +533,18 @@ export class InteractionComponent
     el.className = 'hpc-widget hpc-composite ' + el.className;
     this._renderer.setStyle(el, 'box-sizing', 'border-box');
     this._renderer.setStyle(el, 'position', 'absolute');
-    if (el.children.length > 0) {
+    this._renderer.setStyle(el, 'zIndex', '0');
+/*     if (el.children.length > 0) {
       const root = el.children[0];
-      this._renderer.addClass(root, 'hcp-root');
+      this._renderer.addClass(root, 'hpc-root');
       this._renderer.setStyle(root, 'height', '100%');
       this._renderer.setStyle(root, 'width', '100%');
-    }
+    } */
     this._interactionService.components.push({ el: el, ref: componentRef });
     if (select) {
       this._selectionService.selectElement(el);
       this._interactionService.selectedElements = this._selectionService.clients;
+      this.interactionElement.focus();
     }
     this._cdRef.detectChanges();
     return { component: componentRef, element: el };
@@ -647,6 +649,8 @@ export class InteractionComponent
       this.sizeToScale();
     });
     ro.observe(this._root.nativeElement.parentElement);
+/*     fromEvent<any>(this._root.nativeElement, 'keydown').pipe(
+    ).subscribe(event => this.keyDownHandler(event)); */
   }
 
   private sizeToScale() {

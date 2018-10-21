@@ -4,7 +4,7 @@
 <ng-template #defaultItemsPanel>
   <div class="item" [ngClass]="{'hpc-stack-v': orientation === 'vertical',
    'hpc-stack-h': orientation === 'horizontal', 'wrap-content': wrapContent}">
-    <div (click)="itemClicked(item)" *ngFor="let item of itemsSource">
+      <div (click)="itemClicked(item)" *ngFor="let item of itemsSource">
       <div *ngIf="itemTemplate; else defaultItemTemplate">
         <ng-container *ngTemplateOutlet="itemTemplate; context:{$implicit: item}"></ng-container>
       </div>

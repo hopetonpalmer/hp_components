@@ -1,5 +1,6 @@
 import { splitToProperCase } from '../scripts/strings';
 import 'reflect-metadata';
+import { Type } from '@angular/core';
 
 const inspectableKey = Symbol('inspectable');
 export interface IInspectableConfig {
@@ -34,7 +35,7 @@ export interface IInspectConfig {
   category?: string;
   description?: string;
   displayName?: string;
-  editorClass?: any;
+  editorClass?: Type<any>;
   propType?: any;
   isStyle?: boolean;
   valueOptions?: any[];

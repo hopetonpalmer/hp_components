@@ -49,12 +49,23 @@ export abstract class PropertyEditor
     return this.inspectorService.getElementPropValue(styleName);
   }
 
-  getPropertyValue(propertyName: string): any {
-    return this.inspectorService.getPropertyValue(propertyName);
+  getPropertyValue(propertyName: string = null): any {
+    if (!propertyName && this.propertyConfig) {
+      propertyName = this.propertyConfig.propertyName;
+    }
+    if (propertyName) {
+      return this.inspectorService.getPropertyValue(propertyName);
+    }
+    return null;
   }
 
-  async setPropertyValue(propertyName: string, value: any) {
-    await this.inspectorService.setPropertyValueAsync(propertyName, value);
+  async setPropertyValue(value: any, propertyName: string = null) {
+    if (!propertyName && this.propertyConfig) {
+       propertyName = this.propertyConfig.propertyName;
+    }
+    if (propertyName) {
+      await this.inspectorService.setPropertyValueAsync(propertyName, value);
+    }
   }
 
   constructor() {
@@ -64,7 +75,7 @@ export abstract class PropertyEditor
   elementChanged() {}
 
   ngOnInit(): void {
-    this._elementChangeSubscription = this.inspectorService.interactionService.selectedElements$.subscribe(
+    this._elementChangeSubscription = this.inspectorService.interactionService.selectedElements$.subscribe (
       () => {
         this.elementChanged();
       }

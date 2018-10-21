@@ -55,6 +55,8 @@ export function defaultExcludeFromChildren(children: HTMLElement[]) {
     const child = children[i] as HTMLElement;
     if (child.className.indexOf('hpc-lasso-selector') > -1 ||
       child.getAttribute('skipChildLookup') === 'true' ||
+      child.getAttribute('hpc-segment') === 'true' ||
+      child.className.indexOf('hpc-segment') > -1 ||
       child.className.indexOf('hpc-element-selector') > -1 ||
       child.className.indexOf('hpc-drag-overlay') > -1 ||
       child.className.indexOf('grip-container') > -1 ||

@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, HostListener, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, HostListener, OnDestroy,
+  ChangeDetectionStrategy, ElementRef, ViewChild, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
 import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
 import { InteractionService } from '../interaction/interaction.service';
 import { PropertyInspectorService } from './property-inspector.service';
@@ -8,9 +9,11 @@ import {StringPropertyEditorComponent,
   ColorPropertyEditorComponent,
   FontPropertyEditorComponent,
   MediaSourcePropertyEditorComponent,
-  StylePropertyEditorComponent} from './editors/';
+  StylePropertyEditorComponent,
+  IPropertyEditor} from './editors/';
 import { properCase } from '../scripts/strings';
 import { Observable, Subscription } from 'rxjs';
+
 
 
 @Component({
@@ -19,8 +22,8 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })
 export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
-
   _selectedElementsSubscriber: Subscription;
+  _selectedComponentsSubscriber: Subscription;
 
   /**
    * Returns the first active component.
@@ -44,28 +47,6 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
     return null;
   }
 
-  /**
-   * Returns a style value of the first active component.
-   */
-  getActiveElementValue(styleName: string): any {
-     return this._inspectorService.getStyleValue(styleName);
-  }
-
-  /**
-   * Sets a style value for all active elements.
-  */
-  setActiveElementsValue(prop: string, value: string) {
-      this._inspectorService.setStyleValue(prop, value);
-  }
-
-  get inspectableComponentInfo(): IInspectableConfig {
-    return getInspectableComponentInfo(this.activeComponent);
-  }
-
-  get inspectableProperties(): IInspectConfig[] {
-    return getInspectPropertyInfos(this.activeComponent);
-  }
-
   get headerCaption(): string {
     let result = '';
     if (this.inspectableComponentInfo) {
@@ -77,12 +58,36 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
     return result;
   }
 
+  @ViewChild('componentProps', { read: ViewContainerRef })
+  componentPropsContainer: ViewContainerRef;
+
+  /**
+   * Returns a style value of the first active component.
+   */
+  getActiveElementValue(styleName: string): any {
+    return this._inspectorService.getStyleValue(styleName);
+  }
+
+  /**
+   * Sets a style value for all active elements.
+   */
+  setActiveElementsValue(prop: string, value: string) {
+    this._inspectorService.setStyleValue(prop, value);
+  }
+
+  get inspectableComponentInfo(): IInspectableConfig {
+    return getInspectableComponentInfo(this.activeComponent);
+  }
+
+  get inspectableProperties(): IInspectConfig[] {
+    return getInspectPropertyInfos(this.activeComponent);
+  }
+
   getPropType(prop: IInspectConfig) {
     return prop.propType;
   }
 
   getPropertyEditor(prop: IInspectConfig): any {
-    this._inspectorService.activeEditorFor = prop;
     return prop.editorClass
       ? prop.editorClass
       : this._inspectorService.getPropertyEditor(prop.propType);
@@ -92,47 +97,109 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
     private _cdRef: ChangeDetectorRef,
     private _inspectorService: PropertyInspectorService,
     private _interactionService: InteractionService,
-    private _changeDectorRef: ChangeDetectorRef
+    private _changeDectorRef: ChangeDetectorRef,
+    private _componentFactoryResolver: ComponentFactoryResolver
   ) {
     this.registerKnownInspectors();
   }
 
   private registerKnownInspectors() {
-    this._inspectorService.registerPropertyInspector('string', StringPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('text', StringPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('boolean', BooleanPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('number', NumberPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('color', ColorPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('backgroundColor', ColorPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('borderColor', ColorPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('font', FontPropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('src', MediaSourcePropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('mediaSource', MediaSourcePropertyEditorComponent);
-    this._inspectorService.registerPropertyInspector('style', StylePropertyEditorComponent);
+    this._inspectorService.registerPropertyInspector(
+      'string',
+      StringPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'text',
+      StringPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'boolean',
+      BooleanPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'number',
+      NumberPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'color',
+      ColorPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'backgroundColor',
+      ColorPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'borderColor',
+      ColorPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'font',
+      FontPropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'src',
+      MediaSourcePropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'mediaSource',
+      MediaSourcePropertyEditorComponent
+    );
+    this._inspectorService.registerPropertyInspector(
+      'style',
+      StylePropertyEditorComponent
+    );
     this.registerKnownStyleInspectors();
   }
 
   private registerKnownStyleInspectors() {
-    this._inspectorService.registerStyleInspector('background-color', ColorPropertyEditorComponent);
+    this._inspectorService.registerStyleInspector(
+      'background-color',
+      ColorPropertyEditorComponent
+    );
   }
 
-  @HostListener ('mouseenter', ['$event'])
+  @HostListener('mouseenter', ['$event'])
   mouseClick(event: MouseEvent) {
     this._inspectorService.canAcceptChanges = true;
   }
 
   ngOnInit() {
-    this._selectedElementsSubscriber = this._interactionService.selectedElements$.subscribe(() => {
-      this._inspectorService.canAcceptChanges = false;
-      // this._cdRef.detectChanges();
-    });
+    // this.loadComponentPropertyEditors();
+    this._selectedElementsSubscriber = this._interactionService.selectedElements$.subscribe(
+      () => {
+        this._inspectorService.canAcceptChanges = false;
+      }
+    );
+
+    this._selectedComponentsSubscriber = this._interactionService.selectedComponents$.subscribe(
+      () => {
+        this._inspectorService.canAcceptChanges = false;
+        this.loadComponentPropertyEditors();
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this._selectedElementsSubscriber.unsubscribe();
+    this._selectedComponentsSubscriber.unsubscribe();
   }
 
   ngAfterViewInit() {
     this._changeDectorRef.detectChanges();
+  }
+
+  loadComponentPropertyEditors() {
+    if (!this.componentPropsContainer) {
+      return;
+    }
+    this.componentPropsContainer.clear();
+    this.inspectableProperties.forEach(prop => {
+      const component = this.getPropertyEditor(prop);
+      if (component) {
+        const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
+        const componentRef = this.componentPropsContainer.createComponent(componentFactory);
+        (<IPropertyEditor>(componentRef.instance)).propertyConfig = prop;
+      }
+    });
   }
 }
