@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PopupOverlayService } from './popup-overlay.service';
+import { PageLoaderService } from './page-loader.service';
 
-describe('PopupOverlayService', () => {
+describe('ScreenLoaderService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: PopupOverlayService = TestBed.get(PopupOverlayService);
+    const service: PageLoaderService = TestBed.get(PageLoaderService);
     expect(service).toBeTruthy();
   });
 });

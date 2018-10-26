@@ -16,4 +16,8 @@ export class TabStripComponent extends ItemsComponent implements OnInit {
   ngOnInit() {
   }
 
+  tabClicked(item: any, e: Event) {
+    e.stopPropagation();
+    this.itemClicked(item);
+  }
 }

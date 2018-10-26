@@ -1,6 +1,6 @@
 <hpc-drop-down-button #ddButton>
    <div selection-box class="selection-box">{{displayMemberPath ? selectedItem[displayMemberPath] : selectedItem}}</div>
-   <div class="hpc-list-container">
+   <div class="hpc-list-container hpc-dropdown">
       <div *ngFor="let item of itemsSource"
             class='hpc-list-item'
             [ngClass]="{'hpc-item-selected': item===selectedItem}"

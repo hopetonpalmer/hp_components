@@ -147,7 +147,7 @@ export class InteractionComponent
 
   @Inspect({ propType: 'number' })
   set height(value: number) {
-    this._renderer.setStyle(this.interactionElement, 'height', value + 'px');
+    this.renderer.setStyle(this.interactionElement, 'height', value + 'px');
     this.sizeToScale();
   }
   get height(): number {
@@ -157,7 +157,7 @@ export class InteractionComponent
 
   @Inspect({ propType: 'number' })
   set width(value: number) {
-    this._renderer.setStyle(this.interactionElement, 'width', value + 'px');
+    this.renderer.setStyle(this.interactionElement, 'width', value + 'px');
     this.sizeToScale();
   }
   get width(): number {
@@ -168,18 +168,19 @@ export class InteractionComponent
   constructor(
     private _root: ElementRef,
     private _cdRef: ChangeDetectorRef,
-    private _renderer: Renderer2,
-    private _componentFactoryResolver: ComponentFactoryResolver,
     protected _composerService: ComposerService,
     private _dragService: DragService,
     private _sizeService: SizeService,
     private _interactionService: InteractionService,
-    private _selectionService: SelectorService
+    private _selectionService: SelectorService,
+    private _pageLoaderService: SelectorService,
+    public renderer: Renderer2,
+    public componentFactoryResolver: ComponentFactoryResolver,
   ) {
-    this._selectionService.renderer = this._renderer;
-    this._sizeService.renderer = this._renderer;
-    this._dragService.renderer = this._renderer;
-    this._interactionService.renderer = this._renderer;
+    this._selectionService.renderer = this.renderer;
+    this._sizeService.renderer = this.renderer;
+    this._dragService.renderer = this.renderer;
+    this._interactionService.renderer = this.renderer;
     // this._keyDownSubject.asObservable().pipe(map(event => event.target.value),
     // debounceTime(400)) .subscribe(e => this.keyDownHandler(e));
   }
@@ -405,7 +406,7 @@ export class InteractionComponent
       }
       this._dragService.clearDropZones(this.interactionElement);
     }
-    this._renderer.setStyle(this.interactionElement, 'cursor', this._cursor);
+    this.renderer.setStyle(this.interactionElement, 'cursor', this._cursor);
     this._lastDropZone = null;
     this._interactionService.selectedElements = this._selectionService.clients;
   }
@@ -436,9 +437,9 @@ export class InteractionComponent
     const pointerPos = new Point(e.pageX, e.pageY);
     const selector = this._selectionService.selectorAtPoint(pointerPos);
     if (selector && dom.elementDraggable(selector.clientEl)) {
-      this._renderer.setStyle(this.interactionElement, 'cursor', 'move');
+      this.renderer.setStyle(this.interactionElement, 'cursor', 'move');
     } else {
-      this._renderer.setStyle(this.interactionElement, 'cursor', 'default');
+      this.renderer.setStyle(this.interactionElement, 'cursor', 'default');
     }
   }
 
@@ -452,7 +453,7 @@ export class InteractionComponent
       if (dom.elementSizable(selector.clientEl)) {
         sizedElements.push(selector.clientEl);
         dom.assignBoundingRect(
-          this._renderer,
+          this.renderer,
           selector.overlay,
           selector.clientEl
         );
@@ -482,7 +483,7 @@ export class InteractionComponent
       if (dom.elementDraggable(selector.clientEl)) {
         movedElements.push(selector.clientEl);
         dom.assignPosition(
-          this._renderer,
+          this.renderer,
           nudgeType === NudgeType.Overlay
             ? selector.overlay
             : selector.selectorEl,
@@ -524,23 +525,22 @@ export class InteractionComponent
     this._interactionService.selectedElements = this._selectionService.clients;
   }
 
-  loadComponent(component: any, data: any, select = true ) {
-    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
+  loadComponent(component: any, data: any, select = true) {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
     const componentRef = this.viewContainer.createComponent(componentFactory);
     const el = componentRef.location.nativeElement;
     el.id = shortid.generate();
     el['componentType'] = component.name;
     el.className = 'hpc-widget hpc-composite ' + el.className;
-    this._renderer.setStyle(el, 'box-sizing', 'border-box');
-    this._renderer.setStyle(el, 'position', 'absolute');
-    this._renderer.setStyle(el, 'zIndex', '0');
-/*     if (el.children.length > 0) {
-      const root = el.children[0];
-      this._renderer.addClass(root, 'hpc-root');
-      this._renderer.setStyle(root, 'height', '100%');
-      this._renderer.setStyle(root, 'width', '100%');
-    } */
+    this.renderer.setStyle(el, 'box-sizing', 'border-box');
+    this.renderer.setStyle(el, 'position', 'absolute');
+    this.renderer.setStyle(el, 'zIndex', '0');
     this._interactionService.components.push({ el: el, ref: componentRef });
+    if (data) {
+      data.forEach(item => {
+        componentRef.instance[item.propertyName] = item.value;
+      });
+    }
     if (select) {
       this._selectionService.selectElement(el);
       this._interactionService.selectedElements = this._selectionService.clients;
@@ -559,7 +559,7 @@ export class InteractionComponent
       selector && dom.isContainer(selector.clientEl)
         ? selector.clientEl
         : this.interactionElement;
-    this._renderer.appendChild(parent, element);
+    this.renderer.appendChild(parent, element);
   }
 
   /**
@@ -613,7 +613,7 @@ export class InteractionComponent
   }
 
   ngOnInit() {
-    if (this.interactionElement && this._renderer) {
+    if (this.interactionElement && this.renderer) {
       this._interactionService.hostComponent = this;
       this._interactionService.interactionHost = this.interactionElement;
       this._selectionService.interactionHost = this.interactionElement;

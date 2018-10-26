@@ -26,9 +26,7 @@ export class VideoPlayerComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngOnInit() {
-    console.log('init');
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.video.nativeElement.muted = true;

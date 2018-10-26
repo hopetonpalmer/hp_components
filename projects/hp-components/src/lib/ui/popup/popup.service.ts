@@ -1,4 +1,4 @@
-import { Injectable, Injector, ComponentRef } from '@angular/core';
+import { Injectable, Injector, ComponentRef, Type } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 import { PopupComponent } from './popup.component';
@@ -6,7 +6,6 @@ import { PopupRef } from './popup-ref';
 import { POPUP_DATA } from './popup.tokens';
 
 interface PopupConfig {
-  panelClass?: string;
   hasBackdrop?: boolean;
   backdropClass?: string;
   data?: any;
@@ -15,30 +14,29 @@ interface PopupConfig {
 const DEFAULT_CONFIG: PopupConfig = {
   hasBackdrop: true,
   backdropClass: 'cdk-overlay-dark-backdrop',
-  panelClass: 'hpc-popup',
-  data: {}
+  data: {},
 };
 
 @Injectable()
 export class PopupService {
   constructor(private _injector: Injector, private _overlay: Overlay) {}
 
-  open(config: PopupConfig = {}): PopupRef {
+  open(componentClass: Type<any> = PopupComponent, config: PopupConfig = {}): PopupRef {
     const popupConfig = { ...DEFAULT_CONFIG, ...config };
 
     // -- Returns a PortalHost
-    const overlayRef = this.createOverlay(popupConfig);
+    const overlayRef = this.createOverlay(componentClass, popupConfig);
 
     // -- Instantiate remote control
     const popupRef = new PopupRef(overlayRef);
 
-    const overlayComponent = this.attachDialogContainer(overlayRef, popupConfig, popupRef);
+    this.attachDialogContainer(componentClass, overlayRef, popupConfig, popupRef);
 
     overlayRef.backdropClick().subscribe(() => popupRef.close());
     return popupRef;
   }
 
-  private getOverlayConfig(config: PopupConfig): OverlayConfig {
+  private getOverlayConfig(componentClass: Type<any>, config: PopupConfig): OverlayConfig {
     const positionStrategy = this._overlay
       .position()
       .global()
@@ -48,7 +46,7 @@ export class PopupService {
     const overlayConfig = new OverlayConfig({
       hasBackdrop: config.hasBackdrop,
       backdropClass: config.backdropClass,
-      panelClass: config.panelClass,
+      panelClass: componentClass.name,
       scrollStrategy: this._overlay.scrollStrategies.block(),
       positionStrategy
     });
@@ -56,8 +54,8 @@ export class PopupService {
     return overlayConfig;
   }
 
-  private createOverlay(config: PopupConfig) {
-    const overlayConfig = this.getOverlayConfig(config);
+  private createOverlay(componentClass: Type<any>, config: PopupConfig) {
+    const overlayConfig = this.getOverlayConfig(componentClass, config);
     return this._overlay.create(overlayConfig);
   }
 
@@ -73,10 +71,10 @@ export class PopupService {
     return new PortalInjector(this._injector, injectionTokens);
   }
 
-  private attachDialogContainer(overlayRef: OverlayRef, config: PopupConfig, dialogRef: PopupRef) {
+  private attachDialogContainer(componentClass: Type<any>, overlayRef: OverlayRef, config: PopupConfig, dialogRef: PopupRef) {
     const injector = this.createInjector(config, dialogRef);
-    const containerPortal = new ComponentPortal(PopupComponent, null, injector);
-    const containerRef: ComponentRef<PopupComponent> = overlayRef.attach(containerPortal);
+    const containerPortal = new ComponentPortal(componentClass, null, injector);
+    const containerRef = overlayRef.attach(containerPortal);
     return containerRef.instance;
   }
 }

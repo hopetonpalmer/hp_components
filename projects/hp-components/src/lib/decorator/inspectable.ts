@@ -38,6 +38,8 @@ export interface IInspectConfig {
   editorClass?: Type<any>;
   propType?: any;
   isStyle?: boolean;
+  isExternal?: boolean;
+  isHidden?: boolean;
   valueOptions?: any[];
   readonly propertyName?: string;
 }
@@ -49,7 +51,9 @@ export function Inspect(config: IInspectConfig = {}) {
       propertyName: key,
       displayName: displayName,
       propType: propType.name,
-      isStyle: false
+      isStyle: false,
+      isExternal: false,
+      isHidden: false
     }, config);
     Reflect.defineMetadata(inspectPropKey, propConfig, target, key);
 
@@ -66,6 +70,18 @@ export function getInspectPropertyInfos(target: any): IInspectConfig[] {
   let result = [];
   if (target) {
     result = Reflect.getMetadata(inspectPropsKey, target);
+    const externalProps = target['externalProps'] as any[];
+    if (externalProps) {
+       result = [...result, ...externalProps.reduce((list, item) => {
+           list.push({
+             propertyName: item.name,
+             displayName: splitToProperCase(item.name),
+             propType: item.type,
+             isExternal: true,
+             isVisible: true});
+           return list;
+       }, [])];
+    }
   }
   return result ? result : [];
 }

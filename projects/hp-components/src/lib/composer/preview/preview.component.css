@@ -1,0 +1,25 @@
+:host {
+  height: 100%;
+  width: 100%;
+  --closeHeight: 55px;
+}
+
+.close-container {
+  overflow:hidden;
+  padding: 12px 12px 0 0;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: right;
+  height: var(--closeHeight);
+  position: relative;
+  font-size: 35px;
+  z-index: 1000;
+  color: rgb(218, 214, 214);
+  cursor: pointer;
+  transition: height .75s ease-out, padding-top .75s ease, opacity .75s;
+}
+
+.hide-close {
+  height: 0;
+  padding-top: 0;
+  opacity: 0;
+}

@@ -1,6 +1,6 @@
 :host {
-  background-color: var(--hpc-container-background);
-  color: var(--hpc-container-color);
+  background-color: var(--hpc-panel-background);
+  color: var(--hpc-panel-color);
   font-size: 0.75em;
   user-select: none;
 
@@ -27,9 +27,11 @@
   grid-template-columns: auto;
   width: 100%;
   padding: 10px;
-  border: 1px solid gray;
+  border: var(--hpc-panel-border);
   margin-bottom: 5px;
 }
+
+
 
 .settings-container {
   display: flex;

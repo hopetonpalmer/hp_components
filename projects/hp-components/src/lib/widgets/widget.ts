@@ -6,6 +6,7 @@ export interface IWidget {
   isDesignMode: boolean;
   rootElement: HTMLElement;
   externalProps: any[];
+  invalidate();
 }
 
 @Inspectable()
@@ -14,9 +15,10 @@ export abstract class WidgetBaseComponent implements IWidget {
   @Inspect()
   widgetName: string;
 
-  isDesignMode: boolean;
-
+  @Inspect({isHidden: true})
   externalProps: any[];
+
+  isDesignMode: boolean;
 
   get rootElement(): HTMLElement {
      return this.elRef.nativeElement as HTMLElement;
@@ -38,4 +40,7 @@ export abstract class WidgetBaseComponent implements IWidget {
     this.isDesignMode = true;
   }
 
+  invalidate() {
+
+  }
 }

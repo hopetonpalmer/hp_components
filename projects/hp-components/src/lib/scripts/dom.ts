@@ -328,18 +328,25 @@ export function isSelectable(element: Element): boolean {
     element.parentElement && element.parentElement.classList.contains('hpc-container')) ;
 }
 
-export function pauseVideos(element: Element) {
-  if (!element) {
-    return;
-  }
-  if (element instanceof HTMLVideoElement) {
-    element.pause();
-  }
+export function pauseVideos(element: Element): HTMLVideoElement[] {
   const videos = element.querySelectorAll('video');
+  const pausedVideos = [];
   for (let index = 0; index < videos.length; index++) {
-    const el = videos[index];
-    pauseVideos(el);
+    const video = videos[index];
+    if (isVideoPlaying(video)) {
+      video.pause();
+      pausedVideos.push(video);
+    }
   }
+  return pausedVideos;
+}
+
+export function playVideos(videos: HTMLVideoElement[]) {
+   videos.forEach(video => video.play());
+}
+
+export function isVideoPlaying(video: HTMLVideoElement): boolean {
+  return video && video.currentTime > 0 && !video.paused && !video.ended;
 }
 
 export function hasVideo(element: Element): boolean {
@@ -398,4 +405,37 @@ export function centerFlexChild (child: HTMLElement) {
      child.style.alignSelf = parentSize.width > childSize.width ? 'center' : '';
      child.style.justifySelf = parentSize.height > childSize.height ? 'center' : '';
    }
+}
+
+export function requestFullScreen(element: HTMLElement): any {
+  const doc = <any>element;
+
+  if (doc.msRequestFullscreen) {
+    return doc.msRequestFullscreen();
+  } else if (doc.requestFullscreen) {
+    return doc.requestFullscreen();
+  } else if (doc.mozRequestFullScreen) {
+    return doc.mozRequestFullScreen();
+  } else if (doc.webkitRequestFullScreen) {
+    return doc.webkitRequestFullScreen();
+  }
+}
+
+export function exitFullScreen(element: HTMLElement) {
+  const doc = <any>element;
+
+  if (doc.msExitFullscreen) {
+    doc.msExitFullscreen();
+  } else if (doc.exitFullscreen) {
+    doc.exitFullscreen();
+  } else if (doc.mozCancelFullScreen) {
+    doc.mozCancelFullScreen();
+  } else if (doc.webkitCancelFullScreen) {
+    doc.webkitCancelFullScreen();
+  }
+}
+
+export function enableKeyboardInteraction(element: HTMLElement) {
+  element.tabIndex = 0;
+  element.focus();
 }

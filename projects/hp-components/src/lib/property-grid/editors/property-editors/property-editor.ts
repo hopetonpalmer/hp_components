@@ -64,7 +64,7 @@ export abstract class PropertyEditor
        propertyName = this.propertyConfig.propertyName;
     }
     if (propertyName) {
-      await this.inspectorService.setPropertyValueAsync(propertyName, value);
+      await this.inspectorService.setPropertyValueAsync(propertyName, value, this.propertyConfig.isExternal);
     }
   }
 

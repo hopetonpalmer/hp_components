@@ -3,7 +3,7 @@
 :host {
   display: grid;
   grid-template-columns: 1fr auto;
-  border: var(--hpc-container-border);
+  border: var(--hpc-panel-border);
 }
 
 .selection-box {

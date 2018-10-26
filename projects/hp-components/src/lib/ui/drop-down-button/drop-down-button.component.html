@@ -17,7 +17,7 @@
     [cdkConnectedOverlayHasBackdrop] = true
     [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
     (backdropClick)="close()" >
-    <div [style.min-width]= "popupWidth">
+    <div class="hpc-popup" [style.min-width]="popupWidth">
       <ng-content></ng-content>
     </div>
 </ng-template>

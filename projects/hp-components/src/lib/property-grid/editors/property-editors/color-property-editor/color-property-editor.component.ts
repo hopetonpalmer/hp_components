@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { PropertyEditor } from '../property-editor';
 
 @Component({
   selector: 'hpc-color-property-editor',
-  templateUrl: './color-property-editor.component.html',
-  styleUrls: ['./color-property-editor.component.css']
+  template: `
+  <div class="hpc-simple-editor">
+    <span>{{propertyConfig.displayName}}</span>
+    <hpc-color-combo-box
+      [selectedColor]="getPropertyValue()"
+      (selectedColorChange)="setPropertyValue($event)">
+    </hpc-color-combo-box>
+  </div>`,
+  styleUrls: ['../../editor-styles.css']
 })
-export class ColorPropertyEditorComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+export class ColorPropertyEditorComponent extends PropertyEditor implements OnInit {
+  constructor() {
+    super();
   }
 
+  ngOnInit() {}
 }

@@ -22,23 +22,23 @@
 }
 
 .composer_container > * {
-/*   --hpc-container-header: rgb(63, 63, 63);
-  --hpc-container-header-color: rgb(29, 202, 38);
-  --hpc-container-main: rgb(63, 63, 63); */
+/*   --hpc-panel-header: rgb(63, 63, 63);
+  --hpc-panel-header-color: rgb(29, 202, 38);
+  --hpc-panel-main: rgb(63, 63, 63); */
 }
 
 .composer_container-widgets {
   width: 305px;
-  background-color: var(--hpc-container-background);
+  background-color: var(--hpc-panel-background);
 }
 
 .composer_container-properties {
   width: 325px;
-  background-color: var(--hpc-container-background);
+  background-color: var(--hpc-panel-background);
 }
 
 .composer-content {
-  background-color: var(--hpc-container-main);
+  background-color: var(--hpc-panel-main);
   flex: 1;
 }
 
@@ -55,7 +55,7 @@
   display: flex;
   flex-wrap: wrap;
   height: 75px;
-  background: gray;
+  background: var(--hpc-toolbar-background);
 }
 
 .body-row {

@@ -80,7 +80,7 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get inspectableProperties(): IInspectConfig[] {
-    return getInspectPropertyInfos(this.activeComponent);
+    return getInspectPropertyInfos(this.activeComponent).filter(x => !x.isHidden);
   }
 
   getPropType(prop: IInspectConfig) {

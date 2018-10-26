@@ -2,6 +2,7 @@ import { Injectable, Type } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { IWidgetType, IWidgetTypeGroup } from '../models/widget-type';
 import { InteractionService } from '../interaction/interaction.service';
+import { PageLoaderService } from '../services/page-loader.service';
 
 
 @Injectable()
@@ -35,7 +36,7 @@ export class ComposerService {
     return result;
   } */
 
-  constructor(public interactionService: InteractionService) {}
+  constructor(public interactionService: InteractionService, public pageLoaderService: PageLoaderService) {}
 
   getRegisteredComponentClass(className: string): Type<any> {
     const widgetType = this.registeredWidgets.find(
@@ -86,6 +87,8 @@ export class ComposerService {
   }
 
   private registerComponentTypes() {
-    this.interactionService.registerComponentTypes(this.registeredWidgets.map(w => w.componentClass));
+    const regWidgets = this.registeredWidgets.map(w => w.componentClass);
+    this.interactionService.registerComponentTypes(regWidgets);
+    this.pageLoaderService.registerComponentTypes(regWidgets);
   }
 }

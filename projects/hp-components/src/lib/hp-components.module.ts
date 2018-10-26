@@ -3,6 +3,7 @@ import { NgModule, Injector } from '@angular/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 import { InteractionComponent } from './interaction/interaction.component';
 import { ComposerComponent } from './composer/composer.component';
@@ -50,7 +51,7 @@ import { PersistenceService } from './services/persistence.service';
 import { setInjectorRef } from './scripts/lib-injector';
 import { WidgetGridComponent } from './widget-grid/widget-grid.component';
 import { AutoScrollDirective } from './directives/auto-scroll.directive';
-import { PreviewService } from './composer/preview.service';
+import { PreviewService } from './composer/preview/preview.service';
 import { IframeComponent } from './widgets/iframe/iframe.component';
 import { HostedAppComponent } from './widgets/hosted-app/hosted-app.component';
 import { RemoteAppComponent } from './widgets/remote-app/remote-app.component';
@@ -58,11 +59,13 @@ import { WidgetDirective } from './widgets/widget.directive';
 import { PopupComponent } from './ui/popup/popup.component';
 import { PopupService } from './ui/popup/popup.service';
 import { SegmentComponent } from './widgets/segment.component';
+import { WebAppComponent } from './widgets/web-app/web-app.component';
+import { PreviewComponent } from './composer/preview/preview.component';
 
 
 
 @NgModule({
-  imports: [OverlayModule, A11yModule, CommonModule],
+  imports: [OverlayModule, A11yModule, CommonModule, HttpClientModule],
   declarations: [
     InteractionComponent,
     ComposerComponent,
@@ -113,7 +116,9 @@ import { SegmentComponent } from './widgets/segment.component';
     RemoteAppComponent,
     WidgetDirective,
     PopupComponent,
-    SegmentComponent
+    SegmentComponent,
+    WebAppComponent,
+    PreviewComponent
   ],
   exports: [
     InteractionComponent,
@@ -123,7 +128,8 @@ import { SegmentComponent } from './widgets/segment.component';
     HeaderComponent,
     ListViewComponent,
     HeaderComponent,
-    TabStripComponent
+    TabStripComponent,
+    ComboBoxComponent
   ],
   providers: [
     DragService,
@@ -150,10 +156,12 @@ import { SegmentComponent } from './widgets/segment.component';
     StylePropertyEditorComponent,
     ThicknessPropertyEditorComponent,
     ColorPickerComponent,
+    WebAppComponent,
     IframeComponent,
     HostedAppComponent,
     RemoteAppComponent,
-    PopupComponent
+    PopupComponent,
+    PreviewComponent
   ]
 })
 export class HpComponentsModule {

@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { InteractionService } from '../interaction/interaction.service';
 import { camelToDash } from '../scripts/strings';
-import { ColorVoid } from '../ui/color-picker/helpers';
-import { IInspectConfig } from 'hp-components/public_api';
 
 
 
@@ -48,16 +46,23 @@ export class PropertyInspectorService {
    * @param * value
    * @returns Promise<boolean>
    */
-  setPropertyValueAsync(propertyName: string, value: any): Promise<boolean> {
+  setPropertyValueAsync(propertyName: string, value: any, isExternal = false): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (!this.canAcceptChanges) {
-        reject('Cannot accept changes!');
+        resolve(false);
       }
       try {
         const components = this.interactionService.selectedComponents;
         if (components) {
           components.forEach(component => {
             component[propertyName] = value;
+            if (isExternal) {
+              const externalProp = (component['externalProps'] as any[]).find(x => x.name === propertyName);
+              if (externalProp) {
+                externalProp.value = value;
+                component.invalidate();
+              }
+            }
           });
           resolve(true);
         }

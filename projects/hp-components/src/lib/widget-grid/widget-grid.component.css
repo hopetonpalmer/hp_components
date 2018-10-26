@@ -3,8 +3,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  background-color: var(--hpc-container-background);
-  color: var(--hpc-container-color);
+  background-color: var(--hpc-panel-background);
+  color: var(--hpc-panel-color);
   font-size: 0.75em;
   user-select: none;
   height: 100%;
@@ -21,11 +21,11 @@
 }
 
 .widget-item:hover .widget-icon {
-   border-color: var(--hpc-hover-border-color);
+   border-color: var(--hpc-hover-background);
 }
 
 .widget-icon {
-   border: var(--hpc-container-border);
+   border: var(--hpc-panel-border);
    height: 50px;
    width: 55px;
    margin-bottom: 5px;

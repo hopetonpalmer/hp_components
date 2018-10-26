@@ -5,6 +5,8 @@ import * as dom from '../scripts/dom';
 import { PersistenceService, StorageType } from '../services/persistence.service';
 import * as shortid from 'shortid';
 import { createElement } from '@angular/core/src/view/element';
+import { getInspectPropertyInfos } from '../decorator';
+import { PageLoaderService } from '../services/page-loader.service';
 
 
 
@@ -83,7 +85,9 @@ export class InteractionService implements OnDestroy {
   renderer: Renderer2;
   interactionHost: HTMLElement;
 
-  constructor(private _selectionService: SelectorService, private _persistenceService: PersistenceService) {}
+  constructor(private _selectionService: SelectorService,
+     private _pageLoaderService: PageLoaderService,
+     private _persistenceService: PersistenceService) {}
 
   findComponentRef(el: Element) {
     const comp = this.components.find(x => x.el === el);
@@ -186,32 +190,36 @@ export class InteractionService implements OnDestroy {
     return element;
   }
 
-  addContainer(element: HTMLElement = null) {
+  addContainer(element: HTMLElement = null): HTMLElement {
     if (!element) {
       element = this.renderer.createElement('div');
       this.renderer.addClass(element, 'hpc-new-element');
     }
     this.renderer.addClass(element, 'hpc-dropzone');
     this.renderer.addClass(element, 'hpc-container');
-    this.addElement(element);
+    return this.addElement(element);
   }
 
-  addComponent(componentType: any) {
-    this.hostComponent.loadComponent(componentType, null);
+  addComponent(componentType: any): any {
+    const result = this.hostComponent.loadComponent(componentType, null);
     this._addComponentSubject.next(componentType);
+    return result;
   }
 
   addWidget(klass: Type<any>) {
-     if (klass.name.startsWith('HTML')) {
+    let element: HTMLElement;
+    const children = dom.childrenOf(this.interactionHost, false);
+    if (klass.name.startsWith('HTML')) {
        const tagName = klass.name.replace('HTML', '').replace('Element', '').toLowerCase();
        if (tagName === 'div') {
-         this.addContainer();
+         element = this.addContainer();
        } else {
-         this.addElement(null, true, tagName);
+         element = this.addElement(null, true, tagName);
        }
      } else {
-        this.addComponent(klass);
+        element = this.addComponent(klass).element;
      }
+     element.style.zIndex = children.length.toString();
   }
 
   selectAll() {
@@ -225,30 +233,37 @@ export class InteractionService implements OnDestroy {
   }
 
   save(key: string, storageType: StorageType = StorageType.local) {
-     const elements = dom.childrenOf(this.hostComponent.interactionElement, true) as HTMLElement[];
-     const dataItems = [];
-     if (elements && elements.length) {
-       elements.forEach(element => {
-         const parent = element.parentElement;
-         if (!parent || (!element.classList.contains('hpc-segment')
-          && !parent['componentType'] && !parent.classList.contains('hpc-segment'))) {
-            const styles = dom.getAppliedStyles(element);
-            const data = {
-              'id': element.id,
-              'parentId': element.parentElement ? element.parentElement.id : '',
-              'componentType': element['componentType'],
-              'tagName': element.tagName,
-              'styles': styles,
-              'classes': element.className
-            };
-            dataItems.push(data);
-          }
-       });
-     }
+    const dataItems = this.getDataItems();
     this._persistenceService.set(key, dataItems, storageType);
   }
 
-  load(key: string, storageType: StorageType = StorageType.local) {
+  getDataItems(): any[] {
+    const elements = dom.childrenOf(this.hostComponent.interactionElement, true) as HTMLElement[];
+    const dataItems = [];
+    if (elements && elements.length) {
+      elements.forEach(element => {
+        const parent = element.parentElement;
+        const componentRef = this.findComponentRef(element);
+        if (!parent || (!element.classList.contains('hpc-segment')
+          && !parent['componentType'] && !parent.classList.contains('hpc-segment'))) {
+          const styles = dom.getAppliedStyles(element);
+          const data = {
+            'id': element.id,
+            'parentId': element.parentElement ? element.parentElement.id : '',
+            'componentType': element['componentType'],
+            'tagName': element.tagName,
+            'styles': styles,
+            'classes': element.className,
+            'props': componentRef ? this.getPersistableProps(componentRef.instance) : null
+          };
+          dataItems.push(data);
+        }
+      });
+    }
+    return dataItems;
+  }
+
+  xload(key: string, storageType: StorageType = StorageType.local) {
      const loadedElements: HTMLElement[] = [];
      this.deleteAll();
      const dataItems = this._persistenceService.get(key, storageType);
@@ -258,7 +273,7 @@ export class InteractionService implements OnDestroy {
           if (item.componentType) {
              const componentClass = this._componentTypes.find(x => x.name === item.componentType);
              if (componentClass) {
-               el = this.hostComponent.loadComponent(componentClass, null, false).element;
+               el = this.hostComponent.loadComponent(componentClass, item['props'], false).element;
              } else {
                console.error(item.componentType + ' is not registered!');
              }
@@ -284,6 +299,26 @@ export class InteractionService implements OnDestroy {
        });
        this.selectedElements = [];
      }
+  }
+
+  load(key: string, storageType: StorageType = StorageType.local) {
+    this.deleteAll();
+    const dataItems = this._persistenceService.get(key, storageType);
+    this._pageLoaderService.loadPage(
+      this.interactionHost,
+      this.hostComponent.renderer,
+      dataItems,
+      this.hostComponent.componentFactoryResolver,
+      this.hostComponent.viewContainer,
+      loadedComp => this.components.push({ el: loadedComp.element, ref: loadedComp.component })
+    );
+    this.selectedElements = [];
+  }
+
+  getPersistableProps(obj: any) {
+    const props = getInspectPropertyInfos(obj);
+    const result = props.map(k => ({ propertyName: k.propertyName, value: obj[k.propertyName] }));
+    return result;
   }
 
   registerComponentTypes(componentTypes: Type<any>[]) {

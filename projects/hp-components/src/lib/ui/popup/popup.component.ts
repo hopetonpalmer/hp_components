@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, TemplateRef } from '@angular/core';
 import { PopupRef } from './popup-ref';
 import { POPUP_DATA } from './popup.tokens';
 

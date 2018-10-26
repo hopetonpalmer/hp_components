@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { WidgetBaseComponent } from '../widget';
+import { Inspect } from '../../decorator';
 
 
 @Component({
@@ -16,7 +17,8 @@ export class IframeComponent extends WidgetBaseComponent
   private _scrollable: boolean;
   private _wmode = 'transparent';
   private _queryString: string;
-  private _source = 'http://cmsfdxdev.s3.amazonaws.com/fdx/assets/apps/corp-comm/Company%20News/index.html';
+  private _source =
+    'http://cmsfdxdev.s3.amazonaws.com/fdx/assets/apps/corp-comm/Company%20News/index.html';
 
   isConfigurable: boolean;
 
@@ -68,13 +70,16 @@ export class IframeComponent extends WidgetBaseComponent
       this.setIframeSource();
     }
   }
+
+  @Inspect()
   get source(): string {
     return this._source;
   }
+
   set source(value: string) {
     if (value && value !== this._source) {
       this._source = value;
-      this.setIframeSource();
+      this.doSetSource(value);
     }
   }
 
@@ -87,6 +92,10 @@ export class IframeComponent extends WidgetBaseComponent
 
   get iframe(): HTMLIFrameElement {
     return this._iframe.nativeElement as HTMLIFrameElement;
+  }
+
+  protected doSetSource(value: string) {
+    this.setIframeSource();
   }
 
   protected setIframeSource() {
@@ -120,7 +129,7 @@ export class IframeComponent extends WidgetBaseComponent
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.setIframeSource();
+    // this.setIframeSource();
     this.setIframeHeight(this.contentHeight);
     this.setIframeWidth(this.contentWidth);
     if (this.isDesignMode) {

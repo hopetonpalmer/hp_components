@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, AfterViewInit, EventEmitter } from '@angular/core';
-import { IframeComponent, RemoteAppComponent } from '../widgets';
+import { IframeComponent, RemoteAppComponent, WebAppComponent } from '../widgets';
 import { ComposerService } from './composer.service';
+import { PopupService } from '../ui/popup/popup.service';
+import { PreviewComponent } from './preview/preview.component';
+
 
 @Component({
   selector: 'hpc-composer',
@@ -28,10 +31,17 @@ export class ComposerComponent implements OnInit, AfterViewInit {
   headerVisible = true;
 
 
-  constructor(public composerService: ComposerService) {}
+  constructor(public composerService: ComposerService, private popupDialog: PopupService) {}
 
   ngOnInit() {
     this.registerWidgetTypes();
+  }
+
+  preview() {
+    const config = {
+      hasBackdrop: false,
+    };
+    const dialogRef = this.popupDialog.open(PreviewComponent, config);
   }
 
   registerWidgetTypes() {
@@ -46,7 +56,8 @@ export class ComposerComponent implements OnInit, AfterViewInit {
         group: 'Web Apps', icon: '',
         widgets: [
           { name: 'Player Hosted App', componentClass: IframeComponent },
-          { name: 'Server Hosted App', componentClass: RemoteAppComponent }
+          { name: 'Server Hosted App', componentClass: RemoteAppComponent },
+          { name: 'Configurable Web App', componentClass: WebAppComponent }
         ]
       },
       {

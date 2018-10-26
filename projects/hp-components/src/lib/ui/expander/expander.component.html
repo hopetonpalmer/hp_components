@@ -1,4 +1,4 @@
-<div #expander class="expander" (click)=" ($event.target === expander || $event.target === arrow) ? toggleExpanded() : ''" >
+<div #expander class="expander" (click)="toggleExpanded()" >
   <div *ngIf="caption" class="header-content">{{caption}}</div>
   <div *ngIf="!caption" class="header-content">
     <ng-content select=[header]></ng-content>
