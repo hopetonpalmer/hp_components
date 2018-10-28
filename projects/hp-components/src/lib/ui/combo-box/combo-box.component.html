@@ -1,11 +1,24 @@
 <hpc-drop-down-button #ddButton>
    <div selection-box class="selection-box">{{displayMemberPath ? selectedItem[displayMemberPath] : selectedItem}}</div>
-   <div class="hpc-list-container hpc-dropdown">
-      <div *ngFor="let item of itemsSource"
-            class='hpc-list-item'
-            [ngClass]="{'hpc-item-selected': item===selectedItem}"
-            (click)="selectedItem=item; ddButton.close();">
-          {{displayMemberPath ? item[displayMemberPath] : item}}
+    <div *ngIf="itemsPanelTemplate; else defaultItemsPanel" class="hpc-list-container hpc-dropdown">
+      <ng-container *ngTemplateOutlet="itemsPanelTemplate; context:{$implicit: listItemsTemplate}"></ng-container>
+    </div>
+
+    <ng-template #defaultItemsPanel>
+      <div class="hpc-list-container hpc-dropdown">
+        <ng-container *ngTemplateOutlet="listItemsTemplate"></ng-container>
       </div>
-   </div>
+    </ng-template>
 </hpc-drop-down-button>
+
+<ng-template #listItemsTemplate>
+    <div *ngFor="let item of itemsSource" class='hpc-list-item' [ngClass]="{'hpc-item-selected': item===selectedItem}"
+      (click)="selectedItem=item; ddButton.close();">
+      <div *ngIf="itemTemplate; else defaultItemTemplate">
+        <ng-container *ngTemplateOutlet="itemTemplate; context:{$implicit: item}"></ng-container>
+      </div>
+      <ng-template #defaultItemTemplate>
+        {{displayMemberPath ? item[displayMemberPath] : item}}
+      </ng-template>
+    </div>
+</ng-template>

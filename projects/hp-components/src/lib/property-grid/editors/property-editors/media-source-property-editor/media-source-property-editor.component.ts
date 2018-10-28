@@ -6,7 +6,7 @@ import { PropertyEditor } from '../property-editor';
   template: `
   <div class="hpc-simple-editor">
     <span>{{propertyConfig.displayName}}</span>
-    <textarea [value]="getPropertyValue()" (change)="setPropertyValue($event.target.value)"></textarea>
+    <textarea [rows]="propertyConfig.lineCount" [value]="getPropertyValue()" (change)="setPropertyValue($event.target.value)"></textarea>
   </div>`,
   styleUrls: ['../../editor-styles.css']
 })

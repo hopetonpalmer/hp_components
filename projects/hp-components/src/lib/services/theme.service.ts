@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getColorValues, adjustColor } from '../scripts/colors';
+import { BehaviorSubject } from 'rxjs';
 
 export interface ITheme {
   name: string;
@@ -12,6 +13,9 @@ export interface ITheme {
   providedIn: 'root'
 })
 export class ThemeService {
+  _activeThemeSubject = new BehaviorSubject<ITheme>(null);
+  $activeTheme = this._activeThemeSubject.asObservable();
+
   private _activeTheme: ITheme;
   get activeTheme(): ITheme {
     return this._activeTheme;
@@ -19,27 +23,56 @@ export class ThemeService {
   set activeTheme(value: ITheme) {
     if (this._activeTheme !== value) {
       this._activeTheme = value;
-      this.updateStyleValues();
+      this.applyActiveTheme();
+      this._activeThemeSubject.next(value);
     }
+  }
+
+  get customTheme(): ITheme {
+    return this.theme('Custom');
   }
 
   themes: ITheme[] = [
     { name: 'Dark', primaryBg: '#494949', primaryText: '#e6e4e4' },
+    { name: 'Deep Dark', primaryBg: '#1a1a1a', primaryText: '#e6e4e4' },
     { name: 'Purple', primaryBg: '#2b2633', primaryText: '#e6e4e4' },
+    { name: 'Mauve', primaryBg: '#282a39', primaryText: '#e6e4e4' },
     { name: 'Blue', primaryBg: '#303e4d', primaryText: '#e6e4e4' },
     { name: 'Teal', primaryBg: '#008080', primaryText: '#e6e4e4' },
-    { name: 'Brown', primaryBg: '#49321c', primaryText: '#f9d6b3' },
-    { name: 'Green', primaryBg: '#26332f', primaryText: '#cbf2e6' },
+    { name: 'Green', primaryBg: '#273224', primaryText: '#cbf2e6' },
+    { name: 'Deep Green', primaryBg: '#26332f', primaryText: '#cbf2e6' },
+    { name: 'Deeper Green', primaryBg: '#141f1f', primaryText: '#e6e4e4' },
     { name: 'Maroon', primaryBg: '#4c020a', primaryText: '#e6e4e4' },
     { name: 'Firebrick', primaryBg: '#B22222', primaryText: '#e6e4e4' },
-    { name: 'Aubergine', primaryBg: '#4D394B', primaryText: '#e6e4e4' }
+    { name: 'Aubergine', primaryBg: '#4D394B', primaryText: '#e6e4e4' },
+    { name: 'Deep Blue', primaryBg: '#132639', primaryText: '#e6e4e4' },
+    { name: 'Light Brown', primaryBg: '#433e37', primaryText: '#f9d6b3' },
+    { name: 'UPS Brown', primaryBg: '#49321c', primaryText: '#f9d6b3' },
+    { name: 'T Mobile Pink', primaryBg: '#660033', primaryText: '#e6e4e4' },
+    { name: 'Custom', primaryBg: '#0d3239', primaryText: '#e6e4e4' }
   ];
 
   constructor() {}
 
-  updateStyleValues() {
-    const primaryBgValues = getColorValues(this.activeTheme.primaryBg);
-    const primaryTextValues = getColorValues(this.activeTheme.primaryText);
+  theme(themeName: string) {
+    return this.themes.find(
+      t => t.name.toLowerCase() === themeName.toLowerCase()
+    );
+  }
+
+  updateTheme(themeName: string, changes: {}) {
+    const theme = this.theme(themeName);
+    if (theme) {
+      Object.assign(theme, changes);
+      this.applyActiveTheme();
+    }
+  }
+
+  updateCustomTheme(changes: {}) {
+    this.updateTheme('Custom', changes);
+  }
+
+  applyActiveTheme() {
     const rootStyle = document.documentElement.style;
     this.updateStyle(
       rootStyle,
@@ -99,7 +132,7 @@ export class ThemeService {
     this.updateStyle(
       rootStyle,
       '--hpc-inactive-color',
-      adjustColor(this.activeTheme.primaryText, { dR: .7, dG: .7, dB: .7 })
+      adjustColor(this.activeTheme.primaryText, { dR: 0.7, dG: 0.7, dB: 0.7 })
     );
 
     this.updateStyle(
@@ -110,25 +143,23 @@ export class ThemeService {
 
     this.updateStyle(
       rootStyle,
-      '--hpc-popup-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: .75, dG: .75, dB: .75 })
-    );
-    this.updateStyle(
-      rootStyle,
-      '--hpc-popup-color',
-      'rgb(255,255,255)'
+      '--hpc-selected-color',
+      adjustColor(this.activeTheme.primaryText, { dR: 1.7, dG: 1.7, dB: 1.7 })
     );
 
     this.updateStyle(
       rootStyle,
-      '--hpc-input-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: .9, dG: .9, dB: .9 })
+      '--hpc-popup-background',
+      adjustColor(this.activeTheme.primaryBg, { dR: 0.75, dG: 0.75, dB: 0.75 })
     );
+    this.updateStyle(rootStyle, '--hpc-popup-color', 'rgb(255,255,255)');
+
     this.updateStyle(
       rootStyle,
-      '--hpc-input-color',
-      'rgb(255,255,255)'
+      '--hpc-input-background',
+      adjustColor(this.activeTheme.primaryBg, { dR: 0.9, dG: 0.9, dB: 0.9 })
     );
+    this.updateStyle(rootStyle, '--hpc-input-color', 'rgb(255,255,255)');
   }
 
   updateStyle(style: CSSStyleDeclaration, propertyName: string, color: string) {

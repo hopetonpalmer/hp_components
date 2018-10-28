@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.themeService.activeTheme = this.themeService.themes[1];
+    this.themeService.activeTheme = this.themeService.theme('mauve');
     // this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
     const widgets = [
       {
@@ -56,12 +56,23 @@ export class AppComponent implements OnInit, AfterViewInit {
         ]
       },
       {
-        group: 'Corporate Comms', icon: '',
+        group: 'Corporate Communications', icon: '',
         widgets: [
-          { name: 'Welcome', componentClass: ImageViewerComponent },
-          { name: 'Career Opportunities', componentClass: VideoPlayerComponent },
+          { name: 'Career Opportunities', componentClass: ImageViewerComponent },
+          { name: 'Company Announce- ments', componentClass: VideoPlayerComponent },
+          { name: 'Company Awareness', componentClass: ImageViewerComponent },
+          { name: 'Company Benefits', componentClass: ImageViewerComponent },
+          { name: 'Company Events', componentClass: ImageViewerComponent },
+          { name: 'Company Holidays', componentClass: ImageViewerComponent },
+          { name: 'Company News', componentClass: VideoPlayerComponent },
+          { name: 'Customer Wins', componentClass: ImageViewerComponent },
+          { name: 'Employee Anniversary', componentClass: ImageViewerComponent },
           { name: 'Employee Recognition', componentClass: ImageViewerComponent },
-          { name: 'Employee Birthday', componentClass: ImageViewerComponent },
+          { name: 'New Hire', componentClass: ImageViewerComponent },
+          { name: 'New Product Launch', componentClass: VideoPlayerComponent },
+          { name: 'Safety Message', componentClass: ImageViewerComponent },
+          { name: 'Value Statement', componentClass: ImageViewerComponent },
+          { name: 'Welcome Message', componentClass: ImageViewerComponent },
         ]
       },
       {

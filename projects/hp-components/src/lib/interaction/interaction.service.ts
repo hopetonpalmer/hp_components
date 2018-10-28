@@ -4,7 +4,6 @@ import { SelectorService } from '../selector/selector.service';
 import * as dom from '../scripts/dom';
 import { PersistenceService, StorageType } from '../services/persistence.service';
 import * as shortid from 'shortid';
-import { createElement } from '@angular/core/src/view/element';
 import { getInspectPropertyInfos } from '../decorator';
 import { PageLoaderService } from '../services/page-loader.service';
 

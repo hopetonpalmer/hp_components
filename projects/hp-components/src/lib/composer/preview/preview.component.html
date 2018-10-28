@@ -1,1 +1,1 @@
-<div #closeElement class="close-container" [ngClass]="{'hide-close': !isCloseVisible}" (click)="close()" >X</div>
+<div #closeElement class="close-container" [ngClass]="{'show-close': isCloseVisible, 'hide-close': !isCloseVisible}" (click)="close()" >X</div>

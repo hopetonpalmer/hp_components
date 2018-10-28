@@ -34,7 +34,10 @@ export class PropertyInspectorService {
    */
   getPropertyValue(propertyName: string): any {
     if (this.activeComponent) {
-      return this.activeComponent[propertyName];
+      const result = this.activeComponent[propertyName];
+      if (result !== undefined) {
+        return result;
+      }
     }
     return null;
   }
@@ -48,7 +51,7 @@ export class PropertyInspectorService {
    */
   setPropertyValueAsync(propertyName: string, value: any, isExternal = false): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      if (!this.canAcceptChanges) {
+      if (!this.canAcceptChanges || value === undefined) {
         resolve(false);
       }
       try {

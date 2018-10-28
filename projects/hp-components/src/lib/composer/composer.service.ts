@@ -24,18 +24,6 @@ export class ComposerService {
     return this._widgetGroups;
   }
 
- /*  get widgetsByGroupMap(): Map<string, IWidget[]> {
-    const result = this.registeredWidgets.reduce((m, widget) => m.set(widget.group,
-       [...(m.get(widget.group) || []), widget]), new Map<string, IWidget[]>());
-    return result;
-  } */
-
-/*   getWidgetGroups(): IWidgetGroup[] {
-    const groupMap = Array.from(this.widgetsByGroupMap);
-    const result = groupMap.reduce((a, item) => [...a, { group: item[0], widgets: item[1] }], []);
-    return result;
-  } */
-
   constructor(public interactionService: InteractionService, public pageLoaderService: PageLoaderService) {}
 
   getRegisteredComponentClass(className: string): Type<any> {
@@ -47,13 +35,6 @@ export class ComposerService {
     }
     return null;
   }
-
-/*   registerWidgets(widgets: IWidget[]) {
-    this._registeredWidgets = widgets;
-    this._widgetsBehaviorSubject.next(widgets);
-    this._widgetGroupsBehaviorSubject.next(this.getWidgetGroups());
-    this.registerComponentTypes();
-  } */
 
   registerWidetGroup(widgetGroup: IWidgetTypeGroup, merge = false) {
      const group = this._widgetGroups.find(x => x.group === widgetGroup.group);

@@ -61,6 +61,7 @@ import { PopupService } from './ui/popup/popup.service';
 import { SegmentComponent } from './widgets/segment.component';
 import { WebAppComponent } from './widgets/web-app/web-app.component';
 import { PreviewComponent } from './composer/preview/preview.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 
 
@@ -118,7 +119,8 @@ import { PreviewComponent } from './composer/preview/preview.component';
     PopupComponent,
     SegmentComponent,
     WebAppComponent,
-    PreviewComponent
+    PreviewComponent,
+    SafeHtmlPipe
   ],
   exports: [
     InteractionComponent,
@@ -129,7 +131,9 @@ import { PreviewComponent } from './composer/preview/preview.component';
     ListViewComponent,
     HeaderComponent,
     TabStripComponent,
-    ComboBoxComponent
+    ComboBoxComponent,
+    ColorComboBoxComponent,
+    SafeHtmlPipe
   ],
   providers: [
     DragService,

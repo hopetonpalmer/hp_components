@@ -16,8 +16,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 5px;
-  font-size: 0.8em
+  margin: 6px;
+  font-size: 0.75em
 }
 
 .widget-item:hover .widget-icon {

@@ -71,7 +71,7 @@ export class IframeComponent extends WidgetBaseComponent
     }
   }
 
-  @Inspect()
+  @Inspect({lineCount: 3})
   get source(): string {
     return this._source;
   }

@@ -1,6 +1,7 @@
 import {Point, Rect, Size} from './math';
 import { dashToCamel } from './strings';
 import {Renderer2, Type} from '@angular/core';
+import { Orientation } from './types';
 
 export function offset(el: Element): Point {
   const box = el.getBoundingClientRect();
@@ -438,4 +439,45 @@ export function exitFullScreen(element: HTMLElement) {
 export function enableKeyboardInteraction(element: HTMLElement) {
   element.tabIndex = 0;
   element.focus();
+}
+
+export function load(target, url) {
+  const r = new XMLHttpRequest();
+  r.open('GET', url, true);
+  r.onreadystatechange = function () {
+    if (r.readyState !== 4 || r.status !== 200) { return; }
+    target.innerHTML = r.responseText;
+    const allScripts = target.getElementsByTagName('script');
+    for (let n = 0; n < allScripts.length; n++) {
+      // tslint:disable-next-line:no-eval
+      eval(allScripts[n].innerHTML);
+    }
+  };
+  r.send();
+}
+
+export function elementOrientation(element: HTMLElement): Orientation {
+   const size = elementSize(element);
+   return size.width > size.height ? 'horizontal' : 'vertical';
+}
+
+export function scaleToViewPort(element: HTMLElement): number {
+  const viewPortSize = new Size(document.documentElement.clientHeight, document.documentElement.clientWidth);
+  const size = new Size(element.clientHeight, element.clientWidth);
+  const scale = viewPortSize.width / size.width;
+
+  scaleElement(element, scale);
+  return scale;
+}
+
+export function scaleElement(element: HTMLElement, scale: number, origin: string = 'top left') {
+  scaleElementXY(element, scale, scale);
+}
+
+export function scaleElementXY(element: HTMLElement,
+   scaleX: number,
+   scaleY: number,
+   origin: string = 'top left') {
+  element.style.transformOrigin = origin;
+  element.style.transform = `scale3d(${scaleX}, ${scaleY}, 0)`;
 }

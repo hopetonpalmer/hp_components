@@ -1,4 +1,12 @@
-:host * {
+.theme-color {
+    border: 1px solid white;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+}
 
+.theme-template {
+  margin: 5px 0;
 }
 

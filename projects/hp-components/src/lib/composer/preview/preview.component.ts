@@ -21,7 +21,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   private _timeoutToken: any;
 
   inFullScreen: boolean;
-  isCloseVisible = true;
+  isCloseVisible = false;
 
   constructor(
     public popupRef: PopupRef,
@@ -41,7 +41,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.goFullScreen();
     this.loadPage();
-    this.scheduleCloseRemoval();
+    // this.scheduleCloseRemoval();
   }
 
   loadPage() {

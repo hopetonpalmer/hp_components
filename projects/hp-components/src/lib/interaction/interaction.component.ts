@@ -16,6 +16,7 @@ import { Inspectable, Inspect } from '../decorator';
 import * as shortid from 'shortid';
 import { ResizeObserver } from 'resize-observer';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { IProject } from '../models/project';
 
 
 
@@ -80,6 +81,18 @@ export class InteractionComponent
   get scale(): number {
     return this._scale;
   }
+
+  @Inspect({placeHolder: 'Enter a unique project name', propType: 'string'})
+  name: string;
+
+  @Inspect({placeHolder: 'Optional full description', lineCount: 3})
+  description: string;
+
+  @Inspect({placeHolder: 'URL for icon to represent this project for selection', propType: 'string' })
+  smallIcon: string;
+
+  @Inspect({placeHolder: 'URL for large icon to represent this project for selection', propType: 'string' })
+  largeIcon: string;
 
   @Input()
   scaleMin = 0.25;

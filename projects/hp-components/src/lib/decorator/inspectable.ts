@@ -35,11 +35,13 @@ export interface IInspectConfig {
   category?: string;
   description?: string;
   displayName?: string;
+  placeHolder?: string;
   editorClass?: Type<any>;
   propType?: any;
   isStyle?: boolean;
   isExternal?: boolean;
   isHidden?: boolean;
+  lineCount?: number;
   valueOptions?: any[];
   readonly propertyName?: string;
 }
@@ -53,7 +55,8 @@ export function Inspect(config: IInspectConfig = {}) {
       propType: propType.name,
       isStyle: false,
       isExternal: false,
-      isHidden: false
+      isHidden: false,
+      lineCount: 0
     }, config);
     Reflect.defineMetadata(inspectPropKey, propConfig, target, key);
 

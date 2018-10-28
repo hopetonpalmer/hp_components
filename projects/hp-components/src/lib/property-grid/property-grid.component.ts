@@ -198,7 +198,8 @@ export class PropertyGridComponent implements OnInit, AfterViewInit, OnDestroy {
       if (component) {
         const componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
         const componentRef = this.componentPropsContainer.createComponent(componentFactory);
-        (<IPropertyEditor>(componentRef.instance)).propertyConfig = prop;
+        const propEditor = <IPropertyEditor>(componentRef.instance);
+        propEditor.propertyConfig = prop;
       }
     });
   }
