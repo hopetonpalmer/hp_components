@@ -441,7 +441,7 @@ export function enableKeyboardInteraction(element: HTMLElement) {
   element.focus();
 }
 
-export function load(target, url) {
+/* export function load(target, url) {
   const r = new XMLHttpRequest();
   r.open('GET', url, true);
   r.onreadystatechange = function () {
@@ -455,7 +455,7 @@ export function load(target, url) {
   };
   r.send();
 }
-
+ */
 export function elementOrientation(element: HTMLElement): Orientation {
    const size = elementSize(element);
    return size.width > size.height ? 'horizontal' : 'vertical';

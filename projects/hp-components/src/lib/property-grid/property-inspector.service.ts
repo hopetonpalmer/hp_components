@@ -5,14 +5,15 @@ import { camelToDash } from '../scripts/strings';
 
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PropertyInspectorService {
   styleInspectorMap = new Map<string, any>();
   propertyInspectorMap = new Map<string, any>();
   componentInspectorMap = new Map<any, any>();
 
   canAcceptChanges = true;
-
 
   /**
    * Gets the first active component from the selectedComponents array.
@@ -49,7 +50,11 @@ export class PropertyInspectorService {
    * @param * value
    * @returns Promise<boolean>
    */
-  setPropertyValueAsync(propertyName: string, value: any, isExternal = false): Promise<boolean> {
+  setPropertyValueAsync(
+    propertyName: string,
+    value: any,
+    isExternal = false
+  ): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (!this.canAcceptChanges || value === undefined) {
         resolve(false);
@@ -60,7 +65,9 @@ export class PropertyInspectorService {
           components.forEach(component => {
             component[propertyName] = value;
             if (isExternal) {
-              const externalProp = (component['externalProps'] as any[]).find(x => x.name === propertyName);
+              const externalProp = (component['externalProps'] as any[]).find(
+                x => x.name === propertyName
+              );
               if (externalProp) {
                 externalProp.value = value;
                 component.invalidate();

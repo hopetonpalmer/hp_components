@@ -29,7 +29,7 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
-    "hp-components": "file:dist/hp-components/hp-components-0.1.4.tgz",
+    "hp-components": "^0.4.7",
     "lodash-uuid": "0.0.3",
     "resize-observer": "^1.0.0-alpha.1",
     "rxjs": "~6.2.0",

@@ -1,5 +1,3 @@
-@import "../../hp-components.css";
-
 :host {
   display: flex;
   flex-direction: column;

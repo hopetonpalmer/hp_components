@@ -17,11 +17,16 @@ const DEFAULT_CONFIG: PopupConfig = {
   data: {},
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PopupService {
   constructor(private _injector: Injector, private _overlay: Overlay) {}
 
-  open(componentClass: Type<any> = PopupComponent, config: PopupConfig = {}): PopupRef {
+  open(
+    componentClass: Type<any> = PopupComponent,
+    config: PopupConfig = {}
+  ): PopupRef {
     const popupConfig = { ...DEFAULT_CONFIG, ...config };
 
     // -- Returns a PortalHost
@@ -30,13 +35,21 @@ export class PopupService {
     // -- Instantiate remote control
     const popupRef = new PopupRef(overlayRef);
 
-    this.attachDialogContainer(componentClass, overlayRef, popupConfig, popupRef);
+    this.attachDialogContainer(
+      componentClass,
+      overlayRef,
+      popupConfig,
+      popupRef
+    );
 
     overlayRef.backdropClick().subscribe(() => popupRef.close());
     return popupRef;
   }
 
-  private getOverlayConfig(componentClass: Type<any>, config: PopupConfig): OverlayConfig {
+  private getOverlayConfig(
+    componentClass: Type<any>,
+    config: PopupConfig
+  ): OverlayConfig {
     const positionStrategy = this._overlay
       .position()
       .global()
@@ -59,7 +72,10 @@ export class PopupService {
     return this._overlay.create(overlayConfig);
   }
 
-  private createInjector(config: PopupConfig, popupRef: PopupRef): PortalInjector {
+  private createInjector(
+    config: PopupConfig,
+    popupRef: PopupRef
+  ): PortalInjector {
     // Instantiate new WeakMap for our custom injection tokens
     const injectionTokens = new WeakMap();
 
@@ -71,7 +87,12 @@ export class PopupService {
     return new PortalInjector(this._injector, injectionTokens);
   }
 
-  private attachDialogContainer(componentClass: Type<any>, overlayRef: OverlayRef, config: PopupConfig, dialogRef: PopupRef) {
+  private attachDialogContainer(
+    componentClass: Type<any>,
+    overlayRef: OverlayRef,
+    config: PopupConfig,
+    dialogRef: PopupRef
+  ) {
     const injector = this.createInjector(config, dialogRef);
     const containerPortal = new ComponentPortal(componentClass, null, injector);
     const containerRef = overlayRef.attach(containerPortal);

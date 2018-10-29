@@ -7,7 +7,7 @@ export type ShadowType = 'box' | 'text';
 @Component({
   selector: 'hpc-shadow-property-editor',
   templateUrl: './shadow-property-editor.component.html',
-  styleUrls: ['./shadow-property-editor.component.css']
+  styleUrls: ['./shadow-property-editor.component.css', '../../editor-styles.css']
 })
 export class ShadowPropertyEditorComponent extends PropertyEditor {
 

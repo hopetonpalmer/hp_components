@@ -6,7 +6,7 @@ export type ITemplateSelector = (item: any) => TemplateRef<any>;
 @Component({
   selector: 'hpc-items',
   templateUrl: './items.component.html',
-  styleUrls: ['./items.component.css']
+  styleUrls: ['./items.component.css', '../../hp-components.css']
 })
 /**
    Represents a component that can be used to represent a colleciton of items.

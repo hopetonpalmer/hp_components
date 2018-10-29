@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@an
 @Component({
   selector: 'hpc-drop-down-list',
   templateUrl: './drop-down-list.component.html',
-  styleUrls: ['./drop-down-list.component.css']
+  styleUrls: ['../../hp-components.css', './drop-down-list.component.css']
 })
 export class DropDownListComponent implements OnInit {
   @Input()

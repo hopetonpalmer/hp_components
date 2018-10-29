@@ -5,7 +5,7 @@ import { PropertyEditor } from '../property-editor';
 @Component({
   selector: 'hpc-font-property-editor',
   templateUrl: './font-property-editor.component.html',
-  styleUrls: ['./font-property-editor.component.css']
+  styleUrls: ['./font-property-editor.component.css', '../../editor-styles.css']
 })
 export class FontPropertyEditorComponent extends PropertyEditor
   implements OnInit, AfterViewInit {

@@ -4,7 +4,7 @@ import { PropertyEditor } from '../property-editor';
 @Component({
   selector: 'hpc-posandsize-property-editor',
   templateUrl: './posandsize-property-editor.component.html',
-  styleUrls: ['./posandsize-property-editor.component.css']
+  styleUrls: ['./posandsize-property-editor.component.css', '../../editor-styles.css']
 })
 export class PosandsizePropertyEditorComponent extends PropertyEditor implements OnInit {
 

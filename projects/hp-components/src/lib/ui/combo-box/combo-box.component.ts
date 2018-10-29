@@ -4,7 +4,7 @@ import { DropDownListComponent } from '../drop-down-list/drop-down-list.componen
 @Component({
   selector: 'hpc-combo-box',
   templateUrl: './combo-box.component.html',
-  styleUrls: ['./combo-box.component.css']
+  styleUrls: ['../../hp-components.css', './combo-box.component.css']
 })
 export class ComboBoxComponent extends DropDownListComponent implements OnInit {
 

@@ -2,8 +2,10 @@ import { Injectable, Renderer2, OnDestroy } from '@angular/core';
 import { Point } from '../scripts/math';
 import * as dom from '../scripts/dom';
 
-@Injectable()
-export class DragService implements OnDestroy  {
+@Injectable({
+  providedIn: 'root'
+})
+export class DragService implements OnDestroy {
   dragCursor = 'move';
   renderer: Renderer2;
 
@@ -42,7 +44,11 @@ export class DragService implements OnDestroy  {
    * @param HTMLElement parent
    * @returns HTMLElement
    */
-  findDropZone(draggedElement: Element, parent: Element, exclude = []): Element {
+  findDropZone(
+    draggedElement: Element,
+    parent: Element,
+    exclude = []
+  ): Element {
     if (!draggedElement) {
       return null;
     }
@@ -55,9 +61,21 @@ export class DragService implements OnDestroy  {
     return null;
   }
 
-  updateDropZone(draggedElement: Element, interactionHost: Element, exclude = [], lastDropZone: Element = null): Element {
-    const dropZone = this.findDropZone(draggedElement, interactionHost, exclude);
-    if (lastDropZone === dropZone || dropZone === draggedElement.parentElement ) {
+  updateDropZone(
+    draggedElement: Element,
+    interactionHost: Element,
+    exclude = [],
+    lastDropZone: Element = null
+  ): Element {
+    const dropZone = this.findDropZone(
+      draggedElement,
+      interactionHost,
+      exclude
+    );
+    if (
+      lastDropZone === dropZone ||
+      dropZone === draggedElement.parentElement
+    ) {
       return dropZone;
     }
     this.clearDropZones(interactionHost);
@@ -74,18 +92,21 @@ export class DragService implements OnDestroy  {
     });
   }
 
-  dropElement(dropZone: Element, draggedElement: Element, defaultDropZone: Element) {
-      try {
-        dropZone = dropZone ? dropZone : defaultDropZone;
-        if (dropZone !== draggedElement.parentElement) {
-          dom.changeParent(draggedElement, dropZone, this.renderer);
-        }
-      } catch (error) {
-        console.log(error);
-        // -- todo log error;
+  dropElement(
+    dropZone: Element,
+    draggedElement: Element,
+    defaultDropZone: Element
+  ) {
+    try {
+      dropZone = dropZone ? dropZone : defaultDropZone;
+      if (dropZone !== draggedElement.parentElement) {
+        dom.changeParent(draggedElement, dropZone, this.renderer);
       }
+    } catch (error) {
+      console.log(error);
+      // -- todo log error;
+    }
   }
-
 
   ngOnDestroy(): void {
     this.renderer = null;

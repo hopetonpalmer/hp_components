@@ -2,7 +2,9 @@ import { Injectable, Renderer2, OnDestroy } from '@angular/core';
 import * as dom from '../scripts/dom';
 import { Point, Rect } from '../scripts/math';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SizeService implements OnDestroy {
   renderer: Renderer2;
 

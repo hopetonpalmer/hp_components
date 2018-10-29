@@ -4,7 +4,7 @@ import { ItemsComponent } from '../items/items.component';
 @Component({
   selector: 'hpc-list-view',
   templateUrl: './list-view.component.html',
-  styleUrls: ['./list-view.component.css']
+  styleUrls: ['./list-view.component.css', '../../hp-components.css']
 })
 export class ListViewComponent extends ItemsComponent implements OnInit {
   constructor() {

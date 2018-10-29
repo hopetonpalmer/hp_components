@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { PanelComponent } from '../panel/panel.component';
 
 @Component({
   selector: 'hpc-header',

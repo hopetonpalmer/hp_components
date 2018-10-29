@@ -3,7 +3,7 @@ import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef }
 @Component({
   selector: 'hpc-drop-down-button',
   templateUrl: './drop-down-button.component.html',
-  styleUrls: ['./drop-down-button.component.css']
+  styleUrls: ['../../hp-components.css', './drop-down-button.component.css']
 })
 export class DropDownButtonComponent implements OnInit {
   get isOpen(): boolean {

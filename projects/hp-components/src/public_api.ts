@@ -4,7 +4,6 @@
 
 export * from './lib/hp-components.service';
 export * from './lib/hp-components.module';
-export * from './lib/ui/tab/tab.module';
 export * from './lib/interaction/interaction.service';
 export * from './lib/interaction/interaction.component';
 export * from './lib/composer/composer.service';

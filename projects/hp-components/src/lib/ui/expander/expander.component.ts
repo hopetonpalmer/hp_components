@@ -4,7 +4,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } fro
 @Component({
   selector: 'hpc-expander',
   templateUrl: './expander.component.html',
-  styleUrls: ['./expander.component.css']
+  styleUrls: ['../../hp-components.css', './expander.component.css']
 })
 export class ExpanderComponent implements OnInit {
   @Input()

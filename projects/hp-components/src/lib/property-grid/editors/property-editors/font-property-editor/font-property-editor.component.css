@@ -1,5 +1,3 @@
-@import "../../editor-styles.css";
-
 :host {
   padding: 10px;
   flex-direction: column;

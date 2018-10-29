@@ -5,17 +5,24 @@ import { InteractionService } from '../interaction/interaction.service';
 import { PageLoaderService } from '../services/page-loader.service';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ComposerService {
   private _bulkRegistering = false;
   private _widgetsBehaviorSubject = new BehaviorSubject<IWidgetType[]>([]);
   widgets$ = this._widgetsBehaviorSubject.asObservable();
 
-  private _widgetGroupsBehaviorSubject = new BehaviorSubject<IWidgetTypeGroup[]>([]);
+  private _widgetGroupsBehaviorSubject = new BehaviorSubject<
+    IWidgetTypeGroup[]
+  >([]);
   widgetGroups$ = this._widgetGroupsBehaviorSubject.asObservable();
 
   get registeredWidgets(): IWidgetType[] {
-    const result =  this.widgetGroups.reduce((array, group) => [...array, ...group.widgets], [] );
+    const result = this.widgetGroups.reduce(
+      (array, group) => [...array, ...group.widgets],
+      []
+    );
     return result;
   }
 
@@ -24,7 +31,10 @@ export class ComposerService {
     return this._widgetGroups;
   }
 
-  constructor(public interactionService: InteractionService, public pageLoaderService: PageLoaderService) {}
+  constructor(
+    public interactionService: InteractionService,
+    public pageLoaderService: PageLoaderService
+  ) {}
 
   getRegisteredComponentClass(className: string): Type<any> {
     const widgetType = this.registeredWidgets.find(
@@ -37,30 +47,30 @@ export class ComposerService {
   }
 
   registerWidetGroup(widgetGroup: IWidgetTypeGroup, merge = false) {
-     const group = this._widgetGroups.find(x => x.group === widgetGroup.group);
-     if (group) {
-       if (merge) {
-         group.widgets = [...widgetGroup.widgets, ...group.widgets];
-       } else  {
-         const groupIndex = this._widgetGroups.indexOf(group);
-         this._widgetGroups.splice(groupIndex, 1, widgetGroup);
-       }
-     } else {
-       this._widgetGroups.push(widgetGroup);
-     }
-     if (!this._bulkRegistering) {
-       this.registerComponentTypes();
-     }
+    const group = this._widgetGroups.find(x => x.group === widgetGroup.group);
+    if (group) {
+      if (merge) {
+        group.widgets = [...widgetGroup.widgets, ...group.widgets];
+      } else {
+        const groupIndex = this._widgetGroups.indexOf(group);
+        this._widgetGroups.splice(groupIndex, 1, widgetGroup);
+      }
+    } else {
+      this._widgetGroups.push(widgetGroup);
+    }
+    if (!this._bulkRegistering) {
+      this.registerComponentTypes();
+    }
   }
 
   registerWidgetGroups(widgetGroups: IWidgetTypeGroup[], merge = false) {
     this._bulkRegistering = true;
     if (merge) {
-       widgetGroups.forEach(group => {
-         this.registerWidetGroup(group, merge);
-       });
+      widgetGroups.forEach(group => {
+        this.registerWidetGroup(group, merge);
+      });
     } else {
-       this._widgetGroups = widgetGroups;
+      this._widgetGroups = widgetGroups;
     }
     this._widgetGroupsBehaviorSubject.next(this._widgetGroups);
     this.registerComponentTypes();

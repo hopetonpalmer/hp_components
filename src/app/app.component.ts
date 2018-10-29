@@ -1,10 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterViewInit, Type, ChangeDetectorRef } from '@angular/core';
-import { InteractionService, ComposerService, ThemeService } from 'hp-components-src';
+import { InteractionService, ComposerService, ThemeService, ITheme } from 'hp-components';
 import { VideoPlayerComponent } from './widgets/video-player/video-player.component';
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
-import { PropertyInspectorService } from 'projects/hp-components/src/lib/property-grid/property-inspector.service';
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
-import { GeneratedFile } from '@angular/compiler';
 
 
 
@@ -16,15 +14,31 @@ import { GeneratedFile } from '@angular/compiler';
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
+  themes: ITheme[] = [];
+  get activeTheme(): ITheme {
+    return this.themeService.activeTheme;
+  }
+
+  set activeTheme(value: ITheme) {
+    this.themeService.activeTheme = value;
+  }
+
+  get customTheme(): ITheme {
+    return this.themeService.customTheme;
+  }
+
   title = 'hp-components-app';
   constructor(private cdRef: ChangeDetectorRef, public interactionService: InteractionService,
     public themeService: ThemeService,
-    public composerService: ComposerService,
-    public inspectorService: PropertyInspectorService) {}
+    public composerService: ComposerService) {}
 
+  updateCustomTheme(changes: {}) {
+    this.themeService.updateCustomTheme(changes);
+  }
 
   ngOnInit(): void {
-    this.themeService.activeTheme = this.themeService.theme('mauve');
+    this.themes = this.themeService.themes;
+    this.activeTheme = this.themeService.theme('mauve');
     // this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
     const widgets = [
       {

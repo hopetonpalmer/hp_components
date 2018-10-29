@@ -30,8 +30,9 @@ export class ComposerComponent implements OnInit, AfterViewInit {
   @Input()
   headerVisible = true;
 
+  constructor(public composerService: ComposerService, private popupDialog: PopupService) {
 
-  constructor(public composerService: ComposerService, private popupDialog: PopupService) {}
+  }
 
   ngOnInit() {
     this.registerWidgetTypes();

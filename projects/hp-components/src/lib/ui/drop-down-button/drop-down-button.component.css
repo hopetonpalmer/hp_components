@@ -1,6 +1,3 @@
-@import "../../hp-components.css";
-
-
 .drop-down-button {
   display: grid;
   grid-template-columns: 1fr auto;

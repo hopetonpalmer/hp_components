@@ -21,7 +21,9 @@ export enum NudgeType {
   Selector
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SelectorService implements OnDestroy {
   private _lassoSelector: HTMLElement = null;
   private _selectors = new Array<ISelector>();
@@ -80,7 +82,9 @@ export class SelectorService implements OnDestroy {
   }
 
   get selectableElements(): Element[] {
-    const children = dom.childrenOf(this.interactionHost).filter(x => dom.isSelectable(x));
+    const children = dom
+      .childrenOf(this.interactionHost)
+      .filter(x => dom.isSelectable(x));
     return children;
   }
 
@@ -151,13 +155,13 @@ export class SelectorService implements OnDestroy {
     this.clearSelectors();
     const children = this.selectableElements;
     children.forEach(child => {
-        this.selectElement(child as HTMLElement, false);
+      this.selectElement(child as HTMLElement, false);
     });
   }
 
   selectElement(element: HTMLElement, clearFirst = true, isSizable = true) {
     if (!this.isSelectable) {
-       return;
+      return;
     }
     const compositeParent = dom.compositeParent(element);
     if (compositeParent) {
@@ -186,7 +190,7 @@ export class SelectorService implements OnDestroy {
     }
 
     if (!dom.isSelectable(element)) {
-       return;
+      return;
     }
 
     if (clearFirst) {

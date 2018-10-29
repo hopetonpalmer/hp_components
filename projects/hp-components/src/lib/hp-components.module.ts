@@ -1,4 +1,4 @@
-import { NgModule, Injector } from '@angular/core';
+import { NgModule, Injector, ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -136,17 +136,13 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     SafeHtmlPipe
   ],
   providers: [
-    DragService,
-    SizeService,
-    InteractionService,
-    SelectorService,
-    ComposerService,
-    PersistenceService,
-    PropertyInspectorService,
-    PreviewService,
-    PopupService
+    PreviewService
   ],
   entryComponents: [
+  ]
+})
+export class HpComponentsModule {
+   static entryComponents = [
     PanelComponent,
     StringPropertyEditorComponent,
     NumberPropertyEditorComponent,
@@ -166,10 +162,22 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     RemoteAppComponent,
     PopupComponent,
     PreviewComponent
-  ]
-})
-export class HpComponentsModule {
+  ];
+
   constructor(injector: Injector) {
     setInjectorRef(injector);
+  }
+   static withComponents(components: any[]) {
+    components = [...HpComponentsModule.entryComponents, components];
+    return {
+      ngModule: HpComponentsModule,
+      providers: [
+        {
+          provide: ANALYZE_FOR_ENTRY_COMPONENTS,
+          useValue: components,
+          multi: true
+        }
+      ]
+    };
   }
 }

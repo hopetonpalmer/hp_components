@@ -7,7 +7,7 @@ import { InteractionService } from '../interaction/interaction.service';
 @Component({
   selector: 'hpc-widget-grid',
   templateUrl: './widget-grid.component.html',
-  styleUrls: ['./widget-grid.component.css']
+  styleUrls: ['../hp-components.css', './widget-grid.component.css']
 })
 export class WidgetGridComponent implements OnInit {
 

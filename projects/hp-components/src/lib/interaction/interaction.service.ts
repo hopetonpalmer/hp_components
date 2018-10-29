@@ -9,7 +9,9 @@ import { PageLoaderService } from '../services/page-loader.service';
 
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class InteractionService implements OnDestroy {
   hostComponent: any;
 
@@ -58,10 +60,10 @@ export class InteractionService implements OnDestroy {
 
     const selectedComponents = [];
     elements.forEach(el => {
-       const compRef = this.findComponentRef(el);
-       if (compRef) {
-         selectedComponents.push(compRef.instance);
-       }
+      const compRef = this.findComponentRef(el);
+      if (compRef) {
+        selectedComponents.push(compRef.instance);
+      }
     });
     this._selectedComponents = selectedComponents;
     this._selectedComponentsSubject.next(selectedComponents);
@@ -84,9 +86,11 @@ export class InteractionService implements OnDestroy {
   renderer: Renderer2;
   interactionHost: HTMLElement;
 
-  constructor(private _selectionService: SelectorService,
-     private _pageLoaderService: PageLoaderService,
-     private _persistenceService: PersistenceService) {}
+  constructor(
+    private _selectionService: SelectorService,
+    private _pageLoaderService: PageLoaderService,
+    private _persistenceService: PersistenceService
+  ) {}
 
   findComponentRef(el: Element) {
     const comp = this.components.find(x => x.el === el);
@@ -162,7 +166,12 @@ export class InteractionService implements OnDestroy {
     this.hostComponent.viewContainer.clear();
   }
 
-  addElement(element: HTMLElement = null, select = true, tagName: string = 'div', isReloading = false): HTMLElement {
+  addElement(
+    element: HTMLElement = null,
+    select = true,
+    tagName: string = 'div',
+    isReloading = false
+  ): HTMLElement {
     if (!element) {
       element = this.renderer.createElement(tagName) as HTMLElement;
       this.renderer.addClass(element, 'hpc-new-element');
@@ -209,16 +218,19 @@ export class InteractionService implements OnDestroy {
     let element: HTMLElement;
     const children = dom.childrenOf(this.interactionHost, false);
     if (klass.name.startsWith('HTML')) {
-       const tagName = klass.name.replace('HTML', '').replace('Element', '').toLowerCase();
-       if (tagName === 'div') {
-         element = this.addContainer();
-       } else {
-         element = this.addElement(null, true, tagName);
-       }
-     } else {
-        element = this.addComponent(klass).element;
-     }
-     element.style.zIndex = children.length.toString();
+      const tagName = klass.name
+        .replace('HTML', '')
+        .replace('Element', '')
+        .toLowerCase();
+      if (tagName === 'div') {
+        element = this.addContainer();
+      } else {
+        element = this.addElement(null, true, tagName);
+      }
+    } else {
+      element = this.addComponent(klass).element;
+    }
+    element.style.zIndex = children.length.toString();
   }
 
   selectAll() {
@@ -237,23 +249,32 @@ export class InteractionService implements OnDestroy {
   }
 
   getDataItems(): any[] {
-    const elements = dom.childrenOf(this.hostComponent.interactionElement, true) as HTMLElement[];
+    const elements = dom.childrenOf(
+      this.hostComponent.interactionElement,
+      true
+    ) as HTMLElement[];
     const dataItems = [];
     if (elements && elements.length) {
       elements.forEach(element => {
         const parent = element.parentElement;
         const componentRef = this.findComponentRef(element);
-        if (!parent || (!element.classList.contains('hpc-segment')
-          && !parent['componentType'] && !parent.classList.contains('hpc-segment'))) {
+        if (
+          !parent ||
+          (!element.classList.contains('hpc-segment') &&
+            !parent['componentType'] &&
+            !parent.classList.contains('hpc-segment'))
+        ) {
           const styles = dom.getAppliedStyles(element);
           const data = {
-            'id': element.id,
-            'parentId': element.parentElement ? element.parentElement.id : '',
-            'componentType': element['componentType'],
-            'tagName': element.tagName,
-            'styles': styles,
-            'classes': element.className,
-            'props': componentRef ? this.getPersistableProps(componentRef.instance) : null
+            id: element.id,
+            parentId: element.parentElement ? element.parentElement.id : '',
+            componentType: element['componentType'],
+            tagName: element.tagName,
+            styles: styles,
+            classes: element.className,
+            props: componentRef
+              ? this.getPersistableProps(componentRef.instance)
+              : null
           };
           dataItems.push(data);
         }
@@ -263,44 +284,53 @@ export class InteractionService implements OnDestroy {
   }
 
   xload(key: string, storageType: StorageType = StorageType.local) {
-     const loadedElements: HTMLElement[] = [];
-     this.deleteAll();
-     const dataItems = this._persistenceService.get(key, storageType);
-     if (dataItems) {
-       dataItems.forEach(item => {
-          let el: HTMLElement = null;
-          if (item.componentType) {
-             const componentClass = this._componentTypes.find(x => x.name === item.componentType);
-             if (componentClass) {
-               el = this.hostComponent.loadComponent(componentClass, item['props'], false).element;
-             } else {
-               console.error(item.componentType + ' is not registered!');
-             }
+    const loadedElements: HTMLElement[] = [];
+    this.deleteAll();
+    const dataItems = this._persistenceService.get(key, storageType);
+    if (dataItems) {
+      dataItems.forEach(item => {
+        let el: HTMLElement = null;
+        if (item.componentType) {
+          const componentClass = this._componentTypes.find(
+            x => x.name === item.componentType
+          );
+          if (componentClass) {
+            el = this.hostComponent.loadComponent(
+              componentClass,
+              item['props'],
+              false
+            ).element;
           } else {
-             el = this.addElement(null, false, item['tagName'], true);
+            console.error(item.componentType + ' is not registered!');
           }
-          if (el) {
-            el.id = item.id;
-            el.className = item.classes;
-            dom.setStyles(el, item.styles);
-            loadedElements.push(el);
-          }
-       });
+        } else {
+          el = this.addElement(null, false, item['tagName'], true);
+        }
+        if (el) {
+          el.id = item.id;
+          el.className = item.classes;
+          dom.setStyles(el, item.styles);
+          loadedElements.push(el);
+        }
+      });
 
-       dataItems.forEach(item => {
-         if (item.parentId) {
-           const parent = loadedElements.find(x => x.id === item.parentId);
-           const child = loadedElements.find(x => x.id === item.id);
-           if (parent) {
-             parent.appendChild(child);
-           }
-         }
-       });
-       this.selectedElements = [];
-     }
+      dataItems.forEach(item => {
+        if (item.parentId) {
+          const parent = loadedElements.find(x => x.id === item.parentId);
+          const child = loadedElements.find(x => x.id === item.id);
+          if (parent) {
+            parent.appendChild(child);
+          }
+        }
+      });
+      this.selectedElements = [];
+    }
   }
 
   load(key: string, storageType: StorageType = StorageType.local) {
+    if (!this.hostComponent) {
+      return;
+    }
     this.deleteAll();
     const dataItems = this._persistenceService.get(key, storageType);
     this._pageLoaderService.loadPage(
@@ -309,19 +339,26 @@ export class InteractionService implements OnDestroy {
       dataItems,
       this.hostComponent.componentFactoryResolver,
       this.hostComponent.viewContainer,
-      loadedComp => this.components.push({ el: loadedComp.element, ref: loadedComp.component })
+      loadedComp =>
+        this.components.push({
+          el: loadedComp.element,
+          ref: loadedComp.component
+        })
     );
     this.selectedElements = [];
   }
 
   getPersistableProps(obj: any) {
     const props = getInspectPropertyInfos(obj);
-    const result = props.map(k => ({ propertyName: k.propertyName, value: obj[k.propertyName] }));
+    const result = props.map(k => ({
+      propertyName: k.propertyName,
+      value: obj[k.propertyName]
+    }));
     return result;
   }
 
   registerComponentTypes(componentTypes: Type<any>[]) {
-     this._componentTypes = componentTypes;
+    this._componentTypes = componentTypes;
   }
 
   ngOnDestroy(): void {

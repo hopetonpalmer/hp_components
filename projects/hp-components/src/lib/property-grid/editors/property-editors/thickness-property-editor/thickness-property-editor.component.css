@@ -1,5 +1,3 @@
-@import "../../editor-styles.css";
-
 .extra-content {
   margin: 5px 0;
   grid-area: 1 / 1 / span 1 / span 4
