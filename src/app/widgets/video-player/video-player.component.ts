@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import 'reflect-metadata';
-import {Inspect, Inspectable, MediaSourcePropertyEditorComponent} from 'hp-components-src';
+import { Inspectable } from 'hp-components';
+import { Inspect } from 'hp-components';
+import { MediaSourcePropertyEditorComponent } from 'hp-components';
+
+
+
 
 
 @Inspectable({ icon: 'assets/videoplayer.png' })

@@ -50,7 +50,7 @@ export class ComposerService {
     const group = this._widgetGroups.find(x => x.group === widgetGroup.group);
     if (group) {
       if (merge) {
-        group.widgets = [...widgetGroup.widgets, ...group.widgets];
+        group.widgets = [...widgetGroup.widgets, ...group.widgets.filter(w => !group.widgets.includes(w))];
       } else {
         const groupIndex = this._widgetGroups.indexOf(group);
         this._widgetGroups.splice(groupIndex, 1, widgetGroup);
@@ -65,16 +65,19 @@ export class ComposerService {
 
   registerWidgetGroups(widgetGroups: IWidgetTypeGroup[], merge = false) {
     this._bulkRegistering = true;
-    if (merge) {
-      widgetGroups.forEach(group => {
-        this.registerWidetGroup(group, merge);
-      });
-    } else {
-      this._widgetGroups = widgetGroups;
+    try {
+      if (merge) {
+        widgetGroups.forEach(group => {
+          this.registerWidetGroup(group, merge);
+        });
+      } else {
+        this._widgetGroups = widgetGroups;
+      }
+      this._widgetGroupsBehaviorSubject.next(this._widgetGroups);
+      this.registerComponentTypes();
+    } finally {
+      this._bulkRegistering = false;
     }
-    this._widgetGroupsBehaviorSubject.next(this._widgetGroups);
-    this.registerComponentTypes();
-    this._bulkRegistering = false;
   }
 
   private registerComponentTypes() {

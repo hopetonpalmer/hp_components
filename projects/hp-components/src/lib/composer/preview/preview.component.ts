@@ -7,6 +7,7 @@ import { POPUP_DATA } from '../../ui/popup/popup.tokens';
 import { requestFullScreen, enableKeyboardInteraction, exitFullScreen, pauseVideos, playVideos } from '../../scripts/dom';
 import { DOCUMENT } from '@angular/common';
 import { FullscreenService } from '../../services/fullscreen.service';
+import { reduce } from 'rxjs/operators';
 
 
 @Component({
@@ -41,7 +42,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.goFullScreen();
     this.loadPage();
-    // this.scheduleCloseRemoval();
   }
 
   loadPage() {

@@ -14,7 +14,10 @@
     "package": "npm run build_lib && npm run copy-readme && npm run npm_pack",
     "build_git_page": "ng build --prod --base-href \"https://hopetonpalmer.github.io/hp_components/\"",
     "publish_git_page": "ngh --dir=dist/hp-components-app",
-    "update_git_page": "npm run build_git_page && npm run publish_git_page"
+    "update_git_page": "npm run build_git_page && npm run publish_git_page",
+    "build_lib2": "ng build --prod hp-widgets",
+    "npm_pack2": "cd dist/hp-widgets && npm pack",
+    "package2": "npm run build_lib2 && npm run npm_pack2"
   },
   "private": true,
   "dependencies": {
@@ -29,7 +32,7 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
-    "hp-components": "^0.4.7",
+    "hp-components": "file:dist/hp-components/hp-components-0.4.7.tgz",
     "lodash-uuid": "0.0.3",
     "resize-observer": "^1.0.0-alpha.1",
     "rxjs": "~6.2.0",

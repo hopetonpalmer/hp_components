@@ -1,5 +1,5 @@
 import { IPropertyEditor } from '../editor-interface';
-import { IInspectConfig } from '../../../decorator';
+import { IInspectConfig } from '../../../decorator/inspectable';
 import { PropertyInspectorService } from '../../property-inspector.service';
 import { OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';

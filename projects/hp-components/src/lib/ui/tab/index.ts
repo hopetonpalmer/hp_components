@@ -1,3 +1,3 @@
-export * from './tab-item/tab-item.component';
-export * from './tab-strip/tab-strip.component';
-export * from './tab.component';
+export {TabItemComponent} from './tab-item/tab-item.component';
+export {TabStripComponent} from './tab-strip/tab-strip.component';
+export {TabComponent} from './tab.component';

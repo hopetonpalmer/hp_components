@@ -5,6 +5,10 @@
     "entryFile": "src/public_api.ts",
     "externals": {
       "reflect-metadata": "Reflect"
+    },
+    "umdModuleIds": {
+      "shortid": "shortid",
+      "resize-observer": "resizeObserver"
     }
   }
 }

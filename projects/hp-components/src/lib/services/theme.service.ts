@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { getColorValues, adjustColor } from '../scripts/colors';
-import { BehaviorSubject } from 'rxjs';
+import { adjustColor } from '../scripts/colors';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 export interface ITheme {
   name: string;
@@ -14,7 +14,7 @@ export interface ITheme {
 })
 export class ThemeService {
   _activeThemeSubject = new BehaviorSubject<ITheme>(null);
-  $activeTheme = this._activeThemeSubject.asObservable();
+  activeTheme$ = this._activeThemeSubject.asObservable();
 
   private _activeTheme: ITheme;
   get activeTheme(): ITheme {
@@ -109,11 +109,27 @@ export class ThemeService {
       '--hpc-panel-header-color',
       this.activeTheme.primaryText
     );
+
+    this.updateStyle(
+      rootStyle,
+      '--hpc-toolbar-color',
+      adjustColor(this.activeTheme.primaryText, { dR: 1.9, dG: 1.9, dB: 1.9 })
+    );
     this.updateStyle(
       rootStyle,
       '--hpc-toolbar-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 1.9, dG: 1.9, dB: 1.9 })
     );
+
+    this.updateStyle(rootStyle, '--hpc-menu-color', adjustColor(
+        this.activeTheme.primaryText,
+        { dR: 1.9, dG: 1.9, dB: 1.9 }
+      ));
+    this.updateStyle(rootStyle, '--hpc-menu-background', adjustColor(
+        this.activeTheme.primaryBg,
+        { dR: 1.9, dG: 1.9, dB: 1.9 }
+      ));
+
     this.updateStyle(
       rootStyle,
       '--hpc-hover-background',

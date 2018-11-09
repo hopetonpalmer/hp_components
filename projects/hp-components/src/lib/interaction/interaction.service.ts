@@ -4,7 +4,7 @@ import { SelectorService } from '../selector/selector.service';
 import * as dom from '../scripts/dom';
 import { PersistenceService, StorageType } from '../services/persistence.service';
 import * as shortid from 'shortid';
-import { getInspectPropertyInfos } from '../decorator';
+import { getInspectPropertyInfos } from '../decorator/inspectable';
 import { PageLoaderService } from '../services/page-loader.service';
 
 

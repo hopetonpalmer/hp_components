@@ -1,7 +1,7 @@
 import {
   Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy,
   Input, Renderer2, ViewChild, ElementRef, Output, EventEmitter, OnDestroy,
-   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked, HostBinding, HostListener, ChangeDetectorRef
+   ViewContainerRef, ComponentFactoryResolver, AfterViewInit, AfterViewChecked, ComponentRef, HostListener, ChangeDetectorRef
 } from '@angular/core';
 import { DragService } from '../services/drag.service';
 import { SizeService } from '../services/size.service';
@@ -10,14 +10,10 @@ import * as dom from '../scripts/dom';
 import { Point } from '../scripts/math';
 import { InteractionService } from './interaction.service';
 import { Subject, Observable, Subscription, BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
 import { ComposerService } from '../composer/composer.service';
-import { Inspectable, Inspect } from '../decorator';
+import { Inspectable, Inspect } from '../decorator/inspectable';
 import * as shortid from 'shortid';
 import { ResizeObserver } from 'resize-observer';
-import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
-import { IProject } from '../models/project';
-
 
 
 export type ICancellable = ( value: any )  => boolean;

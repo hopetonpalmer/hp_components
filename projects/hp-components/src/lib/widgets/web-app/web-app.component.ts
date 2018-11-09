@@ -1,9 +1,10 @@
 import { Component, OnInit, ElementRef, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IframeComponent } from '../iframe/iframe.component';
-import { inspect } from 'util';
-import { Inspect } from '../../decorator';
+import {Inspectable } from '../../decorator/inspectable';
 
+
+@Inspectable()
 @Component({
   selector: 'hpc-web-app',
   template: `<iframe hpc-segment class="hpc-fill-parent" #iframe></iframe>`,

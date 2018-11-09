@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef, HostListener, OnDestroy,
-  ChangeDetectionStrategy, ElementRef, ViewChild, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
-import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator';
+  ViewChild, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+import { IInspectableConfig, getInspectableComponentInfo, IInspectConfig, getInspectPropertyInfos } from '../decorator/inspectable';
 import { InteractionService } from '../interaction/interaction.service';
 import { PropertyInspectorService } from './property-inspector.service';
 import {StringPropertyEditorComponent,

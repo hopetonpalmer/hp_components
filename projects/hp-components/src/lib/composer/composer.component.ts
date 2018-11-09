@@ -11,8 +11,16 @@ import { PreviewComponent } from './preview/preview.component';
   styleUrls: ['./composer.component.css', '../hp-components.css']
 })
 export class ComposerComponent implements OnInit, AfterViewInit {
-
   zoomChange = new EventEmitter<number>();
+
+  @Input()
+  widgetGridVisible = true;
+
+  @Input()
+  propertyGridVisible = true;
+
+  @Input()
+  headerVisible = true;
 
   private _zoom = 0.65;
   @Input()
@@ -27,12 +35,10 @@ export class ComposerComponent implements OnInit, AfterViewInit {
     return this._zoom;
   }
 
-  @Input()
-  headerVisible = true;
-
-  constructor(public composerService: ComposerService, private popupDialog: PopupService) {
-
-  }
+  constructor(
+    public composerService: ComposerService,
+    private popupDialog: PopupService
+  ) {}
 
   ngOnInit() {
     this.registerWidgetTypes();
@@ -40,7 +46,9 @@ export class ComposerComponent implements OnInit, AfterViewInit {
 
   preview() {
     const config = {
-      hasBackdrop: false,
+      height: 0,
+      width: 0,
+      hasBackdrop: false
     };
     const dialogRef = this.popupDialog.open(PreviewComponent, config);
   }
@@ -48,13 +56,13 @@ export class ComposerComponent implements OnInit, AfterViewInit {
   registerWidgetTypes() {
     const widgets = [
       {
-        group: 'General', icon: '',
-        widgets: [
-          { name: 'IFrame', componentClass: IframeComponent }
-        ]
+        group: 'General',
+        icon: '',
+        widgets: [{ name: 'IFrame', componentClass: IframeComponent }]
       },
       {
-        group: 'Web Apps', icon: '',
+        group: 'Web Apps',
+        icon: '',
         widgets: [
           { name: 'Player Hosted App', componentClass: IframeComponent },
           { name: 'Server Hosted App', componentClass: RemoteAppComponent },
@@ -62,16 +70,13 @@ export class ComposerComponent implements OnInit, AfterViewInit {
         ]
       },
       {
-        group: 'My Widgets', icon: '',
-        widgets: [
-
-        ]
+        group: 'My Widgets',
+        icon: '',
+        widgets: []
       }
     ];
     this.composerService.registerWidgetGroups(widgets, true);
   }
 
-  ngAfterViewInit() {
-
-  }
+  ngAfterViewInit() {}
 }

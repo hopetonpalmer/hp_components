@@ -1,67 +1,77 @@
-import { NgModule, Injector, ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
+import { NgModule, Injector, InjectionToken, ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
-import { InteractionComponent } from './interaction/interaction.component';
-import { ComposerComponent } from './composer/composer.component';
-import { TreeviewComponent } from './ui/treeview/treeview.component';
+
 import { TreeviewItemComponent } from './ui/treeview/treeview-item/treeview-item.component';
 import { SelectorComponent } from './selector/selector.component';
-import { DragService } from './services/drag.service';
-import { SizeService } from './services/size.service';
-import { InteractionService } from './interaction/interaction.service';
-import { SelectorService } from './selector/selector.service';
 import { FileManagerComponent } from './file-manager/file-manager.component';
-import { PropertyGridComponent } from './property-grid/property-grid.component';
-import { PanelComponent } from './ui/panel/panel.component';
-import { HeaderComponent } from './ui/header/header.component';
-import { ComposerService } from './composer/composer.service';
-import { ItemsComponent } from './ui/items/items.component';
-import { ListViewComponent } from './ui/list-view/list-view.component';
-import { StringPropertyEditorComponent,
-  NumberPropertyEditorComponent,
-  BooleanPropertyEditorComponent,
-  AlignmentPropertyEditorComponent,
-  BrushPropertyEditorComponent,
-  BackgroundPropertyEditorComponent,
-  FontPropertyEditorComponent,
-  ColorPropertyEditorComponent,
-  MediaSourcePropertyEditorComponent,
-  StylePropertyEditorComponent,
-  ShadowPropertyEditorComponent,
-  BorderPropertyEditorComponent,
-  PosandsizePropertyEditorComponent,
-  ThicknessPropertyEditorComponent} from './property-grid/editors';
-import { ColorPickerComponent } from './ui/color-picker/color-picker.component';
 import { InteractionDirective } from './interaction/interaction.directive';
-import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
-import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
-import { PropertyInspectorService } from './property-grid/property-inspector.service';
-import { AccordionComponent, ExpanderComponent } from './ui';
-import { DropDownListComponent } from './ui/drop-down-list/drop-down-list.component';
-import { PixelInputComponent } from './ui/pixel-input/pixel-input.component';
-import { DropDownButtonComponent } from './ui/drop-down-button/drop-down-button.component';
 import { ColorComboBoxComponent } from './ui/color-combo-box/color-combo-box.component';
-import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
-import { TabStripComponent, TabItemComponent, TabComponent } from './ui/tab';
-import { PersistenceService } from './services/persistence.service';
-import { setInjectorRef } from './scripts/lib-injector';
-import { WidgetGridComponent } from './widget-grid/widget-grid.component';
 import { AutoScrollDirective } from './directives/auto-scroll.directive';
-import { PreviewService } from './composer/preview/preview.service';
+import { WidgetDirective } from './widgets/widget.directive';
+import { SegmentComponent } from './widgets/segment.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { setInjectorRef } from './scripts/lib-injector';
+import { InteractionComponent } from './interaction/interaction.component';
+import { ComposerComponent } from './composer/composer.component';
+import { PropertyGridComponent } from './property-grid/property-grid.component';
+import { WidgetGridComponent } from './widget-grid/widget-grid.component';
 import { IframeComponent } from './widgets/iframe/iframe.component';
 import { HostedAppComponent } from './widgets/hosted-app/hosted-app.component';
 import { RemoteAppComponent } from './widgets/remote-app/remote-app.component';
-import { WidgetDirective } from './widgets/widget.directive';
-import { PopupComponent } from './ui/popup/popup.component';
-import { PopupService } from './ui/popup/popup.service';
-import { SegmentComponent } from './widgets/segment.component';
 import { WebAppComponent } from './widgets/web-app/web-app.component';
 import { PreviewComponent } from './composer/preview/preview.component';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { PreviewService } from './composer/preview/preview.service';
+import { TreeviewComponent } from './ui/treeview/treeview.component';
+import { PanelComponent } from './ui/panel/panel.component';
+import { HeaderComponent } from './ui/header/header.component';
+import { ListViewComponent } from './ui/list-view/list-view.component';
+import { ItemsComponent } from './ui/items/items.component';
+import { AccordionComponent } from './ui/accordion/accordion.component';
+import { ExpanderComponent } from './ui/expander/expander.component';
+import { ColorPickerComponent } from './ui/color-picker/color-picker.component';
+import { ColorSwatchComponent } from './ui/color-swatch/color-swatch.component';
+import { DropDownButtonComponent } from './ui/drop-down-button/drop-down-button.component';
+import { DropDownListComponent } from './ui/drop-down-list/drop-down-list.component';
+import { PixelInputComponent } from './ui/pixel-input/pixel-input.component';
+import { ComboBoxComponent } from './ui/combo-box/combo-box.component';
+import { PopupComponent } from './ui/popup/popup.component';
+import { TabComponent } from './ui/tab/tab.component';
+import { TabItemComponent } from './ui/tab/tab-item/tab-item.component';
+import { TabStripComponent } from './ui/tab/tab-strip/tab-strip.component';
+// tslint:disable-next-line:max-line-length
+import { StringPropertyEditorComponent } from './property-grid/editors/property-editors/string-property-editor/string-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { NumberPropertyEditorComponent } from './property-grid/editors/property-editors/number-property-editor/number-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { BooleanPropertyEditorComponent } from './property-grid/editors/property-editors/boolean-property-editor/boolean-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { AlignmentPropertyEditorComponent } from './property-grid/editors/property-editors/alignment-property-editor/alignment-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { BrushPropertyEditorComponent } from './property-grid/editors/property-editors/brush-property-editor/brush-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { BackgroundPropertyEditorComponent } from './property-grid/editors/property-editors/background-property-editor/background-property-editor.component';
+import { FontPropertyEditorComponent } from './property-grid/editors/property-editors/font-property-editor/font-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { ColorPropertyEditorComponent } from './property-grid/editors/property-editors/color-property-editor/color-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { MediaSourcePropertyEditorComponent } from './property-grid/editors/property-editors/media-source-property-editor/media-source-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { StylePropertyEditorComponent } from './property-grid/editors/property-editors/style-property-editor/style-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { ThicknessPropertyEditorComponent } from './property-grid/editors/property-editors/thickness-property-editor/thickness-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { ShadowPropertyEditorComponent } from './property-grid/editors/property-editors/shadow-property-editor/shadow-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { BorderPropertyEditorComponent } from './property-grid/editors/property-editors/border-property-editor/border-property-editor.component';
+// tslint:disable-next-line:max-line-length
+import { PosandsizePropertyEditorComponent } from './property-grid/editors/property-editors/posandsize-property-editor/posandsize-property-editor.component';
+import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
+
 
 
 
@@ -126,23 +136,56 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     InteractionComponent,
     ComposerComponent,
     TreeviewComponent,
+    TreeviewItemComponent,
+    SelectorComponent,
+    PropertyGridComponent,
     PanelComponent,
     HeaderComponent,
     ListViewComponent,
-    HeaderComponent,
-    TabStripComponent,
-    ComboBoxComponent,
+    ItemsComponent,
+    AccordionComponent,
+    ExpanderComponent,
+
+    StringPropertyEditorComponent,
+    NumberPropertyEditorComponent,
+    BooleanPropertyEditorComponent,
+    AlignmentPropertyEditorComponent,
+    BrushPropertyEditorComponent,
+    BackgroundPropertyEditorComponent,
+    FontPropertyEditorComponent,
+    ColorPropertyEditorComponent,
+    MediaSourcePropertyEditorComponent,
+    StylePropertyEditorComponent,
+    ThicknessPropertyEditorComponent,
+    ShadowPropertyEditorComponent,
+    BorderPropertyEditorComponent,
+    PosandsizePropertyEditorComponent,
+
+    ColorPickerComponent,
+    InteractionDirective,
+    ColorSwatchComponent,
+    DropDownButtonComponent,
+    DropDownListComponent,
+    PixelInputComponent,
     ColorComboBoxComponent,
+    ComboBoxComponent,
+    TabComponent,
+    TabItemComponent,
+    TabStripComponent,
+    WidgetGridComponent,
+    AutoScrollDirective,
+    IframeComponent,
+    HostedAppComponent,
+    RemoteAppComponent,
+    WidgetDirective,
+    PopupComponent,
+    SegmentComponent,
+    WebAppComponent,
+    PreviewComponent,
     SafeHtmlPipe
   ],
-  providers: [
-    PreviewService
-  ],
+  providers: [PreviewService],
   entryComponents: [
-  ]
-})
-export class HpComponentsModule {
-   static entryComponents = [
     PanelComponent,
     StringPropertyEditorComponent,
     NumberPropertyEditorComponent,
@@ -162,22 +205,10 @@ export class HpComponentsModule {
     RemoteAppComponent,
     PopupComponent,
     PreviewComponent
-  ];
-
+  ]
+})
+export class HpComponentsModule {
   constructor(injector: Injector) {
     setInjectorRef(injector);
-  }
-   static withComponents(components: any[]) {
-    components = [...HpComponentsModule.entryComponents, components];
-    return {
-      ngModule: HpComponentsModule,
-      providers: [
-        {
-          provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-          useValue: components,
-          multi: true
-        }
-      ]
-    };
   }
 }

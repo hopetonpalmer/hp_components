@@ -19,6 +19,10 @@
   --hpc-disable-color: gray;
   --hpc-inactive-color: rgb(182, 182, 182);
 
+  --hpc-menu-color: white;
+  --hpc-menu-background: rgb(128, 128, 128);
+
+  --hpc-toolbar-color: white;
   --hpc-toolbar-background: rgb(128, 128, 128);
 
   --hpc-header-background: transparent;
@@ -58,8 +62,8 @@
   --hpc-input-background: black;
   --hpc-input-color: white;
 
-  --hpc-arrow-color: var(--hpc-panel-color);
-  --hpc-arrow-hover: var(--hpc-panel-color);
+  --hpc-arrow-color: inherit;
+  --hpc-arrow-hover: inherit;
 }
 
 :host * {
@@ -198,13 +202,14 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid var(--hpc-arrow-color);
+  border-top: 5px solid;
+  border-top-color: var(--hpc-arrow-color);
   transform: rotate(180deg);
   transition-duration: .25s;
   transition-property: transform;
 }
 .hpc-arrow-up:hover {
-    border-top: 5px solid var(--hpc-arrow-hover);
+    border-top-color: var(--hpc-arrow-hover);
 }
 
 .hpc-arrow-down,
@@ -214,13 +219,14 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid var(--hpc-arrow-color);
+  border-top: 5px solid;
+  border-top-color: var(--hpc-arrow-color);
   transform: rotate(0deg);
   transition-duration: .25s;
   transition-property: transform;
 }
 .hpc-arrow-down:hover {
-  border-top: 5px solid var(--hpc-arrow-hover);
+  border-top-color: var(--hpc-arrow-hover);
 }
 
 
@@ -231,10 +237,11 @@
   height: 0;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-left: 5px solid var(--hpc-arrow-color);
+  border-left: 5px solid;
+  border-left-color: var(--hpc-arrow-color);
 }
 .hpc-arrow-right:hover {
-  border-left: 5px solid var(--hpc-arrow-hover);
+  border-left-color: var(--hpc-arrow-hover);
 }
 
 .hpc-dropzone {
@@ -248,10 +255,11 @@
   height: 0;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-right: 5px solid var(--hpc-arrow-color);
+  border-right: 5px solid;
+  border-right-color: var(--hpc-arrow-color);
 }
 .hpc-arrow-left:hover {
-  border-right: 5px solid var(--hpc-arrow-hover);
+  border-right-color: var(--hpc-arrow-hover);
 }
 
 

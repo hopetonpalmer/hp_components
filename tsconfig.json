@@ -23,6 +23,12 @@
       ],
       "hp-components/*": [
         "dist/hp-components/*"
+      ],
+      "hp-widgets": [
+        "dist/hp-widgets"
+      ],
+      "hp-widgets/*": [
+        "dist/hp-widgets/*"
       ]
     }
   }

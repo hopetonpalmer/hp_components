@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterViewInit, Type, ChangeDetectorRef } from '@angular/core';
-import { InteractionService, ComposerService, ThemeService, ITheme } from 'hp-components';
 import { VideoPlayerComponent } from './widgets/video-player/video-player.component';
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
-
+import { ITheme, ThemeService, ComposerService, InteractionService } from 'hp-components';
 
 
 

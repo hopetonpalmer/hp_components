@@ -1,4 +1,4 @@
-import { Inspectable, Inspect } from '../decorator';
+import { Inspectable, Inspect } from '../decorator/inspectable';
 import { ElementRef} from '@angular/core';
 
 export interface IWidget {

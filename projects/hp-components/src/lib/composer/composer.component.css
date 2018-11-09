@@ -1,8 +1,6 @@
 :host /deep/ .hpc-interaction-host {
   height: 1080px;
   width: 1920px;
- /*  margin-left: 22px;
-  margin-top: 2%; */
 }
 
 
@@ -13,22 +11,8 @@
   height: 100%;
 }
 
-.xcomposer_container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: auto 1fr;
-}
-
-.composer_container > * {
-/*   --hpc-panel-header: rgb(63, 63, 63);
-  --hpc-panel-header-color: rgb(29, 202, 38);
-  --hpc-panel-main: rgb(63, 63, 63); */
-}
-
 .composer_container-widgets {
-  width: 305px;
+  width: auto;
   background-color: var(--hpc-panel-background);
 }
 
@@ -42,23 +26,19 @@
   flex: 1;
 }
 
-
-.composer-menu-container {
-  color: white;
-  padding: 10px;
-  min-height: 75px;
-  width: 100%;
-}
-
-.header-row {
-  grid-column: 1 / span 3;
+.header {
   display: flex;
   flex-wrap: wrap;
-  height: 75px;
+}
+
+.toolbar {
+  color: var(--hpc-toolbar-color);
+  padding: 10px;
+  width: 100%;
   background: var(--hpc-toolbar-background);
 }
 
-.body-row {
+.body {
   display: flex;
   height: 100%;
   width: 100%;

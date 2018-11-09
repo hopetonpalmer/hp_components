@@ -17,18 +17,13 @@ import { MystringPropertyEditorComponent } from './widgets/editors/mystring-prop
   imports: [
     BrowserModule,
     HpComponentsModule,
-    HpComponentsModule.withComponents([
-      VideoPlayerComponent,
-      ImageViewerComponent,
-      MystringPropertyEditorComponent
-    ])
   ],
   exports: [],
   providers: [],
   entryComponents: [
-    /*     VideoPlayerComponent,
+    VideoPlayerComponent,
     ImageViewerComponent,
-    MystringPropertyEditorComponent */
+    MystringPropertyEditorComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,18 +1,21 @@
 :host {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
+  background: white;
   --closeHeight: 55px;
 }
 
 .close-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
   overflow:hidden;
-  padding: 12px 12px 0 0;
   background: rgba(0, 0, 0, 0.5);
-  text-align: right;
   opacity: 0;
   position: relative;
   font-size: 35px;
-  z-index: 1000;
+  z-index: 1001;
   color: rgb(218, 214, 214);
   cursor: pointer;
   transition: height .75s ease-out, padding-top .75s ease, opacity .75s;
@@ -27,4 +30,21 @@
 .show-close {
   opacity: 1;
   height: var(--closeHeight);
+}
+
+@keyframes fadeIn {
+  0% {
+     opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fullscreen {
+  animation-duration: 3s;
+  transition-timing-function: ease-in;
+  animation-fill-mode: both;
+  animation-name: fadeIn;
 }

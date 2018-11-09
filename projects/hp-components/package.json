@@ -34,8 +34,9 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^6.0.0",
-    "@angular/core": "^6.0.0",
+    "@angular/common": "^6.0.0 || ^7.0.0",
+    "@angular/core": "^6.0.0 || ^7.0.0",
+    "@angular/cdk": "^6.4.7",
     "lodash-uuid": "0.0.3",
     "shortid": "^2.2.13",
     "resize-observer": "^1.0.0-alpha.1"

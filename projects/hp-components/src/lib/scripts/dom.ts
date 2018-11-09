@@ -409,16 +409,16 @@ export function centerFlexChild (child: HTMLElement) {
 }
 
 export function requestFullScreen(element: HTMLElement): any {
-  const doc = <any>element;
+  const el = <any>element;
 
-  if (doc.msRequestFullscreen) {
-    return doc.msRequestFullscreen();
-  } else if (doc.requestFullscreen) {
-    return doc.requestFullscreen();
-  } else if (doc.mozRequestFullScreen) {
-    return doc.mozRequestFullScreen();
-  } else if (doc.webkitRequestFullScreen) {
-    return doc.webkitRequestFullScreen();
+  if (el.msRequestFullscreen) {
+    return el.msRequestFullscreen();
+  } else if (el.requestFullscreen) {
+    return el.requestFullscreen();
+  } else if (el.mozRequestFullScreen) {
+    return el.mozRequestFullScreen();
+  } else if (el.webkitRequestFullScreen) {
+    return el.webkitRequestFullScreen();
   }
 }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { WidgetBaseComponent } from '../widget';
-import { Inspect } from '../../decorator';
+import { Inspect, Inspectable } from '../../decorator/inspectable';
 
-
+@Inspectable()
 @Component({
   selector: 'hpc-iframe',
   template: `
@@ -71,7 +71,7 @@ export class IframeComponent extends WidgetBaseComponent
     }
   }
 
-  @Inspect({lineCount: 3})
+  @Inspect({ lineCount: 3 })
   get source(): string {
     return this._source;
   }

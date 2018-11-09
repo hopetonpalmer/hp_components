@@ -1,4 +1,4 @@
-import { IInspectConfig } from '../../decorator';
+import { IInspectConfig } from '../../decorator/inspectable';
 
 export interface IComponentEditor {
   component: any;

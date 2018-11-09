@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Inspectable, Inspect } from 'hp-components-src';
+import { Inspectable, Inspect } from 'hp-components';
+
 
 @Inspectable({ icon: 'assets/imageViewer.png' })
 @Component({
