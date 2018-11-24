@@ -76,106 +76,106 @@ export class ThemeService {
     const rootStyle = document.documentElement.style;
     this.updateStyle(
       rootStyle,
-      '--hpc-panel-background',
+      '--hp-panel-background',
       this.activeTheme.primaryBg
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-panel-color',
+      '--hp-panel-color',
       this.activeTheme.primaryText
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-header-background',
+      '--hp-header-background',
       this.activeTheme.primaryBg
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-header-color',
+      '--hp-header-color',
       this.activeTheme.primaryText
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-panel-main',
+      '--hp-panel-main',
       adjustColor(this.activeTheme.primaryBg, { dR: 0.86, dG: 0.86, dB: 0.86 })
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-panel-header-background',
+      '--hp-panel-header-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 1.33, dG: 1.32, dB: 1.32 })
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-panel-header-color',
+      '--hp-panel-header-color',
       this.activeTheme.primaryText
     );
 
     this.updateStyle(
       rootStyle,
-      '--hpc-toolbar-color',
+      '--hp-toolbar-color',
       adjustColor(this.activeTheme.primaryText, { dR: 1.9, dG: 1.9, dB: 1.9 })
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-toolbar-background',
+      '--hp-toolbar-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 1.9, dG: 1.9, dB: 1.9 })
     );
 
-    this.updateStyle(rootStyle, '--hpc-menu-color', adjustColor(
+    this.updateStyle(rootStyle, '--hp-menu-color', adjustColor(
         this.activeTheme.primaryText,
         { dR: 1.9, dG: 1.9, dB: 1.9 }
       ));
-    this.updateStyle(rootStyle, '--hpc-menu-background', adjustColor(
+    this.updateStyle(rootStyle, '--hp-menu-background', adjustColor(
         this.activeTheme.primaryBg,
         { dR: 1.9, dG: 1.9, dB: 1.9 }
       ));
 
     this.updateStyle(
       rootStyle,
-      '--hpc-hover-background',
+      '--hp-hover-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 3.26, dG: 3.34, dB: 3.14 })
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-hover-color',
+      '--hp-hover-color',
       adjustColor(this.activeTheme.primaryBg, { dR: 0.9, dG: 0.9, dB: 0.9 })
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-panel-border-color',
+      '--hp-panel-border-color',
       adjustColor(this.activeTheme.primaryBg, { dR: 1.47, dG: 1.45, dB: 1.45 })
     );
     this.updateStyle(
       rootStyle,
-      '--hpc-inactive-color',
+      '--hp-inactive-color',
       adjustColor(this.activeTheme.primaryText, { dR: 0.7, dG: 0.7, dB: 0.7 })
     );
 
     this.updateStyle(
       rootStyle,
-      '--hpc-selected-background',
+      '--hp-selected-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 1.7, dG: 1.7, dB: 1.7 })
     );
 
     this.updateStyle(
       rootStyle,
-      '--hpc-selected-color',
+      '--hp-selected-color',
       adjustColor(this.activeTheme.primaryText, { dR: 1.7, dG: 1.7, dB: 1.7 })
     );
 
     this.updateStyle(
       rootStyle,
-      '--hpc-popup-background',
+      '--hp-popup-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 0.75, dG: 0.75, dB: 0.75 })
     );
-    this.updateStyle(rootStyle, '--hpc-popup-color', 'rgb(255,255,255)');
+    this.updateStyle(rootStyle, '--hp-popup-color', 'rgb(255,255,255)');
 
     this.updateStyle(
       rootStyle,
-      '--hpc-input-background',
+      '--hp-input-background',
       adjustColor(this.activeTheme.primaryBg, { dR: 0.9, dG: 0.9, dB: 0.9 })
     );
-    this.updateStyle(rootStyle, '--hpc-input-color', 'rgb(255,255,255)');
+    this.updateStyle(rootStyle, '--hp-input-color', 'rgb(255,255,255)');
   }
 
   updateStyle(style: CSSStyleDeclaration, propertyName: string, color: string) {

@@ -174,7 +174,7 @@ export class InteractionService implements OnDestroy {
   ): HTMLElement {
     if (!element) {
       element = this.renderer.createElement(tagName) as HTMLElement;
-      this.renderer.addClass(element, 'hpc-new-element');
+      this.renderer.addClass(element, 'hp-new-element');
     }
 
     element.id = shortid.generate();
@@ -201,10 +201,10 @@ export class InteractionService implements OnDestroy {
   addContainer(element: HTMLElement = null): HTMLElement {
     if (!element) {
       element = this.renderer.createElement('div');
-      this.renderer.addClass(element, 'hpc-new-element');
+      this.renderer.addClass(element, 'hp-new-element');
     }
-    this.renderer.addClass(element, 'hpc-dropzone');
-    this.renderer.addClass(element, 'hpc-container');
+    this.renderer.addClass(element, 'hp-dropzone');
+    this.renderer.addClass(element, 'hp-container');
     return this.addElement(element);
   }
 
@@ -260,9 +260,9 @@ export class InteractionService implements OnDestroy {
         const componentRef = this.findComponentRef(element);
         if (
           !parent ||
-          (!element.classList.contains('hpc-segment') &&
+          (!element.classList.contains('hp-segment') &&
             !parent['componentType'] &&
-            !parent.classList.contains('hpc-segment'))
+            !parent.classList.contains('hp-segment'))
         ) {
           const styles = dom.getAppliedStyles(element);
           const data = {

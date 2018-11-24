@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[hpcInteraction]'
+  selector: '[hpInteraction]'
 })
 export class InteractionDirective {
 

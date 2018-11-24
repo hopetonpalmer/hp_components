@@ -11,7 +11,7 @@ import { reduce } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'hpc-preview',
+  selector: 'hp-preview',
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css'],
   providers: [ FullscreenService]

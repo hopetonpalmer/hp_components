@@ -1,18 +1,18 @@
 
-<hpc-expander>
-  <div header class="hpc-editor-title">{{title}}</div>
+<hp-expander>
+  <div header class="hp-editor-title">{{title}}</div>
   <div class="extra-content">
     <ng-content></ng-content>
   </div>
-  <div class="hpc-expander-content">
+  <div class="hp-expander-content">
     <label>Left</label>
     <label>Right</label>
     <label>Top</label>
     <label>Bottom</label>
-    <hpc-pixel-input [value]="getStyleValue(getPropName('left'))" (valueChange)="setStyleValue(getPropName('left'), $event)"></hpc-pixel-input>
-    <hpc-pixel-input [value]="getStyleValue(getPropName('right'))" (valueChange)="setStyleValue(getPropName('right'), $event)"></hpc-pixel-input>
-    <hpc-pixel-input [value]="getStyleValue(getPropName('top'))" (valueChange)="setStyleValue(getPropName('top'), $event)"></hpc-pixel-input>
-    <hpc-pixel-input [value]="getStyleValue(getPropName('bottom'))" (valueChange)="setStyleValue(getPropName('bottom'), $event)"></hpc-pixel-input>
+    <hp-pixel-input [value]="getStyleValue(getPropName('left'))" (valueChange)="setStyleValue(getPropName('left'), $event)"></hp-pixel-input>
+    <hp-pixel-input [value]="getStyleValue(getPropName('right'))" (valueChange)="setStyleValue(getPropName('right'), $event)"></hp-pixel-input>
+    <hp-pixel-input [value]="getStyleValue(getPropName('top'))" (valueChange)="setStyleValue(getPropName('top'), $event)"></hp-pixel-input>
+    <hp-pixel-input [value]="getStyleValue(getPropName('bottom'))" (valueChange)="setStyleValue(getPropName('bottom'), $event)"></hp-pixel-input>
   </div>
-</hpc-expander>
+</hp-expander>
 

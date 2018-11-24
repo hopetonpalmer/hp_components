@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, Input } from '@angular/core';
 import { ItemsComponent } from '../items/items.component';
 
 @Component({
-  selector: 'hpc-accordion',
+  selector: 'hp-accordion',
   templateUrl: './accordion.component.html',
   styleUrls: ['../../hp-components.css', './accordion.component.css']
 })

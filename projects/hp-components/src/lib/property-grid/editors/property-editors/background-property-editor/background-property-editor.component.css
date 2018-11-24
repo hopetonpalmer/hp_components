@@ -18,7 +18,7 @@
 
 .btn-fill.selected,
 .btn-fill-border.selected {
-  background-color: var(--hpc-selected-background);
+  background-color: var(--hp-selected-background);
 }
 
 

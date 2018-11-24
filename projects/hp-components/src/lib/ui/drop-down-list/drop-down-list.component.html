@@ -1,12 +1,12 @@
-<hpc-drop-down-button #ddButton>
+<hp-drop-down-button #ddButton>
    <div header>{{displayMemberPath ? selectedItem[displayMemberPath] : selectedItem}}</div>
-   <div class="hpc-list-container hpc-dropdown">
+   <div class="hp-list-container hp-dropdown">
       <div *ngFor="let item of itemsSource"
-            class='hpc-list-item'
-            [ngClass]="{'hpc-item-selected': item===selectedItem}"
+            class='hp-list-item'
+            [ngClass]="{'hp-item-selected': item===selectedItem}"
             (click)="selectedItem=item; ddButton.close();">
           {{displayMemberPath ? item[displayMemberPath] : item}}
       </div>
    </div>
-</hpc-drop-down-button>
+</hp-drop-down-button>
 

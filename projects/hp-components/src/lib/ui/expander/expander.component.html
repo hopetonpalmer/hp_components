@@ -3,7 +3,7 @@
   <div *ngIf="!caption" class="header-content">
     <ng-content select=[header]></ng-content>
   </div>
-  <div #arrow class="arrow" [ngClass]="{'hpc-arrow-up': isExpanded, 'hpc-arrow-down': animateClose || !isExpanded}" ></div>
+  <div #arrow class="arrow" [ngClass]="{'hp-arrow-up': isExpanded, 'hp-arrow-down': animateClose || !isExpanded}" ></div>
 </div>
 <div class="content" [ngClass]="{'expanded': isExpanded, 'contracted': animateClose, 'animate': animate}">
   <div class="inner-content" *ngIf="isExpanded">

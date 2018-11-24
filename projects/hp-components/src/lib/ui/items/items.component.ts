@@ -4,7 +4,7 @@ import { Orientation } from '../../scripts/types';
 export type ITemplateSelector = (item: any) => TemplateRef<any>;
 
 @Component({
-  selector: 'hpc-items',
+  selector: 'hp-items',
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.css', '../../hp-components.css']
 })

@@ -17,7 +17,7 @@ import { Observable, Subscription } from 'rxjs';
 
 
 @Component({
-  selector: 'hpc-property-grid',
+  selector: 'hp-property-grid',
   templateUrl: './property-grid.component.html',
   styleUrls: ['./property-grid.component.css', '../hp-components.css']
 })

@@ -18,5 +18,5 @@
 }
 
 .selected {
-  border-bottom-color: var(--hpc-selected-border-color);
+  border-bottom-color: var(--hp-selected-border-color);
 }

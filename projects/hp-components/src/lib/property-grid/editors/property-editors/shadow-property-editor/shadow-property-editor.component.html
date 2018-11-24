@@ -2,19 +2,19 @@
     <ng-container *ngTemplateOutlet="shadowTpl; context: shadow"></ng-container>
 </ng-container>
 <ng-template #shadowTpl>
-  <hpc-expander>
-    <div header class="hpc-editor-title">{{title}}</div>
-    <div class="hpc-expander-content"  [ngClass]="{'textShadow': shadowType === 'text'}">
+  <hp-expander>
+    <div header class="hp-editor-title">{{title}}</div>
+    <div class="hp-expander-content"  [ngClass]="{'textShadow': shadowType === 'text'}">
       <label>X</label>
       <label>Y</label>
       <label>Blur</label>
       <label *ngIf="shadowType === 'box'">Spread</label>
       <label>Color</label>
-      <hpc-pixel-input [value]="hOffset" (valueChange)="updateShadow('hOffset', $event)"></hpc-pixel-input>
-      <hpc-pixel-input [value]="vOffset" (valueChange)="updateShadow('vOffset', $event)"></hpc-pixel-input>
-      <hpc-pixel-input [value]="blur" (valueChange)="updateShadow('blur', $event)"></hpc-pixel-input>
-      <hpc-pixel-input *ngIf="shadowType === 'box'" [value]="spread" (valueChange)="updateShadow('spread', $event)"></hpc-pixel-input>
-      <hpc-color-combo-box [selectedColor]="color" (selectedColorChange)="updateShadow('color', $event)"></hpc-color-combo-box>
+      <hp-pixel-input [value]="hOffset" (valueChange)="updateShadow('hOffset', $event)"></hp-pixel-input>
+      <hp-pixel-input [value]="vOffset" (valueChange)="updateShadow('vOffset', $event)"></hp-pixel-input>
+      <hp-pixel-input [value]="blur" (valueChange)="updateShadow('blur', $event)"></hp-pixel-input>
+      <hp-pixel-input *ngIf="shadowType === 'box'" [value]="spread" (valueChange)="updateShadow('spread', $event)"></hp-pixel-input>
+      <hp-color-combo-box [selectedColor]="color" (selectedColorChange)="updateShadow('color', $event)"></hp-color-combo-box>
     </div>
-  </hpc-expander>
+  </hp-expander>
 </ng-template>

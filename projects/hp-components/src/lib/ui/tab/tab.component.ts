@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'hpc-tab',
+  selector: 'hp-tab',
   templateUrl: './tab.component.html',
   styleUrls: ['./tab.component.css']
 })

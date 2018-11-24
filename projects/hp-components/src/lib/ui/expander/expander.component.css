@@ -2,15 +2,15 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: var(--hpc-panel-header-background);
-  color: var(--hpc-panel-header-color);
+  background-color: var(--hp-panel-header-background);
+  color: var(--hp-panel-header-color);
   margin-top: 1px;
 }
 
 .content {
   flex: 1;
   overflow: hidden;
-  background-color: var(--hpc-panel-background);
+  background-color: var(--hp-panel-background);
 }
 .inner-content {
   margin: 10px;
@@ -22,8 +22,8 @@
   cursor: default;
 }
 .expander:hover {
-  background-color: var(--hpc-hover-background);
-  color: var(--hpc-hover-color);
+  background-color: var(--hp-hover-background);
+  color: var(--hp-hover-color);
 }
 
 

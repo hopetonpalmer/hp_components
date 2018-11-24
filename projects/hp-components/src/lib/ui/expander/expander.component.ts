@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } fro
 
 
 @Component({
-  selector: 'hpc-expander',
+  selector: 'hp-expander',
   templateUrl: './expander.component.html',
   styleUrls: ['../../hp-components.css', './expander.component.css']
 })

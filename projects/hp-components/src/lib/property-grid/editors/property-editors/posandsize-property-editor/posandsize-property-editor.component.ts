@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 
 @Component({
-  selector: 'hpc-posandsize-property-editor',
+  selector: 'hp-posandsize-property-editor',
   templateUrl: './posandsize-property-editor.component.html',
   styleUrls: ['./posandsize-property-editor.component.css', '../../editor-styles.css']
 })

@@ -1,23 +1,23 @@
-<hpc-header>{{headerCaption}}</hpc-header>
+<hp-header>{{headerCaption}}</hp-header>
 <div style="flex:1; height: 100%; padding: 2px 5px;">
-  <div hpcAutoScroll [offsetY]=10>
-     <hpc-accordion
+  <div hpAutoScroll [offsetY]=0>
+     <hp-accordion
         [multiExpand]=true
         [displayMemberPath]="'group'"
         [itemsSource]="composerService.widgetGroups$ | async"
         [contentTemplate]="contentTemplate">
-    </hpc-accordion>
+    </hp-accordion>
   </div>
 </div>
 
 <ng-template #contentTemplate let-item>
-  <hpc-items
+  <hp-items
       (itemClick)="createWidget($event)"
       [wrapContent]=true
       [orientation]="'horizontal'"
       [itemTemplate]="itemTemplate ? itemTemplate : defaultTemplate"
       [itemsSource]="item.widgets">
-  </hpc-items>
+  </hp-items>
 </ng-template>
 
 <ng-template #defaultTemplate let-widget >

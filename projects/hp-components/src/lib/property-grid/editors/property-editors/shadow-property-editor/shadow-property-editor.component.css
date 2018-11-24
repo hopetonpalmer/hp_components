@@ -1,4 +1,4 @@
-.hpc-expander-content, .textShadow {
+.hp-expander-content, .textShadow {
   grid-template-columns: repeat(5, 1fr);
   grid-column-gap: 4px;
 }

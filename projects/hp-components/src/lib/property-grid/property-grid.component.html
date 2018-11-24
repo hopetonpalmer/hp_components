@@ -1,18 +1,18 @@
 <ng-container *ngIf="!inspectableComponentInfo?.editorClass">
-  <hpc-header>{{headerCaption}}</hpc-header>
+  <hp-header>{{headerCaption}}</hp-header>
   <div class="settings-container">
-    <hpc-expander #defaultExpander [isExpanded]=true>
-        <div class="hpc-flex-row" header>
-          <hpc-tab-strip #tabStrip1 [itemsSource]="['Color','Text']" (itemClick)="defaultExpander.isExpanded=true"></hpc-tab-strip>
+    <hp-expander #defaultExpander [isExpanded]=true>
+        <div class="hp-flex-row" header>
+          <hp-tab-strip #tabStrip1 [itemsSource]="['Color','Text']" (itemClick)="defaultExpander.isExpanded=true"></hp-tab-strip>
         </div>
-        <hpc-background-property-editor *ngIf="tabStrip1.selectedItem === 'Color'"></hpc-background-property-editor>
-        <hpc-font-property-editor *ngIf="tabStrip1.selectedItem === 'Text'"></hpc-font-property-editor>
-    </hpc-expander>
+        <hp-background-property-editor *ngIf="tabStrip1.selectedItem === 'Color'"></hp-background-property-editor>
+        <hp-font-property-editor *ngIf="tabStrip1.selectedItem === 'Text'"></hp-font-property-editor>
+    </hp-expander>
 
     <div style="flex: 1; height: 100%">
-      <hpc-expander [animate]=false hpcAutoScroll [target]="'.content'" [offsetY]=78  #props_styles [isExpanded]=true>
-        <div class="hpc-flex-row" header>
-          <hpc-tab-strip #tabStrip2 [itemsSource]="['Properties','Styles']" (itemClick)="props_styles.isExpanded=true"></hpc-tab-strip>
+      <hp-expander [animate]=false hpAutoScroll [target]="'.content'"  #props_styles [isExpanded]=true>
+        <div class="hp-flex-row" header>
+          <hp-tab-strip #tabStrip2 [itemsSource]="['Properties','Styles']" (itemClick)="props_styles.isExpanded=true"></hp-tab-strip>
         </div>
         <div [hidden]="tabStrip2.selectedItem !== 'Properties'" class="component-props">
           <ng-container #componentProps ></ng-container>
@@ -20,7 +20,7 @@
         <div #styleProps [hidden]="tabStrip2.selectedItem !== 'Styles'" class="syle-props">
           <ng-container *ngComponentOutlet="getPropertyEditor({propType: 'style'})"></ng-container>
         </div>
-      </hpc-expander>
+      </hp-expander>
     </div>
 
   </div>

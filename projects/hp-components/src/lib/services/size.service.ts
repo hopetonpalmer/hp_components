@@ -58,7 +58,7 @@ export class SizeService implements OnDestroy {
 
   createSizingOverlay(element: Element): HTMLElement {
     const result = element.cloneNode(false) as HTMLElement;
-    this.renderer.addClass(result, 'hpc-sizer-overlay');
+    this.renderer.addClass(result, 'hp-sizer-overlay');
     this.renderer.setStyle(result, 'border-style', 'solid');
     this.renderer.setStyle(result, 'cursor', 'inherit');
     return result;

@@ -5,7 +5,7 @@ import * as dom from '../../../../scripts/dom';
 export type ShadowType = 'box' | 'text';
 
 @Component({
-  selector: 'hpc-shadow-property-editor',
+  selector: 'hp-shadow-property-editor',
   templateUrl: './shadow-property-editor.component.html',
   styleUrls: ['./shadow-property-editor.component.css', '../../editor-styles.css']
 })

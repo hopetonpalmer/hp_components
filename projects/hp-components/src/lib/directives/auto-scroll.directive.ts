@@ -3,7 +3,7 @@ import { ResizeObserver } from 'resize-observer';
 import * as dom from '../scripts/dom';
 
 @Directive({
-  selector: '[hpcAutoScroll]'
+  selector: '[hpAutoScroll]'
 })
 export class AutoScrollDirective implements AfterViewChecked {
   private _active = false;
@@ -39,8 +39,9 @@ export class AutoScrollDirective implements AfterViewChecked {
     const setAbosluteSize = () => {
       if (!isUpdating) {
         isUpdating = true;
-        this._renderer.setStyle(targetEl, 'max-height', parentEl.offsetHeight - this.offsetY + 'px');
-        this._renderer.setStyle(targetEl, 'max-width', parentEl.offsetWidth - this.offsetX + 'px');
+        const offset = dom.offsetToParent(targetEl);
+        this._renderer.setStyle(targetEl, 'max-height', parentEl.offsetHeight - (offset.y * 2 + this.offsetY) + 'px');
+        this._renderer.setStyle(targetEl, 'max-width', parentEl.offsetWidth - (offset.x * 2 + this.offsetX) + 'px');
         isUpdating = false;
       }
     };

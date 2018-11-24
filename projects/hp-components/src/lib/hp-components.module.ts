@@ -75,8 +75,14 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
 
 
 
+
 @NgModule({
-  imports: [OverlayModule, A11yModule, CommonModule, HttpClientModule],
+  imports: [
+    OverlayModule,
+    A11yModule,
+    CommonModule,
+    HttpClientModule
+  ],
   declarations: [
     InteractionComponent,
     ComposerComponent,
@@ -173,15 +179,16 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     TabItemComponent,
     TabStripComponent,
     WidgetGridComponent,
-    AutoScrollDirective,
     IframeComponent,
     HostedAppComponent,
     RemoteAppComponent,
-    WidgetDirective,
     PopupComponent,
     SegmentComponent,
     WebAppComponent,
     PreviewComponent,
+
+    WidgetDirective,
+    AutoScrollDirective,
     SafeHtmlPipe
   ],
   providers: [PreviewService],

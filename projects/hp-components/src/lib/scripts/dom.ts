@@ -10,6 +10,16 @@ export function offset(el: Element): Point {
   return new Point(left, top);
 }
 
+export function offsetToParent(el: HTMLElement): Point {
+  const parent = el.parentElement;
+  if (!parent) {
+    return offset(el);
+  }
+  const x = el.offsetLeft - parent.offsetLeft;
+  const y = el.offsetTop - parent.offsetTop;
+  return new Point(x, y);
+}
+
 export function pixToNum(value: string): number {
   if (!value || value.length === 0) {
     return 0;
@@ -38,8 +48,8 @@ export function childElements(element: Element, orderByZOrder = false): HTMLElem
   for (let i = 0; i < children.length; i++) {
     const child = children[i] as HTMLElement;
     if (child && child.parentElement === element &&
-      child.className.indexOf('hpc-lasso-selector') === -1 &&
-      child.className.indexOf('hpc-element-selector') === -1 &&
+      child.className.indexOf('hp-lasso-selector') === -1 &&
+      child.className.indexOf('hp-element-selector') === -1 &&
       child.className.indexOf('grip') === -1) {
       result.push(child);
     }
@@ -54,12 +64,12 @@ export function childElements(element: Element, orderByZOrder = false): HTMLElem
 export function defaultExcludeFromChildren(children: HTMLElement[]) {
   for (let i = children.length - 1; i >= 0; i--) {
     const child = children[i] as HTMLElement;
-    if (child.className.indexOf('hpc-lasso-selector') > -1 ||
+    if (child.className.indexOf('hp-lasso-selector') > -1 ||
       child.getAttribute('skipChildLookup') === 'true' ||
-      child.getAttribute('hpc-segment') === 'true' ||
-      child.className.indexOf('hpc-segment') > -1 ||
-      child.className.indexOf('hpc-element-selector') > -1 ||
-      child.className.indexOf('hpc-drag-overlay') > -1 ||
+      child.getAttribute('hp-segment') === 'true' ||
+      child.className.indexOf('hp-segment') > -1 ||
+      child.className.indexOf('hp-element-selector') > -1 ||
+      child.className.indexOf('hp-drag-overlay') > -1 ||
       child.className.indexOf('grip-container') > -1 ||
       child.className.indexOf('grip') > -1) {
       removeArrayItem(children, child);
@@ -133,7 +143,7 @@ export function elementPagePos(element: Element): Point {
 }
 
 
-export function parentTree(element: Element, lastClass: string = 'hpc-interaction-container', inclusive = false): Array<HTMLElement> {
+export function parentTree(element: Element, lastClass: string = 'hp-interaction-container', inclusive = false): Array<HTMLElement> {
   const result = new Array<HTMLElement>();
   if (!element) {
     return result;
@@ -300,33 +310,33 @@ export function getRelativePointerPos(e: PointerEvent, element: HTMLElement, sca
 }
 
 export function elementDraggable(element: Element) {
-  return !elementLocked(element) && element.className.indexOf('hpc-no-drag') === -1;
+  return !elementLocked(element) && element.className.indexOf('hp-no-drag') === -1;
 }
 
 export function elementSizable(element: Element) {
-  return !elementLocked(element) && element.className.indexOf('hpc-no-size') === -1;
+  return !elementLocked(element) && element.className.indexOf('hp-no-size') === -1;
 }
 
 export function elementLocked(element: Element): boolean {
-  return element.className.indexOf('hpc-locked') > -1;
+  return element.className.indexOf('hp-locked') > -1;
 }
 
 export function isContainer(element: Element): boolean {
-  return element.classList.contains('hpc-container');
+  return element.classList.contains('hp-container');
 }
 
 export function isComposite(element: Element): boolean {
-  return element.classList.contains('hpc-composite');
+  return element.classList.contains('hp-composite');
 }
 
 export function compositeParent(element: Element): HTMLElement {
-  return parentByClass(element, 'hpc-composite');
+  return parentByClass(element, 'hp-composite');
 }
 
 export function isSelectable(element: Element): boolean {
-  return !element.classList.contains('hpc-no-select')
-   && (element.parentElement && element.parentElement.classList.contains('hpc-interaction-host') ||
-    element.parentElement && element.parentElement.classList.contains('hpc-container')) ;
+  return !element.classList.contains('hp-no-select')
+   && (element.parentElement && element.parentElement.classList.contains('hp-interaction-host') ||
+    element.parentElement && element.parentElement.classList.contains('hp-container')) ;
 }
 
 export function pauseVideos(element: Element): HTMLVideoElement[] {

@@ -7,14 +7,14 @@
     </div>
     <div class= "body">
       <div class="composer_container-widgets">
-          <hpc-widget-grid style="width: 305px" *ngIf="widgetGridVisible"></hpc-widget-grid>
+          <hp-widget-grid style="width: 305px" *ngIf="widgetGridVisible"></hp-widget-grid>
           <ng-content select="[widgets]"></ng-content>
       </div>
-      <div class="composer-content hpc-checkers-tiny-image">
-          <hpc-interaction [isCheckersBackground]=true [isLassoSelectable]=true [(scale)]="zoom" > </hpc-interaction>
+      <div class="composer-content hp-checkers-tiny-image">
+          <hp-interaction [isCheckersBackground]=true [isLassoSelectable]=true [(scale)]="zoom" > </hp-interaction>
       </div>
       <div class="composer_container-properties">
-      <hpc-property-grid style="width: 325px" *ngIf=propertyGridVisible></hpc-property-grid>
+      <hp-property-grid style="width: 325px" *ngIf=propertyGridVisible></hp-property-grid>
         <ng-content select="[properties]"></ng-content>
       </div>
     </div>

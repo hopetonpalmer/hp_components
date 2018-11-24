@@ -2,7 +2,7 @@ import { Component, OnInit, Injector } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 
 @Component({
-  selector: 'hpc-alignment-property-editor',
+  selector: 'hp-alignment-property-editor',
   templateUrl: './alignment-property-editor.component.html',
   styleUrls: ['./alignment-property-editor.component.css']
 })

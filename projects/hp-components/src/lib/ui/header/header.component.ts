@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
 @Component({
-  selector: 'hpc-header',
+  selector: 'hp-header',
   templateUrl: './header.component.html',
   styleUrls: ['../../hp-components.css', './header.component.css']
 })

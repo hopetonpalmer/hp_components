@@ -18,17 +18,65 @@
       "dom"
     ],
     "paths": {
-      "hp-components-src": [
-        "projects/hp-components/src/public_api"
-      ],
       "hp-components/*": [
         "dist/hp-components/*"
+      ],
+      "hp-components-src": [
+        "projects/hp-components/src/public_api"
       ],
       "hp-widgets": [
         "dist/hp-widgets"
       ],
       "hp-widgets/*": [
         "dist/hp-widgets/*"
+      ],
+      "@hp-components/core": [
+        "dist/hp-components/core"
+      ],
+      "@hp-components/core/*": [
+        "dist/hp-components/core/*"
+      ],
+      "@hp-components/core-src": [
+        "projects/hp-components/core/src/public_api"
+      ],
+      "@hp-components/scheduler": [
+        "dist/hp-components/scheduler"
+      ],
+      "@hp-components/scheduler/*": [
+        "dist/hp-components/scheduler/*"
+      ],
+      "@hp-components/scheduler-src": [
+        "projects/hp-components/scheduler/src/public_api"
+      ],
+      "@hp-components/filemanager": [
+        "dist/hp-components/filemanager"
+      ],
+      "@hp-components/filemanager/*": [
+        "dist/hp-components/filemanager/*"
+      ],
+      "@hp-components/designer": [
+        "dist/hp-components/designer"
+      ],
+      "@hp-components/designer/*": [
+        "dist/hp-components/designer/*"
+      ],
+      "@hp-components/ui": [
+        "dist/hp-components/ui"
+      ],
+      "@hp-components/ui/*": [
+        "dist/hp-components/ui/*"
+      ],
+      "@hp-components/common": [
+        "dist/hp-components/common"
+      ],
+      "@hp-components/common/*": [
+        "dist/hp-components/common/*"
+      ],
+      "@hp-components/widgets": [
+        "dist/hp-components/widgets"
+      ],
+      "@hp-components/widgets/*": [
+        "dist/hp-components/widgets/*"
       ]
     }
   }

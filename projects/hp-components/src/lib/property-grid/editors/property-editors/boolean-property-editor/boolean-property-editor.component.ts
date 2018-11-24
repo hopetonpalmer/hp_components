@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'hpc-boolean-property-editor',
+  selector: 'hp-boolean-property-editor',
   templateUrl: './boolean-property-editor.component.html',
   styleUrls: ['./boolean-property-editor.component.css']
 })

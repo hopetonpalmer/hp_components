@@ -13,7 +13,7 @@ export class DragService implements OnDestroy {
 
   createDragOverlay(element: HTMLElement): HTMLElement {
     const result = element.cloneNode(!dom.hasVideo(element)) as HTMLElement;
-    this.renderer.addClass(result, 'hpc-drag-overlay');
+    this.renderer.addClass(result, 'hp-drag-overlay');
     // this.renderer.setStyle(result, 'top', result.offsetTop + 'px');
     // this.renderer.setStyle(result, 'left', result.offsetLeft + 'px');
 
@@ -55,7 +55,7 @@ export class DragService implements OnDestroy {
     exclude.push(draggedElement);
     const pos = dom.offset(draggedElement);
     const el = dom.elementAtPoint(pos, parent, exclude);
-    if (el !== parent && el.classList.contains('hpc-dropzone')) {
+    if (el !== parent && el.classList.contains('hp-dropzone')) {
       return el;
     }
     return null;

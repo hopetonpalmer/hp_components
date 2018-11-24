@@ -29,7 +29,7 @@ export function detectIE(): boolean | number {
 }
 
 @Directive({
-  selector: '[hpcText]'
+  selector: '[hpText]'
 })
 export class TextDirective {
   @Input() rg: number;
@@ -53,7 +53,7 @@ export class TextDirective {
 }
 
 @Directive({
-  selector: '[hpcSlider]'
+  selector: '[hpSlider]'
 })
 export class SliderDirective {
   private listenerMove: any;

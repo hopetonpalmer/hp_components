@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'hpc-segment',
+  selector: 'hp-segment',
   template: `
-  <div  [ngClass]="{'hpc-fill-parent': isRoot}" class="hpc-segment">
+  <div  [ngClass]="{'hp-fill-parent': isRoot}" class="hp-segment">
     <ng-content></ng-content>
   </div>
   `,

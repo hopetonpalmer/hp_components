@@ -100,7 +100,7 @@ export class SelectorService implements OnDestroy {
     if (this.isLassoSelectable) {
       const selector = this.createSelector(left, top, this.interactionHost);
       this.renderer.setStyle(this.interactionHost, 'cursor', this.lassoCursor);
-      this.renderer.addClass(selector, 'hpc-lasso-selector');
+      this.renderer.addClass(selector, 'hp-lasso-selector');
       this._lassoSelector = selector;
     }
   }
@@ -204,7 +204,7 @@ export class SelectorService implements OnDestroy {
     );
     selectorEl['isSelector'] = true;
     dom.assignSize(this.renderer, element, selectorEl);
-    this.renderer.addClass(selectorEl, 'hpc-element-selector');
+    this.renderer.addClass(selectorEl, 'hp-element-selector');
     selector = { clientEl: element, selectorEl: selectorEl, overlay: null };
     this._selectors.push(selector);
     this._activeSelector = selector;

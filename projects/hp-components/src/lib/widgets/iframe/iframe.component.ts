@@ -4,9 +4,9 @@ import { Inspect, Inspectable } from '../../decorator/inspectable';
 
 @Inspectable()
 @Component({
-  selector: 'hpc-iframe',
+  selector: 'hp-iframe',
   template: `
-      <iframe hpc-segment class="hpc-fill-parent" #iframe></iframe>
+      <iframe hp-segment class="hp-fill-parent" #iframe></iframe>
   `,
   styles: ['iframe {border: 0; }']
 })

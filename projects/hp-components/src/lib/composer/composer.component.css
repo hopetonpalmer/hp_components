@@ -1,4 +1,4 @@
-:host /deep/ .hpc-interaction-host {
+:host /deep/ .hp-interaction-host {
   height: 1080px;
   width: 1920px;
 }
@@ -13,16 +13,16 @@
 
 .composer_container-widgets {
   width: auto;
-  background-color: var(--hpc-panel-background);
+  background-color: var(--hp-panel-background);
 }
 
 .composer_container-properties {
   width: 325px;
-  background-color: var(--hpc-panel-background);
+  background-color: var(--hp-panel-background);
 }
 
 .composer-content {
-  background-color: var(--hpc-panel-main);
+  background-color: var(--hp-panel-main);
   flex: 1;
 }
 
@@ -32,10 +32,10 @@
 }
 
 .toolbar {
-  color: var(--hpc-toolbar-color);
+  color: var(--hp-toolbar-color);
   padding: 10px;
   width: 100%;
-  background: var(--hpc-toolbar-background);
+  background: var(--hp-toolbar-background);
 }
 
 .body {

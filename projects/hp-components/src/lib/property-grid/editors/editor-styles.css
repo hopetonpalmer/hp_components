@@ -4,17 +4,17 @@
   display: flex;
 }
 
-.hpc-expander-content {
+.hp-expander-content {
   display: grid;
   grid-row-gap: 3px;
   padding: 5px;
-  border: var(--hpc-panel-border);
+  border: var(--hp-panel-border);
   grid-column-gap: 6px;
   min-height: 0;
   min-width: 0;
 }
 
-.hpc-simple-editor {
+.hp-simple-editor {
   display: grid;
   grid-template-columns: auto;
   grid-row-gap: 3px;
@@ -24,19 +24,19 @@
   margin-bottom: 15px;
 }
 
-hpc-color-combo-box {
+hp-color-combo-box {
   height: 100%;
 }
 
-.hpc-simple-editor * {
+.hp-simple-editor * {
   min-width: 100%;
 }
 
 
-.hpc-editor-title {
+.hp-editor-title {
 
 }
 
-.hpc-editor-content-container {
+.hp-editor-content-container {
 
 }

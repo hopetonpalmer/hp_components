@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'hpc-drop-down-button',
+  selector: 'hp-drop-down-button',
   templateUrl: './drop-down-button.component.html',
   styleUrls: ['../../hp-components.css', './drop-down-button.component.css']
 })

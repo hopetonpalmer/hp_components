@@ -3,7 +3,7 @@ import { PropertyEditor } from '../property-editor';
 
 
 @Component({
-  selector: 'hpc-font-property-editor',
+  selector: 'hp-font-property-editor',
   templateUrl: './font-property-editor.component.html',
   styleUrls: ['./font-property-editor.component.css', '../../editor-styles.css']
 })

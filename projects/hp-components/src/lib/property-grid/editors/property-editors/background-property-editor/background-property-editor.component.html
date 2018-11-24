@@ -2,9 +2,9 @@
       <!-- fill color -->
       <div class="btn-fill" [ngClass]="{'selected': colorFillType === 'fill'}" (click)="colorFillType = 'fill'" >
         <div>
-          <div class="selected-color-background hpc-checkers-small"></div>
+          <div class="selected-color-background hp-checkers-small"></div>
           <div class="selected-color color-type-row" [style.background-color]="getStyleValue('backgroundColor')">
-            <div [hidden]="cp.colorSelectionType !== 'no-color'" class="hpc-no-color-line"></div>
+            <div [hidden]="cp.colorSelectionType !== 'no-color'" class="hp-no-color-line"></div>
           </div>
         </div>
         <div>Fill</div>
@@ -16,11 +16,11 @@
         <div>Border</div>
       </div>
   </div>
-  <hpc-color-picker #cp
+  <hp-color-picker #cp
     [showSelectedColor]=false
     [showSelectedColorCode]=false
     [selectedColor]="getStyleValue(activeProperty)"
     (selectedColorChange)="setStyleValue(activeProperty, $event)"
     class="color-picker">
-  </hpc-color-picker>
+  </hp-color-picker>
 

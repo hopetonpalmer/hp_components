@@ -6,8 +6,8 @@ import {Inspectable } from '../../decorator/inspectable';
 
 @Inspectable()
 @Component({
-  selector: 'hpc-web-app',
-  template: `<iframe hpc-segment class="hpc-fill-parent" #iframe></iframe>`,
+  selector: 'hp-web-app',
+  template: `<iframe hp-segment class="hp-fill-parent" #iframe></iframe>`,
   styles: ['iframe {border: 0; }']
 })
 export class WebAppComponent extends IframeComponent

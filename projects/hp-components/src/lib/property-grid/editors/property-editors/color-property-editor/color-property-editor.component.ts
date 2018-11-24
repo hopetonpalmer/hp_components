@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 
 @Component({
-  selector: 'hpc-color-property-editor',
+  selector: 'hp-color-property-editor',
   template: `
-  <div class="hpc-simple-editor">
+  <div class="hp-simple-editor">
     <span>{{propertyConfig.displayName}}</span>
-    <hpc-color-combo-box
+    <hp-color-combo-box
       [selectedColor]="getPropertyValue()"
       (selectedColorChange)="setPropertyValue($event)">
-    </hpc-color-combo-box>
+    </hp-color-combo-box>
   </div>`,
   styleUrls: ['../../editor-styles.css']
 })

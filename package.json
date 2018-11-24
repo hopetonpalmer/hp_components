@@ -17,7 +17,16 @@
     "update_git_page": "npm run build_git_page && npm run publish_git_page",
     "build_lib2": "ng build --prod hp-widgets",
     "npm_pack2": "cd dist/hp-widgets && npm pack",
-    "package2": "npm run build_lib2 && npm run npm_pack2"
+    "package2": "npm run build_lib2 && npm run npm_pack2",
+    "build_sched": "ng build --prod scheduler",
+    "npm_pack_sched": "cd dist/hp-components/scheduler && npm pack",
+    "package-sched": "npm run build_sched && npm run npm_pack_sched",
+    "build_core": "ng build --prod core",
+    "npm_pack_core": "cd dist/hp-components/core && npm pack",
+    "package-core": "npm run build_core && npm run npm_pack_core",
+    "build_fm": "ng build --prod filemanager",
+    "npm_pack_fm": "cd dist/hp-components/filemanager && npm pack",
+    "package-fm": "npm run build_fm && npm run npm_pack_fm"
   },
   "private": true,
   "dependencies": {
@@ -31,7 +40,10 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@hp-components/core": "file:dist/hp-components/core/hp-components-core-0.0.1.tgz",
+    "@hp-components/scheduler": "file:dist/hp-components/scheduler/hp-components-scheduler-0.0.1.tgz",
     "core-js": "^2.5.4",
+    "date-fns": "^1.29.0",
     "hp-components": "file:dist/hp-components/hp-components-0.4.7.tgz",
     "lodash-uuid": "0.0.3",
     "resize-observer": "^1.0.0-alpha.1",

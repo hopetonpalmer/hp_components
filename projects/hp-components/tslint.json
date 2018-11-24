@@ -4,13 +4,13 @@
         "directive-selector": [
             true,
             "attribute",
-            "hpc",
+            "hp",
             "camelCase"
         ],
         "component-selector": [
             true,
             "element",
-            "hpc",
+            "hp",
             "kebab-case"
         ]
     }

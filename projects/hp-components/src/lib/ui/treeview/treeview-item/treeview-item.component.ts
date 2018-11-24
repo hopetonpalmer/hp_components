@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'hpc-treeview-item',
+  selector: 'hp-treeview-item',
   templateUrl: './treeview-item.component.html',
   styleUrls: ['./treeview-item.component.css']
 })

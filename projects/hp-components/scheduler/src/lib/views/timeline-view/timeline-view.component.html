@@ -1,0 +1,10 @@
+<!-- <hp-time-interval [intervalType]="'Day'" [dateFormat]="'EEEE, MMMM d, y'" [dateRange]="schedulerService.dateRange"></hp-time-interval> -->
+<hp-time-interval
+ [intervalTypes]="intervalTypes"
+ [dayTimeRange]="schedulerService.dayTimeRange$ | async"
+ [dateRange]="schedulerService.dateRange$ | async">
+</hp-time-interval>
+<!-- <hp-time-interval style="font-size: 13px" [intervalType]="'Minute'" [dateFormat]="'mm'" [dateRange]="schedulerService.dateRange"></hp-time-interval> -->
+<div *ngFor="let appt of schedulerService.appointments$ | async">
+    <div>{{appt.subject}}</div>
+</div>

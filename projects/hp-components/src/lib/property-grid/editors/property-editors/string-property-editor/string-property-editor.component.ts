@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { PropertyEditor } from '../property-editor';
 
 @Component({
-  selector: 'hpc-number-property-editor',
+  selector: 'hp-number-property-editor',
   template: `
-  <div class="hpc-simple-editor">
+  <div class="hp-simple-editor">
     <div>{{propertyConfig.displayName}}</div>
     <textarea [rows]="propertyConfig.lineCount" [placeholder]="propertyConfig.placeHolder"
      [value]="getPropertyValue()" (change)="setPropertyValue($event.target.value)"></textarea>

@@ -4,11 +4,11 @@
      width: 100%;
    }
 
-   .hpc-interaction-host {
+   .hp-interaction-host {
       transform-origin: 0 0;
    }
 
-   .hpc-interaction-host.animate {
+   .hp-interaction-host.animate {
       transition: transform .1s ease-in;
    }
 
@@ -20,7 +20,7 @@
       transition: height .1s ease-in, width .1s ease-in;
     }
 
-   .hpc-new-element, .hpc-widget {
+   .hp-new-element, .hp-widget {
      background-color: #808080;
      top: 10px;
      left: 10px;
@@ -31,23 +31,23 @@
    }
 
 
-   .hpc-container {}
+   .hp-container {}
 
-   .hpc-locked {}
+   .hp-locked {}
 
-   .hpc-no-size {}
+   .hp-no-size {}
 
-   .hpc-no-drag {}
+   .hp-no-drag {}
 
-   .hpc-no-select {}
+   .hp-no-select {}
 
-   .hpc-interaction-host {
+   .hp-interaction-host {
      height: 100%;
      box-sizing: border-box;
    }
 
-   .hpc-element-selector,
-   .hpc-lasso-selector {
+   .hp-element-selector,
+   .hp-lasso-selector {
      border: 2px dashed black;
      pointer-events: None;
    }
@@ -151,16 +151,16 @@
      border-radius: 50%;
    }
 
-   .hpc-sizer-overlay {
+   .hp-sizer-overlay {
      z-index: 10000;
    }
 
-   .hpc-drag-overlay {
+   .hp-drag-overlay {
      opacity: 0.5;
      z-index: 10000;
    }
 
-@keyframes hpc-flicker-Dropzone {
+@keyframes hp-flicker-Dropzone {
   0% {
     background: rgba(13, 101, 122, 0.60);
   }
@@ -175,11 +175,11 @@
 }
 
 
-.hpc-dropzone.active {
-  -moz-animation: hpc-flicker-Dropzone 1s infinite;
-  -o-animation: hpc-flicker-Dropzone 1s infinite;
-  -webkit-animation: hpc-flicker-Dropzone 1s infinite;
-  animation: hpc-flicker-Dropzone 1s infinite;
+.hp-dropzone.active {
+  -moz-animation: hp-flicker-Dropzone 1s infinite;
+  -o-animation: hp-flicker-Dropzone 1s infinite;
+  -webkit-animation: hp-flicker-Dropzone 1s infinite;
+  animation: hp-flicker-Dropzone 1s infinite;
 }
 
 

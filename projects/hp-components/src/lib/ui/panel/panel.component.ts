@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
-  selector: 'hpc-panel',
+  selector: 'hp-panel',
   templateUrl: './panel.component.html',
   styleUrls: ['./panel.component.css', '../../hp-components.css']
 })

@@ -6,7 +6,7 @@
       <div class="section" #headerRef>
         <ng-content select=[header]></ng-content>
       </div>
-      <div class="section" *ngIf="headerRef.children.length === 0" class="hpc-arrow-down"></div>
+      <div class="section" *ngIf="headerRef.children.length === 0" class="hp-arrow-down"></div>
    </div>
 </div>
 
@@ -17,7 +17,7 @@
     [cdkConnectedOverlayHasBackdrop] = true
     [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
     (backdropClick)="close()" >
-    <div class="hpc-popup" [style.min-width]="popupWidth">
+    <div class="hp-popup" [style.min-width]="popupWidth">
       <ng-content></ng-content>
     </div>
 </ng-template>

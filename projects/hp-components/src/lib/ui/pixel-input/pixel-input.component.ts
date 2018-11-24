@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'hpc-pixel-input',
+  selector: 'hp-pixel-input',
   templateUrl: './pixel-input.component.html',
   styleUrls: ['./pixel-input.component.css', '../../hp-components.css']
 })

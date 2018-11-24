@@ -1,4 +1,4 @@
-.hpc-expander-content {
+.hp-expander-content {
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 6px;
 }

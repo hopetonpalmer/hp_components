@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'hpc-file-manager',
+  selector: 'hp-file-manager',
   templateUrl: './file-manager.component.html',
   styleUrls: ['./file-manager.component.css']
 })

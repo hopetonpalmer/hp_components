@@ -1,8 +1,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  background: var(--hpc-panel-background);
-  color: var(--hpc-panel-color);
+  background: var(--hp-panel-background);
+  color: var(--hp-panel-color);
 }
 
 .content-container {

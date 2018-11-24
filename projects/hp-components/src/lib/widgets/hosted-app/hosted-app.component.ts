@@ -3,7 +3,7 @@ import { Inspectable } from '../../decorator/inspectable';
 
 @Inspectable()
 @Component({
-  selector: 'hpc-hosted-app',
+  selector: 'hp-hosted-app',
   templateUrl: './hosted-app.component.html',
   styleUrls: ['./hosted-app.component.css']
 })

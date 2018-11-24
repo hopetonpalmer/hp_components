@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostBinding } from '@angular/core';
 
 @Directive({
-  selector: '[hpcWidget]'
+  selector: '[hpWidget]'
 })
 export class WidgetDirective {
 

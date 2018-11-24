@@ -5,7 +5,7 @@ import { InteractionService } from '../interaction/interaction.service';
 
 
 @Component({
-  selector: 'hpc-widget-grid',
+  selector: 'hp-widget-grid',
   templateUrl: './widget-grid.component.html',
   styleUrls: ['../hp-components.css', './widget-grid.component.css']
 })

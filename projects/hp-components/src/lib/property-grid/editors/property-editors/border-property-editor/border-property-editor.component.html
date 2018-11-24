@@ -1,17 +1,17 @@
-<hpc-expander>
-  <div header class="hpc-editor-title">{{title}}</div>
-  <div class="hpc-child-container">
-    <div class="hpc-expander-content">
+<hp-expander>
+  <div header class="hp-editor-title">{{title}}</div>
+  <div class="hp-child-container">
+    <div class="hp-expander-content">
       <label>Size</label>
       <label>Corner</label>
       <label>Style</label>
       <label>Color</label>
-      <hpc-pixel-input [value]="getStyleValue('borderWidth')" (valueChange)="setStyleValue('borderWidth', $event)"></hpc-pixel-input>
-      <hpc-pixel-input [percentOption]=true [value]="getStyleValue('borderRadius')" (valueChange)="setStyleValue('borderRadius', $event)"></hpc-pixel-input>
-      <hpc-combo-box [itemsSource]="borderStyles" [selectedItem]="getStyleValue('borderStyle')" (selectedItemChange)="setStyleValue('borderStyle', $event)"></hpc-combo-box>
-      <hpc-color-combo-box [selectedColor]="getStyleValue('borderColor')" (selectedColorChange)="setStyleValue('borderColor', $event)"></hpc-color-combo-box>
+      <hp-pixel-input [value]="getStyleValue('borderWidth')" (valueChange)="setStyleValue('borderWidth', $event)"></hp-pixel-input>
+      <hp-pixel-input [percentOption]=true [value]="getStyleValue('borderRadius')" (valueChange)="setStyleValue('borderRadius', $event)"></hp-pixel-input>
+      <hp-combo-box [itemsSource]="borderStyles" [selectedItem]="getStyleValue('borderStyle')" (selectedItemChange)="setStyleValue('borderStyle', $event)"></hp-combo-box>
+      <hp-color-combo-box [selectedColor]="getStyleValue('borderColor')" (selectedColorChange)="setStyleValue('borderColor', $event)"></hp-color-combo-box>
     </div>
-    <hpc-thickness-property-editor class="editor" [propSuffix]="'Width'"  [title]="'Border Sizes'" [basePropName]="'border'"></hpc-thickness-property-editor>
+    <hp-thickness-property-editor class="editor" [propSuffix]="'Width'"  [title]="'Border Sizes'" [basePropName]="'border'"></hp-thickness-property-editor>
   </div>
-</hpc-expander>
+</hp-expander>
 

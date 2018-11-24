@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'hpcImageViewer',
+  selector: 'hpImageViewer',
   templateUrl: './image-viewer.component.html',
   styleUrls: ['./image-viewer.component.css']
 })

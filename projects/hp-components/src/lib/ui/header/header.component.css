@@ -1,6 +1,6 @@
 :host {
   display: flex;
-  background-color: var(--hpc-header-background);
-  color: var(--hpc-header-color);
-  padding: var(--hpc-header-padding)
+  background-color: var(--hp-header-background);
+  color: var(--hp-header-color);
+  padding: var(--hp-header-padding)
 }

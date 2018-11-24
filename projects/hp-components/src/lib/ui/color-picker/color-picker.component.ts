@@ -10,7 +10,7 @@ import { palettes, IPalette } from '../color-swatch/palette';
 
 
 @Component({
-  selector: 'hpc-color-picker',
+  selector: 'hp-color-picker',
   templateUrl: './color-picker.component.html',
   styleUrls: ['../../hp-components.css', './color-picker.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

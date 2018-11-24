@@ -3,7 +3,6 @@
  */
 
 export * from './lib/hp-components.module';
-
 export {HpComponentsService} from './lib/hp-components.service';
 export {InteractionService} from './lib/interaction/interaction.service';
 export {PreviewService} from './lib/composer/preview/preview.service';
@@ -16,6 +15,7 @@ export {ComposerComponent} from './lib/composer/composer.component';
 export {PreviewComponent} from './lib/composer/preview/preview.component';
 export {PropertyGridComponent} from './lib/property-grid/property-grid.component';
 export {WidgetGridComponent} from './lib/widget-grid/widget-grid.component';
+
 
 export * from './lib/ui/index';
 export * from './lib/decorator/index';

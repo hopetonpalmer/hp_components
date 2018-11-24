@@ -1,4 +1,5 @@
-<hpc-composer #composer>
+<hp-scheduler></hp-scheduler>
+<hp-composer style="display: none" #composer>
     <div toolbar style="display: flex">
       <button (click)="interactionService.save('interaction-data')">Save</button>
       <button>Save As</button>
@@ -16,16 +17,16 @@
         <span>{{(zoom.value*100).toFixed()}}%</span>
       </label>
       <div style="display: flex; align-items: center; margin-left:20px">Theme:
-          <hpc-combo-box style="margin-left: 5px" [itemsPanelTemplate]="itemsPanelTemplate"
+          <hp-combo-box style="margin-left: 5px" [itemsPanelTemplate]="itemsPanelTemplate"
            [itemTemplate]="themeItemTemplate" [displayMemberPath]="'name'"
-           [itemsSource]="themes" [(selectedItem)]="activeTheme"></hpc-combo-box>
+           [itemsSource]="themes" [(selectedItem)]="activeTheme"></hp-combo-box>
       </div>
       <button style="margin-left: auto" (click)="composer.preview()" >Preview</button>
     </div>
-</hpc-composer>
+</hp-composer>
 
 <ng-template #themeItemTemplate let-item >
-  <div class="hpc-stack-h hpc-vc theme-template">
+  <div class="hp-stack-h hp-vc theme-template">
      <div class="theme-color" [style.backgroundColor]="item.primaryBg"></div>
      <div>{{item.name}}</div>
   </div>
@@ -33,9 +34,9 @@
 
 <ng-template #itemsPanelTemplate let-listItemsTemplate>
    <div style="display: grid; grid-template-columns: auto auto auto; grid-column-gap: 50px; padding:15px">
-      <div class="hpc-stack-h hpc-vc" style="grid-column: 1 / 4; margin-bottom: 20px">Custom Primary Color
-         <hpc-color-combo-box style="margin-left: 5px" [selectedColor]="customTheme.primaryBg"
-          (selectedColorChange)="updateCustomTheme({primaryBg: $event})"></hpc-color-combo-box>
+      <div class="hp-stack-h hp-vc" style="grid-column: 1 / 4; margin-bottom: 20px">Custom Primary Color
+         <hp-color-combo-box style="margin-left: 5px" [selectedColor]="customTheme.primaryBg"
+          (selectedColorChange)="updateCustomTheme({primaryBg: $event})"></hp-color-combo-box>
       </div>
       <ng-container *ngTemplateOutlet="listItemsTemplate"></ng-container>
    </div>

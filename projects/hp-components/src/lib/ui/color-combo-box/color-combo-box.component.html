@@ -1,8 +1,8 @@
 
   <div [style.background-color]="selectedColor" style="min-height: 20px; width: 100%" ></div>
-  <hpc-drop-down-button #dd>
+  <hp-drop-down-button #dd>
     <div *ngIf="dd.isOpen" class="picker-container">
-       <hpc-color-picker style="background: inherit; color: inherit" [isCompact]=true [(selectedColor)]="selectedColor" [showHeader]=false></hpc-color-picker>
+       <hp-color-picker style="background: inherit; color: inherit" [isCompact]=true [(selectedColor)]="selectedColor" [showHeader]=false></hp-color-picker>
     </div>
-  </hpc-drop-down-button>
+  </hp-drop-down-button>
 

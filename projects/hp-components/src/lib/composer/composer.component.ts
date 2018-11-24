@@ -6,7 +6,7 @@ import { PreviewComponent } from './preview/preview.component';
 
 
 @Component({
-  selector: 'hpc-composer',
+  selector: 'hp-composer',
   templateUrl: './composer.component.html',
   styleUrls: ['./composer.component.css', '../hp-components.css']
 })

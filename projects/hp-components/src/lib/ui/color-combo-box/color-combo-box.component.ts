@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'hpc-color-combo-box',
+  selector: 'hp-color-combo-box',
   templateUrl: './color-combo-box.component.html',
   styleUrls: ['./color-combo-box.component.css', '../../hp-components.css']
 })

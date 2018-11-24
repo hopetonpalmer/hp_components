@@ -5,9 +5,6 @@ import { Inspect } from 'hp-components';
 import { MediaSourcePropertyEditorComponent } from 'hp-components';
 
 
-
-
-
 @Inspectable({ icon: 'assets/videoplayer.png' })
 @Component({
   selector: 'app-video-player',

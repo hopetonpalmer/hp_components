@@ -3,7 +3,7 @@ import { PropertyEditor } from '../property-editor';
 import { ColorFillType } from '../../../../ui/color-picker/helpers';
 
 @Component({
-  selector: 'hpc-background-property-editor',
+  selector: 'hp-background-property-editor',
   templateUrl: './background-property-editor.component.html',
   styleUrls: ['./background-property-editor.component.css', '../../../../hp-components.css']
 })

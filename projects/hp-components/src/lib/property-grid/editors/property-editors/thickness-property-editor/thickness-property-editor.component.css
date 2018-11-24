@@ -3,7 +3,7 @@
   grid-area: 1 / 1 / span 1 / span 4
 }
 
-.hpc-expander-content {
+.hp-expander-content {
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 5px;
 }

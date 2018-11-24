@@ -2,7 +2,9 @@ import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterView
 import { VideoPlayerComponent } from './widgets/video-player/video-player.component';
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
-import { ITheme, ThemeService, ComposerService, InteractionService } from 'hp-components';
+import { ITheme, ThemeService, ComposerService, InteractionService } from 'hp-components-src';
+import { startOfWeek, addDays } from 'date-fns';
+import { SchedulerService } from '@hp-components/scheduler-src';
 
 
 
@@ -29,6 +31,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'hp-components-app';
   constructor(private cdRef: ChangeDetectorRef, public interactionService: InteractionService,
     public themeService: ThemeService,
+    public schedulerService: SchedulerService,
     public composerService: ComposerService) {}
 
   updateCustomTheme(changes: {}) {
@@ -37,7 +40,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.themes = this.themeService.themes;
-    this.activeTheme = this.themeService.theme('mauve');
+    this.activeTheme = this.themeService.theme('dark');
     // this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
     const widgets = [
       {
@@ -101,6 +104,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       },
     ];
     this.composerService.registerWidgetGroups(widgets, true);
+
+    const date = startOfWeek(new Date());
+    this.schedulerService.setDayTimeRange('9:00 am', '11:00 pm');
+    this.schedulerService.setDateRange(date, addDays(date, 6));
   }
 
   ngAfterViewInit(): void {

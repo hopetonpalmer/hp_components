@@ -5,7 +5,7 @@ import { PropertyEditor } from '../property-editor';
 type location = 'left' | 'top' | 'right' | 'bottom';
 
 @Component({
-  selector: 'hpc-thickness-property-editor',
+  selector: 'hp-thickness-property-editor',
   templateUrl: './thickness-property-editor.component.html',
   styleUrls: ['./thickness-property-editor.component.css', '../../editor-styles.css']
 })

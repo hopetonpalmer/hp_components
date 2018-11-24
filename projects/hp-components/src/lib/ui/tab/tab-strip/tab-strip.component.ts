@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ItemsComponent } from '../../items/items.component';
 
 @Component({
-  selector: 'hpc-tab-strip',
+  selector: 'hp-tab-strip',
   templateUrl: './tab-strip.component.html',
   styleUrls: ['./tab-strip.component.css']
 })

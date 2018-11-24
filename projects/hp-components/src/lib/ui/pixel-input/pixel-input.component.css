@@ -1,7 +1,7 @@
 :host  {
   display: grid;
   grid-template-columns: 1fr auto;
-  border: var(--hpc-panel-border);
+  border: var(--hp-panel-border);
   padding: 1px;
 }
 
@@ -10,7 +10,7 @@ input {
   width: 100%;
 }
 
-hpc-drop-down-list {
+hp-drop-down-list {
   width: 24px;
 }
 

@@ -150,9 +150,9 @@
   padding: 2px 3px 2px 5px;
   margin-bottom: 5px;
   width: 100%;
-  background-color: var(--hpc-input-background);
-  color: var(--hpc-panel-color);
-  border: 1px solid var(--hpc-panel-border-color);
+  background-color: var(--hp-input-background);
+  color: var(--hp-panel-color);
+  border: 1px solid var(--hp-panel-border-color);
   border-radius: 2px;
 }
 
@@ -160,8 +160,8 @@
   padding: 2px;
   width: 44px;
   border: none;
-  background: var(--hpc-input-background);
-  color: var(--hpc-input-color);
+  background: var(--hp-input-background);
+  color: var(--hp-input-color);
   margin-left: auto;
   font-size: 11px;
 }

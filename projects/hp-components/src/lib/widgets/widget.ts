@@ -26,7 +26,7 @@ export abstract class WidgetBaseComponent implements IWidget {
 
   setOverlay(): void {
     const overlay = document.createElement('div');
-    overlay.classList.add('hpc-no-selct');
+    overlay.classList.add('hp-no-selct');
     overlay.style.position = 'absolute';
     overlay.style.top = '0';
     overlay.style.left = '0';

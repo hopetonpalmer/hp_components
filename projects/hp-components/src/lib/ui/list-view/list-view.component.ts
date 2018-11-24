@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ItemsComponent } from '../items/items.component';
 
 @Component({
-  selector: 'hpc-list-view',
+  selector: 'hp-list-view',
   templateUrl: './list-view.component.html',
   styleUrls: ['./list-view.component.css', '../../hp-components.css']
 })

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ElementRef, Renderer2 }
 import { IPalette, palettes } from './palette';
 
 @Component({
-  selector: 'hpc-color-swatch',
+  selector: 'hp-color-swatch',
   templateUrl: './color-swatch.component.html',
   styleUrls: ['./color-swatch.component.css', '../../hp-components.css']
 })

@@ -1,6 +1,6 @@
 <div class="font-family">
   <label>Font family</label>
-  <hpc-combo-box [(selectedItem)]="fontFamily" [itemsSource]="fonts"></hpc-combo-box>
+  <hp-combo-box [(selectedItem)]="fontFamily" [itemsSource]="fonts"></hp-combo-box>
 </div>
 
 <div class="font-other">
@@ -8,11 +8,11 @@
   <label>Style</label>
   <label>Weight</label>
   <label>Color</label>
-  <hpc-pixel-input [(value)]="fontSize"></hpc-pixel-input>
-  <hpc-combo-box [(selectedItem)]="fontStyle" [itemsSource]="styles"></hpc-combo-box>
-  <hpc-combo-box [(selectedItem)]="fontWeight" [itemsSource]="weights"></hpc-combo-box>
-  <hpc-color-combo-box style="height: 100%" [(selectedColor)]="fontColor"></hpc-color-combo-box>
+  <hp-pixel-input [(value)]="fontSize"></hp-pixel-input>
+  <hp-combo-box [(selectedItem)]="fontStyle" [itemsSource]="styles"></hp-combo-box>
+  <hp-combo-box [(selectedItem)]="fontWeight" [itemsSource]="weights"></hp-combo-box>
+  <hp-color-combo-box style="height: 100%" [(selectedColor)]="fontColor"></hp-color-combo-box>
 </div>
-<hpc-shadow-property-editor [shadowType]="'text'"></hpc-shadow-property-editor>
+<hp-shadow-property-editor [shadowType]="'text'"></hp-shadow-property-editor>
 <!-- <textarea rows=5 [value]="text" (change)="text = $event.target.value" ></textarea> -->
 

@@ -23,7 +23,7 @@ export type ICancellable = ( value: any )  => boolean;
  */
 @Inspectable({ displayName: 'Screen' })
 @Component({
-  selector: 'hpc-interaction',
+  selector: 'hp-interaction',
   templateUrl: './interaction.component.html',
   styleUrls: ['./interaction.component.css', '../hp-components.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -540,7 +540,7 @@ export class InteractionComponent
     const el = componentRef.location.nativeElement;
     el.id = shortid.generate();
     el['componentType'] = component.name;
-    el.className = 'hpc-widget hpc-composite ' + el.className;
+    el.className = 'hp-widget hp-composite ' + el.className;
     this.renderer.setStyle(el, 'box-sizing', 'border-box');
     this.renderer.setStyle(el, 'position', 'absolute');
     this.renderer.setStyle(el, 'zIndex', '0');

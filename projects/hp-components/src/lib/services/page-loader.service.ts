@@ -67,7 +67,7 @@ export class PageLoaderService {
 
     if (!element) {
       element = renderer.createElement(tagName) as HTMLElement;
-      renderer.addClass(element, 'hpc-new-element');
+      renderer.addClass(element, 'hp-new-element');
     }
 
     element.id = shortid.generate();
@@ -89,7 +89,7 @@ export class PageLoaderService {
     const el = componentRef.location.nativeElement;
     el.id = shortid.generate();
     el['componentType'] = component.name;
-    el.className = 'hpc-widget hpc-composite ' + el.className;
+    el.className = 'hp-widget hp-composite ' + el.className;
     renderer.setStyle(el, 'box-sizing', 'border-box');
     renderer.setStyle(el, 'position', 'absolute');
     renderer.setStyle(el, 'zIndex', '0');
