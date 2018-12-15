@@ -1,0 +1,46 @@
+:host {
+  display: grid;
+  --column-sizing: repeat(7, 14.2857%);
+  --row-sizing: repeat(6, minmax(auto, 1fr));
+  grid-template-rows: minmax(30px, auto) 1fr;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+}
+
+.slot-grid, .appointment-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: var(--column-sizing);
+}
+
+.appointment-grid {
+  grid-template-rows: var(--row-sizing);
+  overflow: auto;
+}
+
+.header-container.day {
+  font-size: 14px;
+  align-items: center;
+}
+
+.appointment-slot {
+  border-bottom: var(--hp-panel-border);
+  border-right: var(--hp-panel-border);
+  font-size: 14px;
+  padding: 5px;
+  min-height: 100px;
+}
+
+.slot-date, .show-month {
+  font-size: 1.2em;
+  text-align: left;
+}
+
+.show-month {
+  margin-right: 6px;
+}
+
+.date-header {
+  border-left: none;
+}

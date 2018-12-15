@@ -1,3 +1,19 @@
-<p>
-  month-view works!
-</p>
+<div class="slot-grid interval day header-container">
+  <div *ngFor="let daySlot of firstWeekSlots">
+    <div class="slot-text date-header">
+      <span>{{formatDate(daySlot.startDate, 'EEEE')}}</span>
+    </div>
+  </div>
+</div>
+
+<div class="appointment-grid">
+    <div hpApptCell [timeSlot]=daySlot class="day appointment-slot"
+     *ngFor="let daySlot of viewTimeSlots; let i = index">
+        <div>
+          <span *ngIf="i === 0 || daySlot.startDate.getDate() === 1 || daySlot.isNow"
+           class="show-month">{{formatDate(daySlot.startDate, 'MMM')}}</span>
+          <span class="slot-date">{{daySlot.formattedDate}}</span>
+        </div>
+    </div>
+</div>
+

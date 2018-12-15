@@ -1,5 +1,6 @@
-import { startOfHour, addMinutes } from 'date-fns';
+import { startOfHour, addMinutes, isEqual } from 'date-fns';
 import { IntervalType, MinuteInterval } from '../types';
+import { formatDate } from '@angular/common';
 
 export interface Time {
   hours: number;
@@ -8,8 +9,13 @@ export interface Time {
   milliseconds?: number;
 }
 
-export function setTime(date: Date, time: string | number) {
-   if (typeof time === 'number') {
+export function setTime(date: Date, time: string | number | Date) {
+   if (time instanceof Date) {
+     date.setHours(time.getHours());
+     date.setMinutes(time.getMinutes());
+     date.setSeconds(time.getSeconds());
+     date.setMilliseconds(time.getMilliseconds());
+   } else if (typeof time === 'number') {
      date.setTime(time);
    } else {
     const t = strToTime(time);
@@ -77,5 +83,8 @@ export function minuteTicks(date: Date, interval: MinuteInterval): Date[] {
   return result;
 }
 
+export function formatDateTime(date: Date, format: string, language = 'en-US'): string {
+  return formatDate(date, format, language);
+}
 
 

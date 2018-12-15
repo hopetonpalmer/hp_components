@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { IntervalType, DateRange, MinuteInterval, DayTimeRange } from '../types';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { IntervalType, DateRange, MinuteInterval, DayTimeRange, SchedulerViewType } from '../types';
 import { TimeSlot } from './time-slot';
 import { differenceInCalendarYears,
    differenceInCalendarQuarters,
@@ -10,20 +10,27 @@ import { differenceInCalendarYears,
    startOfHour,
    differenceInDays,
    addSeconds,
-   endOfHour} from 'date-fns';
+   endOfHour,
+   endOfMonth,
+   closestTo,
+   endOfYear,
+   startOfMonth,
+   subSeconds} from 'date-fns';
 import { setTime, isMidnight } from '../scripts/datetime';
-import { SchedulerService } from '../scheduler.service';
+import { SchedulerService } from '../services/scheduler.service';
 
 
 
 @Component({
-  selector: 'hp-time-interval',
-  templateUrl: './time-interval.component.html',
-  styleUrls: ['./time-interval.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  selector: 'hp-time-slot-grid',
+  templateUrl: './time-slot-grid.component.html',
+  styleUrls: ['./time-slot-grid.component.css', '../styles.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimeIntervalComponent implements OnInit {
+export class TimeSlotGridComponent implements OnInit {
   timeSlots = new Map<string, TimeSlot[]>();
+  appointmentSlots: Array<TimeSlot[]> = new Array<TimeSlot[]>();
+
   private _isReady = false;
   private _intervalTypes: IntervalType[];
 
@@ -36,6 +43,9 @@ export class TimeIntervalComponent implements OnInit {
     return this._intervalTypes;
   }
 
+  get masterIntervalType(): IntervalType {
+    return this.intervalTypes[0];
+  }
   private _dateRange: DateRange;
   @Input()
   set dateRange(value: DateRange) {
@@ -44,6 +54,9 @@ export class TimeIntervalComponent implements OnInit {
   }
   get dateRange(): DateRange {
     if (this._dateRange) {
+      if (this.masterIntervalType === 'Month') {
+        this._dateRange.start = startOfMonth(this._dateRange.start);
+      }
       setTime(this._dateRange.start, this.dayTimeRange.dayStarts);
       setTime(this._dateRange.end, this.dayTimeRange.dayEnds);
     }
@@ -60,7 +73,7 @@ export class TimeIntervalComponent implements OnInit {
     return this._dayTimeRange;
   }
 
-  private _minuteInterval: MinuteInterval = 15;
+  private _minuteInterval: MinuteInterval = 30;
   @Input()
   set minuteInterval(value: MinuteInterval) {
     this._minuteInterval = value;
@@ -69,6 +82,9 @@ export class TimeIntervalComponent implements OnInit {
   get minuteInterval(): MinuteInterval {
     return this._minuteInterval;
   }
+
+  @Input()
+  viewType: SchedulerViewType;
 
   get dayCount() {
     return differenceInDays(this.dateRange.end, this.dateRange.start) + 1;
@@ -82,6 +98,11 @@ export class TimeIntervalComponent implements OnInit {
   get maxSlots(): number {
     return this._maxSlots;
   }
+
+  intervalSlots: Map<IntervalType, TimeSlot[]> = new Map<
+    IntervalType,
+    TimeSlot[]
+  >();
 
   private _dateFormats = {
     year: 'y',
@@ -101,36 +122,55 @@ export class TimeIntervalComponent implements OnInit {
     return this._dateFormats;
   }
 
+  getAllSubSlots(slots: TimeSlot[]) {
+    const subSlots = slots.reduce((result, slot) => {
+      return [...result, ...slot.timeSlots];
+    }, new Array<TimeSlot>());
+    return subSlots;
+  }
+
   hasInterval(intervalType: IntervalType): boolean {
     return this.intervalTypes.indexOf(intervalType) > -1;
   }
   constructor(private _schedulerService: SchedulerService) {}
 
-  getSlotCount(intervalType: IntervalType): number {
-    let startDate = this.dateRange.start;
+  getSlotCount(intervalType: IntervalType, startDate: Date): number {
+    // startDate = this.dateRange.start;
     let endDate = this.dateRange.end;
     switch (intervalType) {
       case 'Year':
-        return differenceInCalendarYears(endDate, startDate);
+        return differenceInCalendarYears(endDate, startDate) + 1;
       case 'Quarter':
-        return differenceInCalendarQuarters(endDate, startDate);
+        return differenceInCalendarQuarters(endDate, startDate) + 1;
       case 'Month':
+        if (this.masterIntervalType !== 'Month') {
+          endDate = closestTo(endOfYear(startDate), [
+            endDate,
+            endOfYear(startDate)
+          ]);
+        }
         return differenceInCalendarMonths(endDate, startDate) + 1;
       case 'Week':
         return differenceInCalendarWeeks(endDate, startDate) + 1;
       case 'Day':
-        return differenceInCalendarDays(addSeconds(endDate, -1), startDate) + 1;  // (startOfDay(endDate) === endDate ? 0 : 1);
+        if (this.masterIntervalType !== 'Day') {
+          endDate = closestTo(endOfMonth(startDate), [
+            endDate,
+            endOfMonth(startDate)
+          ]);
+        }
+        return differenceInCalendarDays(addSeconds(endDate, -1), startDate) + 1;
       case 'Hour':
         endDate = this.getEndDate(startDate);
         startDate = this.getStartDate(startDate);
         if (this.hasInterval('Minute')) {
-           endDate = endOfHour(endDate);
+          endDate = endOfHour(endDate);
         }
         let result = differenceInHours(endDate, startDate);
 
         // -- account for midnight
         if (isMidnight(endDate)) {
-           result = result + 1;
+          result = result + 1;
         }
         return result;
       case 'Minute':
@@ -140,10 +180,16 @@ export class TimeIntervalComponent implements OnInit {
     }
   }
 
-
-  createSlots(timeSlots: TimeSlot[] = [], intervalType = null, startDate: Date = null) {
+  createSlots(
+    timeSlots: TimeSlot[] = [],
+    intervalType = null,
+    startDate: Date = null
+  ) {
     if (!this._isReady || !this.dateRange || !this.intervalTypes) {
-       return;
+      return;
+    }
+    if (this.timeSlots.entries.length > 0) {
+      this.appointmentSlots = new Array<TimeSlot[]>();
     }
     if (!intervalType) {
       intervalType = this.intervalTypes[0];
@@ -152,20 +198,30 @@ export class TimeIntervalComponent implements OnInit {
       startDate = this.dateRange.start;
     }
     const intervalIndex = this.intervalTypes.indexOf(intervalType);
-    const maxSlotCount = this.getSlotCount(intervalType);
     let date = this.hasInterval('Minute') ? startOfHour(startDate) : startDate;
+    const maxSlotCount = this.getSlotCount(intervalType, date);
     for (let index = 0; index < maxSlotCount; index++) {
-      const endDate = this._schedulerService.incInterval(intervalType, date,  this.minuteInterval);
-      const slot = this.createSlot(intervalType, date, endDate);
+      if (intervalType === this.masterIntervalType) {
+        this.appointmentSlots.push([]);
+      }
+      const endDate = this._schedulerService.incInterval(
+        intervalType,
+        date,
+        this.minuteInterval
+      );
+      const slot = this.createSlot(intervalType, date, subSeconds(endDate, 1));
       timeSlots.push(slot);
-      if ((intervalIndex + 1) < this.intervalTypes.length) {
+      if (intervalType === this.intervalTypes[this.intervalTypes.length - 1]) {
+        this.appointmentSlots[this.appointmentSlots.length - 1].push(slot);
+      }
+      if (intervalIndex + 1 < this.intervalTypes.length) {
         const nextIntervalType = this.intervalTypes[intervalIndex + 1];
         slot.timeSlots = [];
         const nextDate = this.getStartDate(date);
         if (intervalType === 'Hour') {
           nextDate.setHours(date.getHours());
         }
-        this.createSlots(slot.timeSlots, nextIntervalType, nextDate );
+        this.createSlots(slot.timeSlots, nextIntervalType, nextDate);
       }
       date = endDate;
     }
@@ -186,6 +242,10 @@ export class TimeIntervalComponent implements OnInit {
     return slot;
   }
 
+  slotPercent(slotCount: number): number {
+    return (1 / slotCount * 100);
+  }
+
   getStartDate(date: Date) {
     const result = new Date(date);
     setTime(result, this.dayTimeRange.dayStarts);
@@ -202,4 +262,5 @@ export class TimeIntervalComponent implements OnInit {
     this._isReady = true;
     this.createSlots();
   }
+
 }

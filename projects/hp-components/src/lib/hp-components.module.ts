@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { TreeviewItemComponent } from './ui/treeview/treeview-item/treeview-item.component';
 import { SelectorComponent } from './selector/selector.component';
-import { FileManagerComponent } from './file-manager/file-manager.component';
 import { InteractionDirective } from './interaction/interaction.directive';
 import { ColorComboBoxComponent } from './ui/color-combo-box/color-combo-box.component';
 import { AutoScrollDirective } from './directives/auto-scroll.directive';
@@ -89,7 +88,6 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     TreeviewComponent,
     TreeviewItemComponent,
     SelectorComponent,
-    FileManagerComponent,
     PropertyGridComponent,
     PanelComponent,
     HeaderComponent,

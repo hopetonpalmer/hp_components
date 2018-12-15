@@ -97,12 +97,12 @@ export class ThemeService {
     this.updateStyle(
       rootStyle,
       '--hp-panel-main',
-      adjustColor(this.activeTheme.primaryBg, { dR: 0.86, dG: 0.86, dB: 0.86 })
+      adjustColor(this.activeTheme.primaryBg, 0.86)
     );
     this.updateStyle(
       rootStyle,
       '--hp-panel-header-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: 1.33, dG: 1.32, dB: 1.32 })
+      adjustColor(this.activeTheme.primaryBg, 1.33)
     );
     this.updateStyle(
       rootStyle,
@@ -113,22 +113,16 @@ export class ThemeService {
     this.updateStyle(
       rootStyle,
       '--hp-toolbar-color',
-      adjustColor(this.activeTheme.primaryText, { dR: 1.9, dG: 1.9, dB: 1.9 })
+      adjustColor(this.activeTheme.primaryText, 1.9)
     );
     this.updateStyle(
       rootStyle,
       '--hp-toolbar-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: 1.9, dG: 1.9, dB: 1.9 })
+      adjustColor(this.activeTheme.primaryBg, 1.9)
     );
 
-    this.updateStyle(rootStyle, '--hp-menu-color', adjustColor(
-        this.activeTheme.primaryText,
-        { dR: 1.9, dG: 1.9, dB: 1.9 }
-      ));
-    this.updateStyle(rootStyle, '--hp-menu-background', adjustColor(
-        this.activeTheme.primaryBg,
-        { dR: 1.9, dG: 1.9, dB: 1.9 }
-      ));
+    this.updateStyle(rootStyle, '--hp-menu-color', adjustColor(this.activeTheme.primaryText, 1.9));
+    this.updateStyle(rootStyle, '--hp-menu-background', adjustColor(this.activeTheme.primaryBg, 1.9));
 
     this.updateStyle(
       rootStyle,
@@ -138,7 +132,7 @@ export class ThemeService {
     this.updateStyle(
       rootStyle,
       '--hp-hover-color',
-      adjustColor(this.activeTheme.primaryBg, { dR: 0.9, dG: 0.9, dB: 0.9 })
+      adjustColor(this.activeTheme.primaryBg, 0.9)
     );
     this.updateStyle(
       rootStyle,
@@ -148,34 +142,38 @@ export class ThemeService {
     this.updateStyle(
       rootStyle,
       '--hp-inactive-color',
-      adjustColor(this.activeTheme.primaryText, { dR: 0.7, dG: 0.7, dB: 0.7 })
+      adjustColor(this.activeTheme.primaryText, 0.7)
     );
 
     this.updateStyle(
       rootStyle,
       '--hp-selected-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: 1.7, dG: 1.7, dB: 1.7 })
+      adjustColor(this.activeTheme.primaryBg, 1.7)
     );
 
     this.updateStyle(
       rootStyle,
       '--hp-selected-color',
-      adjustColor(this.activeTheme.primaryText, { dR: 1.7, dG: 1.7, dB: 1.7 })
+      adjustColor(this.activeTheme.primaryText, 1.7)
     );
 
     this.updateStyle(
       rootStyle,
       '--hp-popup-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: 0.75, dG: 0.75, dB: 0.75 })
+      adjustColor(this.activeTheme.primaryBg, 0.75)
     );
     this.updateStyle(rootStyle, '--hp-popup-color', 'rgb(255,255,255)');
 
     this.updateStyle(
       rootStyle,
       '--hp-input-background',
-      adjustColor(this.activeTheme.primaryBg, { dR: 0.9, dG: 0.9, dB: 0.9 })
+      adjustColor(this.activeTheme.primaryBg, 0.9)
     );
     this.updateStyle(rootStyle, '--hp-input-color', 'rgb(255,255,255)');
+    this.updateStyle(rootStyle, '--hp-highlight-color',  adjustColor(this.activeTheme.primaryBg, 4));
+
+    this.updateStyle(rootStyle, '--hp-scheduler-border-color', adjustColor(
+      this.activeTheme.primaryBg, { dR: 1, dG: 1, dB: 1, dA: 0.5}));
   }
 
   updateStyle(style: CSSStyleDeclaration, propertyName: string, color: string) {

@@ -282,52 +282,12 @@
         }
       }
     },
-    "filemanager": {
-      "root": "projects/hp-components/filemanager",
-      "sourceRoot": "projects/hp-components/filemanager/src",
-      "projectType": "library",
-      "prefix": "hp",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/hp-components/filemanager/tsconfig.lib.json",
-            "project": "projects/hp-components/filemanager/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "projects/hp-components/filemanager/ng-package.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/hp-components/filemanager/src/test.ts",
-            "tsConfig": "projects/hp-components/filemanager/tsconfig.spec.json",
-            "karmaConfig": "projects/hp-components/filemanager/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/hp-components/filemanager/tsconfig.lib.json",
-              "projects/hp-components/filemanager/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "@hp-components/designer": {
+     "designer": {
       "root": "projects/hp-components/designer",
       "sourceRoot": "projects/hp-components/designer/src",
       "projectType": "library",
       "prefix": "hp",
-      "targets": {
+      "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
@@ -357,12 +317,12 @@
         }
       }
     },
-    "@hp-components/ui": {
+    "ui": {
       "root": "projects/hp-components/ui",
       "sourceRoot": "projects/hp-components/ui/src",
       "projectType": "library",
       "prefix": "hp",
-      "targets": {
+      "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
@@ -392,12 +352,12 @@
         }
       }
     },
-    "@hp-components/common": {
+    "common": {
       "root": "projects/hp-components/common",
       "sourceRoot": "projects/hp-components/common/src",
       "projectType": "library",
       "prefix": "hp",
-      "targets": {
+      "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
@@ -427,12 +387,12 @@
         }
       }
     },
-    "@hp-components/widgets": {
+    "widgets": {
       "root": "projects/hp-components/widgets",
       "sourceRoot": "projects/hp-components/widgets/src",
       "projectType": "library",
       "prefix": "hp",
-      "targets": {
+      "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
@@ -454,6 +414,41 @@
             "tsConfig": [
               "projects/hp-components/widgets/tsconfig.lib.json",
               "projects/hp-components/widgets/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "file-manager": {
+      "root": "projects/hp-components/file-manager",
+      "sourceRoot": "projects/hp-components/file-manager/src",
+      "projectType": "library",
+      "prefix": "hp",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/hp-components/file-manager/tsconfig.lib.json",
+            "project": "projects/hp-components/file-manager/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/hp-components/file-manager/src/test.ts",
+            "tsConfig": "projects/hp-components/file-manager/tsconfig.spec.json",
+            "karmaConfig": "projects/hp-components/file-manager/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/hp-components/file-manager/tsconfig.lib.json",
+              "projects/hp-components/file-manager/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

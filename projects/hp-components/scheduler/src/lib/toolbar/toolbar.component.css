@@ -1,0 +1,12 @@
+:host {
+  padding: 10px;
+  display: flex;
+}
+
+.nav-container * {
+  margin-right: 5px;
+}
+
+.viewtype-selector-container {
+  margin-left: auto;
+}

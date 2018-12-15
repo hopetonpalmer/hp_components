@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SchedulerService } from './services/scheduler.service';
+import { SchedulerViewService } from './scheduler-view.service';
 
-describe('HpSchedulerService', () => {
+describe('SchedulerviewService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SchedulerService = TestBed.get(SchedulerService);
+    const service: SchedulerViewService = TestBed.get(SchedulerViewService);
     expect(service).toBeTruthy();
   });
 });

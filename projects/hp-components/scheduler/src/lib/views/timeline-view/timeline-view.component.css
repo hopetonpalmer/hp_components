@@ -1,0 +1,29 @@
+:host {
+  background: var(--hp-panel-background);
+  color: var(--hp-panel-color);
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: grid;
+/*   grid-template-columns: auto;
+  grid-template-rows: auto 1fr; */
+}
+
+.interval.day {
+  font-size: .65em !important;
+  text-align: center;
+  min-width: 60px;
+}
+
+.interval.hour {
+  min-width: 40px;
+  overflow: hidden;
+}
+
+table tr,
+td {
+  border: var(--hp-panel-border);
+  border-collapse: collapse;
+}
+

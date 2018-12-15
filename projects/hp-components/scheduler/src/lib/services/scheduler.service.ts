@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Appointment, SchedulerResource } from './models';
+import { Appointment, SchedulerResource } from '../models';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DateRange, DayTimeRange, IntervalType, MinuteInterval } from './types';
+import { DateRange, DayTimeRange, IntervalType, MinuteInterval, SchedulerViewType } from '../types';
 import {
-  differenceInCalendarYears,
-  differenceInCalendarQuarters,
-  differenceInCalendarMonths,
-  differenceInCalendarWeeks,
-  differenceInCalendarDays,
-  differenceInHours,
-  differenceInMinutes,
   addYears,
   startOfYear,
   startOfQuarter,
@@ -22,23 +15,12 @@ import {
   startOfDay,
   addHours,
   addMinutes,
-  startOfHour,
-  endOfDay,
-  differenceInDays,
-  addSeconds,
-  getDaysInMonth,
   endOfMonth,
-  differenceInMonths,
-  getHours,
-  isBefore,
   isAfter,
-  parse,
-  isSameHour,
-  subDays,
-  endOfHour,
   endOfToday,
-  startOfToday
-} from 'date-fns';
+  startOfToday} from 'date-fns';
+import { setTime } from '../scripts/datetime';
+
 
 @Injectable({
   providedIn: 'root'
@@ -48,22 +30,34 @@ export class SchedulerService {
   private _resourcesSubject = new BehaviorSubject<SchedulerResource[]>([]);
   private _dateRangeSubject = new BehaviorSubject<DateRange>({
     start: startOfToday(),
-     end: endOfToday()
+    end: endOfToday()
   });
   private _dayTimeRangeSubject = new BehaviorSubject<DayTimeRange>({
     dayStarts: '00:00',
     dayEnds: '23:59'
   });
+  private _activeDateSubject = new BehaviorSubject<Date>(null);
 
   appointments$ = this._appointmentsSubject.asObservable();
   resources$ = this._resourcesSubject.asObservable();
   dateRange$ = this._dateRangeSubject.asObservable();
   dayTimeRange$ = this._dayTimeRangeSubject.asObservable();
+  activeDate$ = this._activeDateSubject.asObservable();
 
+  get dateRange(): DateRange {
+    const dateRange = this._dateRangeSubject.value;
+    const timeRange = this._dayTimeRangeSubject.value;
+    setTime(dateRange.start, timeRange.dayStarts);
+    setTime(dateRange.end, timeRange.dayEnds);
+    return dateRange;
+  }
   constructor() {}
 
   addAppointment(appointment: Appointment) {
-    this._appointmentsSubject.next([...this._appointmentsSubject.value, ...[appointment]]);
+    this._appointmentsSubject.next([
+      ...this._appointmentsSubject.value,
+      ...[appointment]
+    ]);
   }
 
   deleteAppointment(appointment: Appointment) {
@@ -73,7 +67,10 @@ export class SchedulerService {
   }
 
   addResource(resource: SchedulerResource) {
-    this._resourcesSubject.next([...this._resourcesSubject.value, ...[resource]]);
+    this._resourcesSubject.next([
+      ...this._resourcesSubject.value,
+      ...[resource]
+    ]);
   }
 
   deleteResource(resource: SchedulerResource) {
@@ -82,14 +79,47 @@ export class SchedulerService {
     this._resourcesSubject.next(resources);
   }
 
+  /**
+   * Sets the current date range of the scheduler
+   * @param startDate Starting date of date range
+   * @param endDate Ending date of date range
+   */
   setDateRange(startDate: Date, endDate: Date) {
     const dateRange = { start: startDate, end: endDate };
     this._dateRangeSubject.next(dateRange);
   }
 
+  /**
+   * Sets the date range of the Month Scheduler based on any given date of a month
+   * @param date Any date in the month. It is used to derive the month
+   * @param weeks The number of weeks in the date range
+   */
+  setRangeFromMonth(date = new Date(), weeks = 5) {
+    if (this._activeDateSubject.value) {
+      date = this._activeDateSubject.value;
+    }
+    const daysPerWeek = 7;
+    const days = weeks * daysPerWeek;
+    const startDate = startOfWeek(startOfMonth(date));
+    let endDate = addDays(startDate, days - 1);
+    if (isAfter(endOfMonth(date), endDate)) {
+      endDate = addWeeks(endDate, 1);
+    }
+    this.setDateRange(startDate, endDate);
+  }
+
+  /**
+   * Sets the starting and ending times for each day of the scheduler
+   * @param dayStarts Sets the start time of date range
+   * @param dayEnds Sets the end time of the date range
+   */
   setDayTimeRange(dayStarts: string, dayEnds: string) {
     const dayTimeRange = { dayStarts: dayStarts, dayEnds: dayEnds };
     this._dayTimeRangeSubject.next(dayTimeRange);
+  }
+
+  setActiveDate(date: Date) {
+     this._activeDateSubject.next(date);
   }
 
   incInterval(

@@ -1,0 +1,98 @@
+.now {
+  background: var(--hp-selected-background);
+  color: var(--hp-selected-color);
+  opacity: 1;
+}
+
+.header-container {
+  background-color: var(--hp-header-background);
+  color: var(--hp-header-color)
+}
+
+.date-header {
+  border-left: var(--hp-panel-border);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.intervals {
+  display: flex;
+  min-width: 100%;
+  height: 100%;
+}
+
+.years,
+.months,
+.days,
+.hours,
+.minutes {
+  display: flex;
+  width: 100%;
+}
+
+.months {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+}
+
+.slot-text {
+  padding: 4px;
+  white-space: nowrap;
+}
+
+.interval {
+  flex: 1 1 auto;
+  text-align: center;
+  min-height: 25px;
+  cursor: default;
+  padding: 0px;
+
+}
+
+.interval.month,
+.interval.year,
+.interval.day {
+  text-align: center;
+  font-size: 18px;
+  min-width: 32px;
+}
+
+.interval.day {
+  padding: 0;
+}
+
+.interval.hour {
+  font-size: 12px;
+  white-space: nowrap;
+  text-transform: lowercase;
+  min-width: 25px;
+}
+
+.interval.minute {
+  font-size: 12px;
+  min-height: 18px;
+  min-width: 25px;
+}
+
+.intervals-container {
+  background-color: var(--hp-panel-header-background);
+  color: var(--hp-panel-header-color)
+}
+
+.intervals-container-appointments {
+  background-color: var(--hp-panel-background);
+  color: var(--hp-panel-color)
+}
+
+.appointments-interval {
+  height: 100%;
+}
+
+table, tr, td {
+  border: var(--hp-panel-border);
+  border-collapse: collapse;
+}
+
+

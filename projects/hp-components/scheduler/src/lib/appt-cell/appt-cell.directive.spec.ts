@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FilemanagerComponent } from './filemanager.component';
+import { ApptCellDirective } from './appt-cell.directive';
 
-describe('FilemanagerComponent', () => {
-  let component: FilemanagerComponent;
-  let fixture: ComponentFixture<FilemanagerComponent>;
+describe('ApptCellComponent', () => {
+  let component: ApptCellDirective;
+  let fixture: ComponentFixture<ApptCellDirective>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilemanagerComponent ]
+      declarations: [ ApptCellDirective ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FilemanagerComponent);
+    fixture = TestBed.createComponent(ApptCellDirective);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

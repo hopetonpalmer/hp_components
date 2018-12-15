@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SchedulerService } from './services/scheduler.service';
+import { FileManagerService } from './file-manager.service';
 
-describe('HpSchedulerService', () => {
+describe('FileManagerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SchedulerService = TestBed.get(SchedulerService);
+    const service: FileManagerService = TestBed.get(FileManagerService);
     expect(service).toBeTruthy();
   });
 });

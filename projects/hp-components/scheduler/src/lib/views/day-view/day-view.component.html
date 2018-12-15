@@ -1,1 +1,29 @@
-<
+<div style="overflow-y: scroll; overflow-x: hidden" class="slot-grid interval day header-container">
+  <div class="all-day-spacer"></div>
+  <div class="header-grid" *ngFor="let daySlot of viewTimeSlots; let i=index">
+    <div class="slot-text date-header" [ngClass]="{'hp-text-highlight': daySlot.isNow}">
+        <span *ngIf="i === 0 || daySlot.startDate.getDate() === 1" class="show-month">{{formatDayName(daySlot.startDate, 'MMM')}}</span>
+        <span>{{daySlot.formattedDate}}</span>
+        <span class='day-name'>{{formatDayName(daySlot.startDate, 'EEE')}}</span>
+    </div>
+    <div hpApptCell [dateSelectionService]="daySelectionService" [timeSlot]=daySlot class="all-day-area"></div>
+  </div>
+</div>
+<div class="appointment-grid">
+  <div class="time-intervals intervals-container">
+    <div class="interval hour" *ngFor="let hour of viewTimeSlots[0].timeSlots">
+      <div class="minute ruler" *ngFor="let minuteSlot of hour.timeSlots; let i=index">
+        {{i == 0 ? hour.formattedDate : minuteSlot.formattedDate}}
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let daySlot of viewTimeSlots">
+    <div style class="interval hour" *ngFor="let hour of daySlot.timeSlots">
+      <div hpApptCell [timeSlot]=minuteSlot class="minute appointment-slot" *ngFor="let minuteSlot of hour.timeSlots"></div>
+    </div>
+  </div>
+</div>
+
+
+
+

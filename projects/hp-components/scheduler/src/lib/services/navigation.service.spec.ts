@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FilemanagerService } from './filemanager.service';
+import { NavigationService } from './navigation.service';
 
-describe('FilemanagerService', () => {
+describe('NavigationService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: FilemanagerService = TestBed.get(FilemanagerService);
+    const service: NavigationService = TestBed.get(NavigationService);
     expect(service).toBeTruthy();
   });
 });

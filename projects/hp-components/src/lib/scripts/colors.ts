@@ -12,12 +12,18 @@ export interface IColorChange {
   dA?: number;
 }
 
-export function adjustColor(color: string, changes: IColorChange): string {
+export function adjustColor(color: string, delta: IColorChange | number): string {
+  let changes: IColorChange;
+  if (typeof delta === 'number') {
+     changes = {dR: delta, dG: delta, dB: delta };
+  } else {
+    changes = delta;
+  }
   const colorValues = getColorValues(color);
   const result = `rgba(${(colorValues.red * changes.dR).toFixed()},
-  ${(colorValues.green * changes.dR).toFixed()},
-  ${(colorValues.blue * changes.dR).toFixed()},
-  ${(colorValues.alpha * (changes.dA !== undefined ? changes.dA : 1)).toFixed()})`;
+  ${(colorValues.green * changes.dG).toFixed()},
+  ${(colorValues.blue * changes.dB).toFixed()},
+  ${(changes.dA !== undefined ? changes.dA : 1).toString()})`;
   return result;
 }
 

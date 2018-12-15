@@ -16,6 +16,16 @@
   --hp-panel-header-background: rgb(97, 96, 96);
   --hp-panel-header-color: rgb(255, 255, 255);
 
+  --hp-scheduler-border-color: var(--hp-panel-border-color);
+  --hp-scheduler-border: 1px solid var(--hp-scheduler-border-color);
+  --hp-scheduler-background: var(--hp-panel-background);
+  --hp-scheduler-color: var(--hp-panel-color);
+  --hp-scheduler-work-hour-background: var(--hp-panel-background);
+  --hp-scheduler-weekend-background: var(--hp-panel-background);
+  --hp-scheduler-ruler-background: var(--hp-panel-background);
+  --hp-scheduler-ruler-color: var(--hp-panel-background);
+  --hp-scheduler-ruler-border-color: var(--hp-panel-background);
+
   --hp-disable-color: gray;
   --hp-inactive-color: rgb(182, 182, 182);
 
@@ -37,6 +47,8 @@
   --hp-popup-background: rgb(255, 255, 255);
   --hp-popup-color: rgb(14, 14, 14);
   --hp-popup-border-color: rgb(36, 36, 36);
+
+  --hp-highlight-color: orange;
 
   --hp-selected-border-color: orange;
 
@@ -74,6 +86,16 @@
 
 .hp-hide {
   display: none !important;
+}
+
+.hp-selected {
+  background-color: var(--hp-selected-background);
+  color: var(--hp-selected-color);
+  opacity: 1 !important;
+}
+
+.hp-text-highlight {
+  color: var(--hp-highlight-color);
 }
 
 :host {

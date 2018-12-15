@@ -1,5 +1,5 @@
 {
-  "name": "@hp-components/filemanager",
+  "name": "@hp-components/file-manager",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",

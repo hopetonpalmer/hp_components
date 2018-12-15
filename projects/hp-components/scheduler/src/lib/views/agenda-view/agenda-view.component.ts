@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SchedulerView } from '../schedulerview';
-import { SchedulerService } from '../../scheduler.service';
+import { SchedulerView } from '../scheduler-view';
+import { SchedulerService } from '../../services/scheduler.service';
+import { SchedulerViewService } from '../scheduler-view.service';
 
 @Component({
   selector: 'hp-agenda-view',
@@ -9,8 +10,9 @@ import { SchedulerService } from '../../scheduler.service';
 })
 export class AgendaViewComponent extends SchedulerView implements OnInit {
 
-  constructor(public schedulerService: SchedulerService) {
-    super(schedulerService);
+  constructor(public schedulerViewService: SchedulerViewService,
+     public schedulerService: SchedulerService) {
+    super(schedulerService, schedulerViewService);
   }
 
   ngOnInit() {

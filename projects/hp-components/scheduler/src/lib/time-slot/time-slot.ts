@@ -6,7 +6,7 @@ import { isSameYear, isSameQuarter,
   isSameHour, differenceInMinutes,
   getMinutes,
   closestTo} from 'date-fns';
-import { minuteTicks, isSameTime } from '../scripts/datetime';
+import { minuteTicks, isSameTime, formatDateTime } from '../scripts/datetime';
 
 export class TimeSlot {
    startDate: Date;
@@ -14,9 +14,10 @@ export class TimeSlot {
    dateFormat: string;
    intervalType: IntervalType;
    minuteInterval: MinuteInterval;
-   timeSlots: TimeSlot[];
+   isEnabled = true;
+   timeSlots: TimeSlot[] = [];
    get formattedDate(): string {
-     const result = formatDate(this.startDate, this.dateFormat, 'en' );
+     const result = formatDateTime(this.startDate, this.dateFormat);
      return result;
    }
    get isNow(): boolean {

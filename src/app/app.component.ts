@@ -3,7 +3,7 @@ import { VideoPlayerComponent } from './widgets/video-player/video-player.compon
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
 import { ITheme, ThemeService, ComposerService, InteractionService } from 'hp-components-src';
-import { startOfWeek, addDays } from 'date-fns';
+import { startOfWeek, addDays, addMonths, addWeeks, startOfDay } from 'date-fns';
 import { SchedulerService } from '@hp-components/scheduler-src';
 
 
@@ -106,8 +106,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.composerService.registerWidgetGroups(widgets, true);
 
     const date = startOfWeek(new Date());
-    this.schedulerService.setDayTimeRange('9:00 am', '11:00 pm');
+    // this.schedulerService.setDayTimeRange('9:00 am', '6:00 pm');
     this.schedulerService.setDateRange(date, addDays(date, 6));
+    // this.schedulerService.setRangeFromMonth();
   }
 
   ngAfterViewInit(): void {

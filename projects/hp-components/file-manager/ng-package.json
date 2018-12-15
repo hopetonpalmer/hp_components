@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/hp-components/filemanager",
+  "dest": "../../../dist/hp-components/file-manager",
   "lib": {
     "entryFile": "src/public_api.ts"
   }

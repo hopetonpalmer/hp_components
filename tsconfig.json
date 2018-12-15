@@ -77,6 +77,12 @@
       ],
       "@hp-components/widgets/*": [
         "dist/hp-components/widgets/*"
+      ],
+      "@hp-components/file-manager": [
+        "dist/hp-components/file-manager"
+      ],
+      "@hp-components/file-manager/*": [
+        "dist/hp-components/file-manager/*"
       ]
     }
   }

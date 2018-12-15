@@ -76,6 +76,12 @@
   display: none !important;
 }
 
+.hp-selected {
+  background-color: var(--hp-selected-background);
+  color: var(--hp-selected-color);
+  opacity: 1;
+}
+
 :host {
   background-color: var(--hp-panel-background);
   color: var(--hp-panel-color);

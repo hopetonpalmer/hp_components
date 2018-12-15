@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'hp-filemanager',
+  selector: 'hp-file-manager',
   template: `
     <p>
-      filemanager works!
+      file-manager works!
     </p>
   `,
   styles: []
 })
-export class FilemanagerComponent implements OnInit {
+export class FileManagerComponent implements OnInit {
 
   constructor() { }
 
