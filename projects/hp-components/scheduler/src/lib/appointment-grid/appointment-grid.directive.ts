@@ -1,9 +1,9 @@
 import { Directive, OnInit, OnDestroy, Input, ChangeDetectorRef } from '@angular/core';
-import { IntervalType } from 'hp-components/scheduler/lib/types';
 import { Subscription } from 'rxjs';
-import { TimeSlot } from 'hp-components/scheduler/lib/time-interval/time-slot';
 import { DateSelectionService } from '../services/date-selection.service';
 import { SchedulerService } from '../services/scheduler.service';
+import { IntervalType } from '../types';
+import { TimeSlot } from '../time-slot/time-slot';
 
 @Directive({
   exportAs: 'hpAppointmentGrid',

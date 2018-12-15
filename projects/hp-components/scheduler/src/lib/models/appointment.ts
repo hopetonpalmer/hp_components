@@ -1,14 +1,15 @@
 import { SchedulerResource } from './schedulerResource';
 import { addHours } from 'date-fns';
+import { ISchedulerItem } from '../interfaces/i-scheduler-item';
 
 export type BusyStatus = 'Busy' | 'Free' | 'OutOfOffice' | 'Tentative';
 export type Importance = 'High' | 'Low' | 'Normal';
 export type RecurrenceState = 'Exception' | 'Master' | 'NotRecurring' | 'Occurrence';
 
-export class Appointment {
+export class Appointment implements ISchedulerItem {
   id: string;
   description?: string;
-  creationTime = new Date();
+  creationDate = new Date();
   isAllDay: boolean;
   importance: Importance = 'Low';
   busyStatus: BusyStatus = 'Free';
