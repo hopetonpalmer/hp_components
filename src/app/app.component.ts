@@ -4,7 +4,8 @@ import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.compon
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
 import { ITheme, ThemeService, ComposerService, InteractionService } from 'hp-components-src';
 import { startOfWeek, addDays, addMonths, addWeeks, startOfDay } from 'date-fns';
-import { SchedulerService } from '@hp-components/scheduler-src';
+import { SchedulerService} from '@hp-components/scheduler-src';
+
 
 
 
@@ -28,6 +29,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     return this.themeService.customTheme;
   }
 
+  dateSettings = {
+    startDate: addMonths(new Date(), -1),
+    firstDayOfWeek: 1
+  };
+
   title = 'hp-components-app';
   constructor(private cdRef: ChangeDetectorRef, public interactionService: InteractionService,
     public themeService: ThemeService,
@@ -40,7 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.themes = this.themeService.themes;
-    this.activeTheme = this.themeService.theme('dark');
+    this.activeTheme = this.themeService.theme('Deep Green');
     // this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
     const widgets = [
       {
@@ -105,9 +111,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     ];
     this.composerService.registerWidgetGroups(widgets, true);
 
-    const date = startOfWeek(new Date());
-    // this.schedulerService.setDayTimeRange('9:00 am', '6:00 pm');
+/*     const date = startOfWeek(new Date());
+    this.schedulerService.setDayTimeRange('8:00 am', '7:00 pm');
     this.schedulerService.setDateRange(date, addDays(date, 6));
+    this.schedulerDateService.setSchedulerDates({startDate: date}); */
     // this.schedulerService.setRangeFromMonth();
   }
 

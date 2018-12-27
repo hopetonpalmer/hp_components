@@ -1,5 +1,5 @@
 import { OnInit, OnDestroy, ChangeDetectorRef, Input, Directive, HostListener, HostBinding } from '@angular/core';
-import { DateSelectionService } from '../services/date-selection.service';
+import { SlotSelectionService } from '../services/slot-selection.service';
 import { IntervalType } from '../types';
 import { Subscription, Observable } from 'rxjs';
 import { TimeSlot } from '../time-slot/time-slot';
@@ -7,10 +7,10 @@ import { SchedulerService } from '../services/scheduler.service';
 
 
 @Directive({
-  exportAs: 'hpApptCell',
-  selector: '[hpApptCell]'
+  exportAs: 'hpEventCell',
+  selector: '[hpEventCell]'
 })
-export class ApptCellDirective implements OnInit, OnDestroy {
+export class EventCellDirective implements OnInit, OnDestroy {
   private _isSelected = false;
   @HostBinding('class.hp-selected')
   get isSelected(): boolean {
@@ -27,11 +27,11 @@ export class ApptCellDirective implements OnInit, OnDestroy {
   }
 
   @Input()
-  set dateSelectionService(value: DateSelectionService) {
+  set dateSelectionService(value: SlotSelectionService) {
     this._dateSelectionService = value;
   }
 
-  get dateSelectionService(): DateSelectionService {
+  get dateSelectionService(): SlotSelectionService {
     return this._dateSelectionService;
   }
 
@@ -40,7 +40,7 @@ export class ApptCellDirective implements OnInit, OnDestroy {
   }
 
   constructor(
-    private _dateSelectionService: DateSelectionService,
+    private _dateSelectionService: SlotSelectionService,
     private _schedulerService: SchedulerService,
     private _cdRef: ChangeDetectorRef
   ) {}
@@ -64,7 +64,7 @@ export class ApptCellDirective implements OnInit, OnDestroy {
 
   @HostListener('mouseenter')
   adjustSlotSelection() {
-    this.dateSelectionService.adjustDateRange(this.timeSlot.startDate);
+    this.dateSelectionService.adjustSelectedSlotDateRange(this.timeSlot.startDate);
   }
 
   @HostListener('mouseup')
@@ -75,7 +75,7 @@ export class ApptCellDirective implements OnInit, OnDestroy {
   isSlotSelected(): boolean {
     return (
       this.timeSlot &&
-      this.dateSelectionService.isSelectedDate(this.timeSlot.startDate)
+      this.dateSelectionService.isSelected(this.timeSlot.startDate)
     );
   }
 

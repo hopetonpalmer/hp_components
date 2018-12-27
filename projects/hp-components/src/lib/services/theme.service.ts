@@ -173,7 +173,7 @@ export class ThemeService {
     this.updateStyle(rootStyle, '--hp-highlight-color',  adjustColor(this.activeTheme.primaryBg, 4));
 
     this.updateStyle(rootStyle, '--hp-scheduler-border-color', adjustColor(
-      this.activeTheme.primaryBg, { dR: 1, dG: 1, dB: 1, dA: 0.5}));
+      this.activeTheme.primaryBg, { dR: 1.47, dG: 1.45, dB: 1.45 }));
   }
 
   updateStyle(style: CSSStyleDeclaration, propertyName: string, color: string) {

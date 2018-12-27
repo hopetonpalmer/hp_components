@@ -1,6 +1,6 @@
 import { ITimedItem } from './i-timed-item';
-import { Importance, BusyStatus, SchedulerResource, RecurrenceState } from '../models';
 import { ISchedulerResource } from './i-scheduler-resource';
+import { Importance, BusyStatus, RecurrenceState } from '../event-item/event-item';
 
 export interface ISchedulerItem extends ITimedItem {
   subject: string;

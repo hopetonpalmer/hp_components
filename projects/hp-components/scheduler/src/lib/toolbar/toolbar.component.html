@@ -1,11 +1,23 @@
-<div class="nav-container">
-  <button>Previous</button>
-  <button>Next</button>
+<div class="date-selector-container">
+   <ng-container *ngTemplateOutlet="dateNavigationTemplate ?
+    dateNavigationTemplate : dateNavTemplate" ></ng-container>
 </div>
 <div class="viewtype-selector-container">
+   <ng-container *ngTemplateOutlet="viewTypeNavigationTemplate ?
+    viewTypeNavigationTemplate : viewTypeTemplate"></ng-container>
+</div>
+<ng-template #viewTypeTemplate>
     <button (click)="setViewType('Day')" >Day</button>
     <button (click)="setViewType('Week')">Week</button>
     <button (click)="setViewType('WorkWeek')">Work Week</button>
     <button (click)="setViewType('Month')">Month</button>
     <button (click)="setViewType('Timeline')">Timeline</button>
-</div>
+    <button (click)="setViewType('TimelineWeek')">Timeline Week</button>
+    <button (click)="setViewType('TimelineMonth')">Timeline Month</button>
+</ng-template>
+
+<ng-template #dateNavTemplate>
+  <button (click)="gotoToday()">Today</button>
+  <button (click)="gotoPreviousDate()">Previous</button>
+  <button (click)="gotoNextDate()">Next</button>
+</ng-template>

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppointmentGridComponent } from './appointment-grid.component';
+import { WeekViewComponent } from './week-view.component';
 
-describe('AppointmentGridComponent', () => {
-  let component: AppointmentGridComponent;
-  let fixture: ComponentFixture<AppointmentGridComponent>;
+describe('WeekViewComponent', () => {
+  let component: WeekViewComponent;
+  let fixture: ComponentFixture<WeekViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppointmentGridComponent ]
+      declarations: [ WeekViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AppointmentGridComponent);
+    fixture = TestBed.createComponent(WeekViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

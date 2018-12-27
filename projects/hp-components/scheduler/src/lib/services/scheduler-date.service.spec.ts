@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DateSelectionService } from './date-selection.service';
+import { SchedulerDateService } from './scheduler-date.service';
 
-describe('DateSelectionService', () => {
+describe('SchedulerDateService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: DateSelectionService = TestBed.get(DateSelectionService);
+    const service: SchedulerDateService = TestBed.get(SchedulerDateService);
     expect(service).toBeTruthy();
   });
 });

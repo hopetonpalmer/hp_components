@@ -1,4 +1,4 @@
-import { SchedulerResource } from './schedulerResource';
+import { SchedulerResource } from '../models/schedulerResource';
 import { addHours } from 'date-fns';
 import { ISchedulerItem } from '../interfaces/i-scheduler-item';
 
@@ -6,7 +6,7 @@ export type BusyStatus = 'Busy' | 'Free' | 'OutOfOffice' | 'Tentative';
 export type Importance = 'High' | 'Low' | 'Normal';
 export type RecurrenceState = 'Exception' | 'Master' | 'NotRecurring' | 'Occurrence';
 
-export class Appointment implements ISchedulerItem {
+export class EventItem implements ISchedulerItem {
   id: string;
   description?: string;
   creationDate = new Date();
@@ -14,7 +14,7 @@ export class Appointment implements ISchedulerItem {
   importance: Importance = 'Low';
   busyStatus: BusyStatus = 'Free';
   reminderMinutesBeforeStart = 15;
-  conflicts: Appointment[];
+  conflicts: EventItem[];
   resources: SchedulerResource[];
   recurrenceState: RecurrenceState = 'NotRecurring';
   isReminderSet: boolean;

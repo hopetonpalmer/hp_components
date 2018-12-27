@@ -26,6 +26,17 @@ export function setTime(date: Date, time: string | number | Date) {
    }
 }
 
+/**
+ * Updates the time portion of the date and returns a new Date object
+ * @param date the date to adjust
+ * @param time the time portion of the new date
+ */
+export function getDateTime(date: Date, time: string | number | Date): Date {
+  const result = new Date(date);
+  setTime(result, time);
+  return result;
+}
+
 export function strToTime(time: string): Time {
    const tokenDate = new Date('1/1/1900 ' + time);
    return {

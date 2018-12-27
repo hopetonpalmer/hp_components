@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TimeSlotGridComponent } from './time-slot-grid.component';
+import { EventItemComponent } from './event-item.component';
 
-describe('TimeSlotComponent', () => {
-  let component: TimeSlotGridComponent;
-  let fixture: ComponentFixture<TimeSlotGridComponent>;
+describe('EventItemComponent', () => {
+  let component: EventItemComponent;
+  let fixture: ComponentFixture<EventItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TimeSlotGridComponent ]
+      declarations: [ EventItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TimeSlotGridComponent);
+    fixture = TestBed.createComponent(EventItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

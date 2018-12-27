@@ -5,16 +5,15 @@
   grid-template-rows: minmax(30px, auto) 1fr;
   height: 100%;
   width: 100%;
-  user-select: none;
 }
 
-.slot-grid, .appointment-grid {
+.slot-grid, .event-grid {
   width: 100%;
   display: grid;
   grid-template-columns: var(--column-sizing);
 }
 
-.appointment-grid {
+.event-grid {
   grid-template-rows: var(--row-sizing);
   overflow: auto;
 }
@@ -24,7 +23,7 @@
   align-items: center;
 }
 
-.appointment-slot {
+.event-slot {
   border-bottom: var(--hp-panel-border);
   border-right: var(--hp-panel-border);
   font-size: 14px;
@@ -43,4 +42,12 @@
 
 .date-header {
   border-left: none;
+}
+
+.month-header.date-header {
+  cursor: default;
+}
+
+.month-header.date-header:hover {
+  color: inherit;
 }

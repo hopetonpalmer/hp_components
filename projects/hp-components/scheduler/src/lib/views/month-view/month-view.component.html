@@ -1,15 +1,15 @@
 <div class="slot-grid interval day header-container">
   <div *ngFor="let daySlot of firstWeekSlots">
-    <div class="slot-text date-header">
+    <div class="slot-text month-header date-header">
       <span>{{formatDate(daySlot.startDate, 'EEEE')}}</span>
     </div>
   </div>
 </div>
 
-<div class="appointment-grid">
-    <div hpApptCell [timeSlot]=daySlot class="day appointment-slot"
+<div class="event-grid">
+    <div hpEventCell [timeSlot]=daySlot class="day event-slot"
      *ngFor="let daySlot of viewTimeSlots; let i = index">
-        <div>
+        <div class="date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)" >
           <span *ngIf="i === 0 || daySlot.startDate.getDate() === 1 || daySlot.isNow"
            class="show-month">{{formatDate(daySlot.startDate, 'MMM')}}</span>
           <span class="slot-date">{{daySlot.formattedDate}}</span>

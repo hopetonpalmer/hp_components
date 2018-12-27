@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgendaViewComponent } from './agenda-view.component';
+import { EventCellDirective } from './event-cell.directive';
 
-describe('AgendaViewComponent', () => {
-  let component: AgendaViewComponent;
-  let fixture: ComponentFixture<AgendaViewComponent>;
+describe('ApptCellComponent', () => {
+  let component: EventCellDirective;
+  let fixture: ComponentFixture<EventCellDirective>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AgendaViewComponent ]
+      declarations: [ EventCellDirective ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AgendaViewComponent);
+    fixture = TestBed.createComponent(EventCellDirective);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

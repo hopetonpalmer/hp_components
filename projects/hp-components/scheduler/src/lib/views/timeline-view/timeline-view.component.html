@@ -1,97 +1,76 @@
-<!-- <hp-time-slot-grid #intervals
- [viewType]="'Timeline'"
- [dateFormats]="{day: 'EEE dd'}"
- [intervalTypes]="intervalTypes"
- [minuteInterval]="minuteInterval"
- [dayTimeRange]="schedulerService.dayTimeRange$ | async"
- [dateRange]="schedulerService.dateRange$ | async">
-</hp-time-slot-grid> -->
-
 <div class="intervals">
     <ng-container *ngIf="timeSlots.get('Month')">
-      <ng-container *ngTemplateOutlet="timeline_month_Template; context:{$implicit: timeSlots.get('Month')}"></ng-container>
+      <ng-container *ngTemplateOutlet="timeline_month_Template; context:{$implicit: viewTimeSlots}"></ng-container>
     </ng-container>
     <ng-container *ngIf="timeSlots.get('Day')">
-      <ng-container *ngTemplateOutlet="timeline_day_Template; context:{$implicit: timeSlots.get('Day')}"></ng-container>
+      <ng-container *ngTemplateOutlet="timeline_day_Template; context:{$implicit: viewTimeSlots}"></ng-container>
     </ng-container>
 </div>
 
 
-<ng-template #timeline_month_Template let-slots>
+<ng-template #timeline_month_Template let-slotMonths>
   <div style="height: 100%" class="months">
-    <table style="height: 100%" class="interval month" *ngFor="let slot of slots; let i = index">
-
-      <!-- Month Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Month')">
-        <td [attr.colspan]="appointmentSlots[i].length" class="slot-text">{{slot.formattedDate}}</td>
-      </tr>
-
-      <!-- Day Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Day')">
-        <td [attr.colspan]="hasInterval('Minute') ? daySlot.timeSlots.length * hourSlotCount : daySlot.timeSlots.length"
-          class="interval day" *ngFor="let daySlot of slot.timeSlots">
-          <div class="slot-text" [ngClass]="{'now': daySlot.isNow}">{{daySlot.formattedDate}}</div>
-        </td>
-      </tr>
-
-      <!-- Hour Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Hour')">
-        <ng-container *ngFor="let daySlot of slot.timeSlots">
-          <td [attr.colspan]="hasInterval('Minute') ? hourSlotCount : 1" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
-            <div class="slot-text" [ngClass]="{'now': hourSlot.isNow}">{{hourSlot.formattedDate}}</div>
-          </td>
-        </ng-container>
-      </tr>
-
-      <!-- Minute Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Minute')">
-        <td class="interval minute" *ngFor="let minuteSlot of appointmentSlots[i]">
-          <div class="slot-text" [ngClass]="{'now': minuteSlot.isNow}">{{minuteSlot.formattedDate}}</div>
-        </td>
-      </tr>
-
-      <ng-container *ngTemplateOutlet="timeline_apptSlotsTmpl; context:{$implicit: appointmentSlots[i]}"></ng-container>
-    </table>
+    <div style="height: 100%" class="interval month" [ngClass]="{'separator-border': isMasterSlot(slotMonth)}"
+     *ngFor="let slotMonth of slotMonths">
+      <div class="header-container">
+        <!-- Month Row -->
+        <div class="intervals-container" *ngIf="hasInterval('Month')">
+          <div class="slot-text">{{slotMonth.formattedDate}}</div>
+        </div>
+      </div>
+      <ng-container *ngTemplateOutlet="timeline_day_Template; context:{$implicit: slotMonth.timeSlots}"></ng-container>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #timeline_day_Template let-daySlots>
   <div style="height: 100%" class="days">
-    <table style="height: 100%" class="interval day" *ngFor="let daySlot of daySlots; let i = index">
-      <!-- Day Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Day')">
-        <td [attr.colspan]=appointmentSlots[i].length class="slot-text" [ngClass]="{'now': daySlot.isNow}">
-          {{daySlot.formattedDate}}
-        </td>
-      </tr>
+    <div style="height: 100%" class="interval day" [ngClass]="{'separator-border': isMasterSlot(daySlot)}"
+     *ngFor="let daySlot of daySlots">
+      <div class="header-container">
+        <!-- Day Row -->
+        <div class="intervals-container" *ngIf="hasInterval('Day')">
+          <div class="slot-text" [ngClass]="{'now': daySlot.isNow}">
+            {{daySlot.formattedDate}}
+          </div>
+        </div>
 
-      <!-- Hour Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Hour')">
-        <td [attr.colspan]="hourSlot.timeSlots.length > 0 ? hourSlot.timeSlots.length : 1" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
-          <div class="slot-text" [ngClass]="{'now': hourSlot.isNow}">{{hourSlot.formattedDate}}</div>
-        </td>
-      </tr>
+        <!-- Hour Row -->
+        <div class="intervals-container" *ngIf="hasInterval('Hour')">
+          <div class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
+            <div class="slot-text" [ngClass]="{'now': hourSlot.isNow}">{{hourSlot.formattedDate}}</div>
+            <!-- Minute Row -->
+            <div class="intervals-container" *ngIf="hasInterval('Minute')">
+              <div class="interval minute" *ngFor="let minuteSlot of hourSlot.timeSlots">
+                <div class="slot-text" [ngClass]="{'now': minuteSlot.isNow}">{{minuteSlot.formattedDate}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="event-grid" [style.display]="hasInterval('Hour') ? 'flex' : 'block'">
+        <ng-container *ngIf="hasInterval('Hour')">
+          <ng-container *ngIf="hasInterval('Minute')">
+            <div style="display: flex; height: 100%" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
+              <div hpEventCell [timeSlot]=minuteSlot class="interval minute event-slot"  *ngFor="let minuteSlot of hourSlot.timeSlots">
+                  <div style="opacity: 0" class="slot-text">{{minuteSlot.formattedDate}}</div>
+              </div>
+            </div>
+          </ng-container>
 
-      <!-- Minute Row -->
-      <tr class="intervals-container" *ngIf="hasInterval('Minute')">
-        <td class="interval minute" *ngFor="let minuteSlot of appointmentSlots[i]">
-          <div class="slot-text" [ngClass]="{'now': minuteSlot.isNow}">{{minuteSlot.formattedDate}}</div>
-        </td>
-      </tr>
-
-      <!-- Appointments Row -->
-      <ng-container *ngTemplateOutlet="timeline_apptSlotsTmpl; context:{$implicit: appointmentSlots[i]}"></ng-container>
-    </table>
+          <ng-container *ngIf="!hasInterval('Minute')">
+            <div hpEventCell [timeSlot]=hourSlot style="display: flex; height: 100%" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
+                <div style="opacity: 0" class="slot-text">{{hourSlot.formattedDate}}</div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!hasInterval('Hour')">
+          <div hpEventCell [timeSlot]=daySlot style="display: flex; height: 100%" >
+            <div style="opacity: 0" class="slot-text">{{daySlot.formattedDate}}</div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #timeline_apptSlotsTmpl let-apptSlots let-offsetSlots="offsetSlots">
-  <tr class="intervals-container-appointments" hpAppointmentGrid #g="hpAppointmentGrid">
-    <td *ngFor="let offset of offsetSlots"></td>
-    <td class="interval appointments-interval" (mousedown)="g.beginSlotSelection(slot); $event.preventDefault()"
-      (mouseup)="g.endSlotSelection()" (mouseenter)="g.adjustSlotSelection(slot)" [ngClass]="[slot.intervalType.toLowerCase(), g.isSlotSelected(slot) ? 'hp-selected' : '']"
-      *ngFor="let slot of apptSlots">
-      <div style="opacity: 0" class="slot-text">{{slot.formattedDate}}</div>
-    </td>
-  </tr>
-</ng-template>

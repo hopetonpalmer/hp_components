@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NavigationService } from './navigation.service';
+import { SlotSelectionService } from './slot-selection.service';
 
-describe('NavigationService', () => {
+describe('DateSelectionService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: NavigationService = TestBed.get(NavigationService);
+    const service: SlotSelectionService = TestBed.get(SlotSelectionService);
     expect(service).toBeTruthy();
   });
 });

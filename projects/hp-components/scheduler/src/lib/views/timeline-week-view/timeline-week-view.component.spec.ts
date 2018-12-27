@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApptCellDirective } from './appt-cell.directive';
+import { TimelineWeekViewComponent } from './timeline-week-view.component';
 
-describe('ApptCellComponent', () => {
-  let component: ApptCellDirective;
-  let fixture: ComponentFixture<ApptCellDirective>;
+describe('TimelineWeekViewComponent', () => {
+  let component: TimelineWeekViewComponent;
+  let fixture: ComponentFixture<TimelineWeekViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApptCellDirective ]
+      declarations: [ TimelineWeekViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ApptCellDirective);
+    fixture = TestBed.createComponent(TimelineWeekViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

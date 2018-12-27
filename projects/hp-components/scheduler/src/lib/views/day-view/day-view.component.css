@@ -3,16 +3,15 @@
   --column-sizing: 60px 1fr;
   height: 100%;
   grid-template-rows: minmax(80px, auto) 1fr;
-  user-select: none;
 }
 
-.slot-grid, .appointment-grid {
+.slot-grid, .event-grid {
   width: 100%;
   display: grid;
   grid-template-columns: var(--column-sizing);
 }
 
-.appointment-grid {
+.event-grid {
   overflow-y: scroll;
   overflow-x: hidden;
   width: 100%;
@@ -41,13 +40,13 @@
   font-size: 14px;
 }
 
-.appointment-slot{
-  border-bottom: var(--hp-panel-border);
+.event-slot{
+  border-bottom: var(--hp-scheduler-border);
   opacity: .3;
   border-bottom-style: dashed;
 }
 
-.appointment-slot:last-child {
+.event-slot:last-child {
   border-bottom-color: transparent;
 }
 
@@ -60,7 +59,7 @@
   text-align: left;
 }
 
-.intervals-container-appointments {
+.intervals-container-events {
   height: 100%;
 }
 

@@ -16,16 +16,6 @@
   --hp-panel-header-background: rgb(97, 96, 96);
   --hp-panel-header-color: rgb(255, 255, 255);
 
-  --hp-scheduler-border-color: var(--hp-panel-border-color);
-  --hp-scheduler-border: 1px solid var(--hp-scheduler-border-color);
-  --hp-scheduler-background: var(--hp-panel-background);
-  --hp-scheduler-color: var(--hp-panel-color);
-  --hp-scheduler-work-hour-background: var(--hp-panel-background);
-  --hp-scheduler-weekend-background: var(--hp-panel-background);
-  --hp-scheduler-ruler-background: var(--hp-panel-background);
-  --hp-scheduler-ruler-color: var(--hp-panel-background);
-  --hp-scheduler-ruler-border-color: var(--hp-panel-background);
-
   --hp-disable-color: gray;
   --hp-inactive-color: rgb(182, 182, 182);
 
@@ -76,6 +66,18 @@
 
   --hp-arrow-color: inherit;
   --hp-arrow-hover: inherit;
+
+  --hp-scheduler-separator-color: orange;
+  --hp-scheduler-border: var(--hp-panel-border);
+  --hp-scheduler-border-color: var(--hp-panel-border-color);
+  --hp-scheduler-border: 1px solid var(--hp-scheduler-border-color);
+  --hp-scheduler-background: var(--hp-panel-background);
+  --hp-scheduler-color: var(--hp-panel-color);
+  --hp-scheduler-work-hour-background: var(--hp-panel-background);
+  --hp-scheduler-weekend-background: var(--hp-panel-background);
+  --hp-scheduler-ruler-background: var(--hp-panel-background);
+  --hp-scheduler-ruler-color: var(--hp-panel-background);
+  --hp-scheduler-ruler-border-color: var(--hp-panel-background);
 }
 
 :host * {

@@ -1,5 +1,4 @@
 import { SchedulerResource } from '../models/schedulerResource';
-import { Appointment } from '../models/appointment';
 import { SchedulerService } from '../services/scheduler.service';
 import { addHours,
    differenceInDays,
@@ -14,36 +13,39 @@ import { addHours,
    differenceInCalendarDays,
    addSeconds,
    endOfHour,
-   differenceInHours } from 'date-fns';
+   differenceInHours,
+   differenceInMilliseconds} from 'date-fns';
 import { SchedulerViewType, MinuteInterval, IntervalType, DateRange } from '../types';
 import { OnDestroy, OnInit, Input } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { TimeSlot } from '../time-slot/time-slot';
 import { setTime, isMidnight } from '../scripts/datetime';
 import { SchedulerViewService } from './scheduler-view.service';
+import { EventItem } from '../event-item/event-item';
+import { SchedulerDateService } from '../services/scheduler-date.service';
+import { logExecution } from '../scripts/debug';
 
 
 export interface ISchedulerView {
   viewType: SchedulerViewType;
   dateRange: DateRange;
   resources: SchedulerResource[];
-  appointments: Appointment[];
+  eventItems: EventItem[];
   connectDataSource();
   disconnectDataSource();
 }
 
 export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
   private _resourcesSubscription: Subscription;
-  private _appointmentsSubscription: Subscription;
-  private _dateRangeSubscription: Subscription;
-  private _timeRangeSubscription: Subscription;
-  private _viewTypeSubscription: Subscription;
+  private _eventsSubscription: Subscription;
+  private _schedularDatesSubscription: Subscription;
+
 
   viewType: SchedulerViewType = 'Day';
   intervalTypes: IntervalType[];
 
   timeSlots = new Map<string, TimeSlot[]>();
-  appointmentSlots: Array<TimeSlot[]> = new Array<TimeSlot[]>();
+  eventSlots: Array<TimeSlot[]> = new Array<TimeSlot[]>();
 
   private _resources: SchedulerResource[];
   set resources(value: SchedulerResource[]) {}
@@ -51,16 +53,16 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
     return this._resources;
   }
 
-  private _appointments: Appointment[];
-  set appointments(value: Appointment[]) {
-    this._appointments = value;
+  private _eventItems: EventItem[];
+  set eventItems(value: EventItem[]) {
+    this._eventItems = value;
   }
-  get appointments(): Appointment[] {
-    return this._appointments;
+  get eventItems(): EventItem[] {
+    return this._eventItems;
   }
 
   get dateRange(): DateRange {
-    return this.schedulerService.dateRange;
+    return this.schedulerDateService.dateRange;
   }
 
   get viewTimeSlots(): TimeSlot[] {
@@ -95,7 +97,12 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
   }
 
   constructor(public schedulerService: SchedulerService,
-     public schedulerViewService: SchedulerViewService) {}
+     public schedulerViewService: SchedulerViewService,
+     public schedulerDateService: SchedulerDateService) {
+       this.setViewDefaults();
+     }
+
+  protected setViewDefaults() {}
 
   get dayCount() {
     return differenceInDays(this.dateRange.end, this.dateRange.start) + 1;
@@ -107,12 +114,17 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
     return this.intervalTypes.indexOf(intervalType) > -1;
   }
 
+  isMasterSlot(slot: TimeSlot): boolean {
+     const result = slot.intervalType === this.masterIntervalType;
+     return result;
+  }
+
   connectDataSource() {
     this._resourcesSubscription = this.schedulerService.resources$.subscribe(
       resources => (this.resources = resources)
     );
-    this._appointmentsSubscription = this.schedulerService.appointments$.subscribe(
-      appointments => (this.appointments = appointments)
+    this._eventsSubscription = this.schedulerService.eventItems$.subscribe(
+      events => (this.eventItems = events)
     );
   }
 
@@ -120,8 +132,8 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
     if (this._resourcesSubscription) {
       this._resourcesSubscription.unsubscribe();
     }
-    if (this._appointmentsSubscription) {
-      this._appointmentsSubscription.unsubscribe();
+    if (this._eventsSubscription) {
+      this._eventsSubscription.unsubscribe();
     }
   }
 
@@ -170,7 +182,16 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
     }
   }
 
-  createTimeSlots(
+
+/**
+ * Creates TimeSlot objects and updates the timeSlots property of current view
+ *
+ * @param timeSlots array to populate
+ * @param intervalType of the timeSlots to create
+ * @param startDate of the timeSlots to create
+ * @returns void
+ */
+createTimeSlots(
     timeSlots: TimeSlot[] = [],
     intervalType = null,
     startDate: Date = null
@@ -179,7 +200,7 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
       return;
     }
     if (this.timeSlots.entries.length > 0) {
-      this.appointmentSlots = new Array<TimeSlot[]>();
+      this.eventSlots = new Array<TimeSlot[]>();
     }
     if (!intervalType) {
       intervalType = this.intervalTypes[0];
@@ -192,7 +213,7 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
     const maxSlotCount = this.getSlotCount(intervalType, date);
     for (let index = 0; index < maxSlotCount; index++) {
       if (intervalType === this.masterIntervalType) {
-        this.appointmentSlots.push([]);
+        this.eventSlots.push([]);
       }
       const endDate = this.schedulerService.incInterval(
         intervalType,
@@ -202,7 +223,7 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
       const slot = this.createTimeSlot(intervalType, date, subSeconds(endDate, 1));
       timeSlots.push(slot);
       if (intervalType === this.intervalTypes[this.intervalTypes.length - 1]) {
-        this.appointmentSlots[this.appointmentSlots.length - 1].push(slot);
+        this.eventSlots[this.eventSlots.length - 1].push(slot);
       }
       if (intervalIndex + 1 < this.intervalTypes.length) {
         const nextIntervalType = this.intervalTypes[intervalIndex + 1];
@@ -219,10 +240,18 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
       const slots = new Map<string, TimeSlot[]>();
       slots.set(intervalType, timeSlots);
       this.timeSlots = slots;
+      this.slotsGenerated();
     }
   }
 
-
+  /**
+   * Creates and returns a new TimeSlot object
+   *
+   * @param intervalType of the new TimeSlot
+   * @param start date of the new TimeSlot
+   * @param end date of the new TimeSlot
+   * @returns a new TimeSlot object
+   */
   createTimeSlot(intervalType: IntervalType, start: Date, end: Date): TimeSlot {
     const slot = new TimeSlot();
     slot.startDate = start;
@@ -233,37 +262,63 @@ export class SchedulerView implements ISchedulerView, OnInit, OnDestroy {
     return slot;
   }
 
+  /**
+   * Calculates the actual start date for a view based on a proposed date
+   *
+   * @param date is the proposed date
+   * @returns the actual start date for the view
+   */
+  getViewStartDate(date: Date): Date {
+    return date;
+  }
+
+  /**
+   * Gets the start date of the scheduler based on the passed in date and current time range
+   *
+   * @param date is the date to combine with the current time range
+   * @returns passed in date plus the current time range start time
+   */
   getStartDate(date: Date) {
     const result = new Date(date);
     setTime(result, this.dateRange.start);
     return result;
   }
 
+   /**
+   * Gets the end date of the scheduler based on the passed in date and current time range
+   *
+   * @param date is the date to combine with the current time range
+   * @returns passed in date plus the current time range end time
+   */
   getEndDate(date: Date) {
     const result = new Date(date);
     setTime(result, this.dateRange.end);
     return result;
   }
 
-  setSubscriptions() {
-    this._dateRangeSubscription = this.schedulerService.dateRange$.subscribe(() => {
+  /**
+   * Changes the current view to Day and selects the passed in date
+   *
+   * @param date is the date to select
+   */
+  jumpToDayView(date: Date) {
+    this.schedulerViewService.jumpToDayView(date);
+  }
+
+  protected setViewDateRange() {}
+
+  protected setSubscriptions() {
+    this._schedularDatesSubscription = this.schedulerDateService.schedulerDates$.subscribe(() => {
       this.createTimeSlots();
     });
-    this._timeRangeSubscription = this.schedulerService.dayTimeRange$.subscribe(() => this.createTimeSlots());
-    this._viewTypeSubscription = this.schedulerViewService.viewType$.subscribe(viewType => {
-        this.viewChanged(viewType);
-    });
   }
 
-  protected viewChanged(viewType) {}
+  protected slotsGenerated() {}
 
   removeSubscriptions() {
-    this._dateRangeSubscription.unsubscribe();
-    this._timeRangeSubscription.unsubscribe();
-    this._viewTypeSubscription.unsubscribe();
+    this._schedularDatesSubscription.unsubscribe();
   }
   ngOnInit(): void {
-    this.createTimeSlots();
     this.setSubscriptions();
     this.connectDataSource();
   }

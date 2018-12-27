@@ -1,4 +1,9 @@
-<hp-scheduler [viewType]="'Month'" ></hp-scheduler>
+<hp-scheduler [dateSettings]="dateSettings" ></hp-scheduler>
+<!-- <div style="width: 100%; display: grid; grid-column-gap: 10px; grid-template-rows: 100%; grid-template-columns: 1fr 1fr;  overflow: scroll">
+   <hp-scheduler [viewType]="'Month'"></hp-scheduler>
+   <hp-scheduler [viewType]="'Month'"></hp-scheduler>
+</div> -->
+
 <hp-composer style="display: none" #composer>
     <div toolbar style="display: flex">
       <button (click)="interactionService.save('interaction-data')">Save</button>

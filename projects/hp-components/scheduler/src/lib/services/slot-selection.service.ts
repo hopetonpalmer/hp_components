@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DateRange } from '../types';
-import { isWithinRange, isBefore, isAfter, subSeconds, addSeconds, isEqual } from 'date-fns';
+import { isWithinRange, isEqual, isBefore, isAfter } from 'date-fns';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class DateSelectionService {
+@Injectable()
+export class SlotSelectionService {
   private _isSelecting = false;
   _initialRange: DateRange = null;
   get isSelecting() {
@@ -25,7 +23,7 @@ export class DateSelectionService {
     this._isSelecting = false;
   }
 
-  clear() {
+  clearSelection() {
     this._selectedDateRangeSubject.next(null);
   }
 
@@ -33,7 +31,13 @@ export class DateSelectionService {
     this._selectedDateRangeSubject.next({ start, end });
   }
 
-  adjustDateRange(date: Date) {
+  isSelected(date: Date) {
+    const range = this._selectedDateRangeSubject.value;
+    const result = range && isWithinRange(date, range.start, range.end);
+    return result;
+  }
+
+  adjustSelectedSlotDateRange(date: Date) {
     if (!this.isSelecting) {
       return;
     }
@@ -43,10 +47,10 @@ export class DateSelectionService {
     }
     if (isEqual(date, this._initialRange.start)) {
       this.setSelectedDateRange(date, this._initialRange.end);
-    } else if (isBefore(date, range.start))  {
-       this.setSelectedDateRange(date, range.end);
+    } else if (isBefore(date, range.start)) {
+      this.setSelectedDateRange(date, range.end);
     } else if (isAfter(date, range.end)) {
-       this.setSelectedDateRange(range.start, date);
+      this.setSelectedDateRange(range.start, date);
     } else if (isBefore(date, range.end)) {
       if (isBefore(date, this._initialRange.start)) {
         this.setSelectedDateRange(date, range.end);
@@ -54,10 +58,5 @@ export class DateSelectionService {
         this.setSelectedDateRange(range.start, date);
       }
     }
-  }
-
-  isSelectedDate(date: Date) {
-    const range = this._selectedDateRangeSubject.value;
-    return range && isWithinRange(date, range.start, range.end);
   }
 }

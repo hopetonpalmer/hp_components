@@ -1,0 +1,18 @@
+
+.interval.day {
+  font-size: 14px;
+  text-align: center;
+  min-width: 60px;
+  width: 100%;
+  justify-items: center;
+  border-top: var(--hp-scheduler-border);
+}
+
+.interval.month {
+  font-size: 1.3em;
+  border-left: var(--hp-scheduler-border);
+}
+
+.interval.month:first-child {
+  border-left: 0;
+}

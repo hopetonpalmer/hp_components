@@ -1,6 +1,9 @@
+:host {
+  user-select: none;
+}
+
 .now {
-  background: var(--hp-selected-background);
-  color: var(--hp-selected-color);
+  color: var(--hp-highlight-color);
   opacity: 1;
 }
 
@@ -10,10 +13,16 @@
 }
 
 .date-header {
-  border-left: var(--hp-panel-border);
+  border-left: var(--hp-scheduler-border);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.date-header:hover {
+  background-color: var(--hp-highlight-background);
+  color: var(--hp-highlight-color);
 }
 
 .intervals {
@@ -40,6 +49,7 @@
 .slot-text {
   padding: 4px;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .interval {
@@ -91,7 +101,7 @@
 }
 
 table, tr, td {
-  border: var(--hp-panel-border);
+  border: var(--hp-scheduler-border);
   border-collapse: collapse;
 }
 

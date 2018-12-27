@@ -1,22 +1,38 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { SchedulerService } from './services/scheduler.service';
-import { Appointment } from './models';
-import { SchedulerViewType, DayViewType, MinuteInterval } from './types';
+import { SchedulerViewType, MinuteInterval } from './types';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { SchedulerViewService } from './views/scheduler-view.service';
+import { SchedulerDateService, ISchedulerDateSettings } from './services/scheduler-date.service';
+import { SlotSelectionService } from './services/slot-selection.service';
 
 @Component({
   selector: 'hp-scheduler',
   template: `
     <hp-toolbar style="height: 50px"></hp-toolbar>
-    <hp-day-view *ngIf="isDayView"
-      [customDays]="customDays"
+    <hp-day-view
+      *ngIf="viewType === 'Day'"
       [minuteInterval]="minuteInterval"
-      [dayViewType]="dayViewType"
-      [firstDayOfWeek]="firstDayOfMonth">
-    </hp-day-view>
+    ></hp-day-view>
+    <hp-week-view
+      *ngIf="viewType === 'Week'"
+      [minuteInterval]="minuteInterval"
+    ></hp-week-view>
+    <hp-work-week-view
+      *ngIf="viewType === 'WorkWeek'"
+      [minuteInterval]="minuteInterval"
+    ></hp-work-week-view>
     <hp-month-view *ngIf="viewType === 'Month'"></hp-month-view>
-    <hp-timeline-view *ngIf="viewType === 'Timeline'"></hp-timeline-view>
+    <hp-timeline-view
+      *ngIf="viewType === 'Timeline'"
+      [minuteInterval]="15"
+    ></hp-timeline-view>
+    <hp-timeline-week-view
+      *ngIf="viewType === 'TimelineWeek'"
+    ></hp-timeline-week-view>
+    <hp-timeline-month-view
+      *ngIf="viewType === 'TimelineMonth'"
+    ></hp-timeline-month-view>
   `,
   styles: [
     `
@@ -24,9 +40,11 @@ import { SchedulerViewService } from './views/scheduler-view.service';
         display: flex;
         flex-direction: column;
         height: 100%;
+        user-select: none;
       }
     `
-  ]
+  ],
+  providers: [SchedulerDateService, SchedulerViewService, SlotSelectionService]
 })
 export class HpSchedulerComponent implements OnInit, OnDestroy {
   private _viewTypeSubscription: Subscription;
@@ -36,25 +54,33 @@ export class HpSchedulerComponent implements OnInit, OnDestroy {
    */
   @Output()
   viewTypeChange = new EventEmitter<SchedulerViewType>();
-  private _viewType: SchedulerViewType = 'Day';
+
   @Input()
   set viewType(value: SchedulerViewType) {
-    if (this._viewType !== value) {
-      this._viewType = value;
-      this.viewTypeChange.next(value);
-    }
+    this.viewService.setViewType(value);
   }
 
   get viewType(): SchedulerViewType {
-    return this._viewType;
-  }
-
-  get dayViewType(): DayViewType {
-    return this._schedulerViewService.getDayViewType();
+    return this.viewService.getActiveViewType();
   }
 
   @Input()
-  firstDayOfMonth = 0;
+  set dateSettings(value: ISchedulerDateSettings) {
+    this.dateService.setDateSettings(value);
+  }
+
+  get dateSettings(): ISchedulerDateSettings {
+    return this.dateService.datesSettings;
+  }
+
+  @Input()
+  set selectedDate(date: Date) {
+    this.dateService.startDate = date;
+  }
+
+  get selectedDate(): Date {
+    return this.dateService.startDate;
+  }
 
   @Input()
   customDays = [0, 1, 2, 3, 4, 5, 6];
@@ -62,16 +88,15 @@ export class HpSchedulerComponent implements OnInit, OnDestroy {
   @Input()
   minuteInterval: MinuteInterval = 15;
 
-  get isDayView(): boolean {
-    return this._schedulerViewService.isDayView();
-  }
-
-  constructor(private _schedulerViewService: SchedulerViewService) {}
+  constructor(
+    public viewService: SchedulerViewService,
+    public dateService: SchedulerDateService
+  ) {}
 
   ngOnInit() {
-    this._viewTypeSubscription = this._schedulerViewService.viewType$.subscribe(
+    this._viewTypeSubscription = this.viewService.viewType$.subscribe(
       viewType => {
-        this.viewType = viewType;
+        this.viewTypeChange.next(viewType);
       }
     );
     /*     this._schedulerService.addAppointment(new Appointment());
