@@ -1,6 +1,7 @@
 import { SchedulerResource } from '../models/schedulerResource';
-import { addHours } from 'date-fns';
+import { addHours, isSameDay, differenceInCalendarDays } from 'date-fns';
 import { ISchedulerItem } from '../interfaces/i-scheduler-item';
+import { DateRange } from '../types';
 
 export type BusyStatus = 'Busy' | 'Free' | 'OutOfOffice' | 'Tentative';
 export type Importance = 'High' | 'Low' | 'Normal';
@@ -18,12 +19,20 @@ export class EventItem implements ISchedulerItem {
   resources: SchedulerResource[];
   recurrenceState: RecurrenceState = 'NotRecurring';
   isReminderSet: boolean;
-
+  isFixedDate: boolean;
+  get isMultiDay(): boolean {
+    return differenceInCalendarDays(this.end, this.start) > 0;
+  }
   get isRecurring(): boolean {
      return this.recurrenceState !== 'NotRecurring';
   }
   get isConflict(): boolean {
     return this.conflicts && this.conflicts.indexOf(this) > -1;
   }
-  constructor(public start = new Date(), public end = addHours(new Date(), 1), public subject = 'New Appointment') {}
+  get dateRange(): DateRange {
+    return {start: this.start, end: this.end};
+  }
+  constructor(public start = new Date(), public end = addHours(new Date(), 1), public subject = 'New Appointment', public color = 'gray') {
+
+  }
 }

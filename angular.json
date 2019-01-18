@@ -363,6 +363,11 @@
           "options": {
             "tsConfig": "projects/hp-components/common/tsconfig.lib.json",
             "project": "projects/hp-components/common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/hp-components/common/ng-package.prod.json"
+            }
           }
         },
         "test": {

@@ -13,16 +13,18 @@
 }
 
 .date-header {
-  border-left: var(--hp-scheduler-border);
+  /* border-left: var(--hp-scheduler-border); */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
+  transition: color 0.25s;
 }
 
 .date-header:hover {
-  background-color: var(--hp-highlight-background);
-  color: var(--hp-highlight-color);
+/*   background-color: var(--hp-highlight-background); */
+/*  color: var(--hp-highlight-color); */
+  color: orange;
 }
 
 .intervals {
@@ -100,9 +102,26 @@
   height: 100%;
 }
 
+.event-intervals {
+  background-color: transparent;
+}
+
 table, tr, td {
   border: var(--hp-scheduler-border);
   border-collapse: collapse;
 }
 
+.event-grid {
+  position: relative;
+}
+
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 

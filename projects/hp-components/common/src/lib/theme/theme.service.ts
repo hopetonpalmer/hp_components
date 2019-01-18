@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { adjustColor } from '../scripts/colors';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
 
 export interface ITheme {
   name: string;
@@ -16,23 +17,9 @@ export class ThemeService {
   _activeThemeSubject = new BehaviorSubject<ITheme>(null);
   activeTheme$ = this._activeThemeSubject.asObservable();
 
-  private _activeTheme: ITheme;
-  get activeTheme(): ITheme {
-    return this._activeTheme;
-  }
-  set activeTheme(value: ITheme) {
-    if (this._activeTheme !== value) {
-      this._activeTheme = value;
-      this.applyActiveTheme();
-      this._activeThemeSubject.next(value);
-    }
-  }
-
-  get customTheme(): ITheme {
-    return this.theme('Custom');
-  }
-
   themes: ITheme[] = [
+    { name: 'Default', primaryBg: '#494949', primaryText: '#e6e4e4' },
+    { name: 'Light', primaryBg: '#dedcdc', primaryText: '#212020' },
     { name: 'Dark', primaryBg: '#494949', primaryText: '#e6e4e4' },
     { name: 'Deep Dark', primaryBg: '#1a1a1a', primaryText: '#e6e4e4' },
     { name: 'Purple', primaryBg: '#2b2633', primaryText: '#e6e4e4' },
@@ -52,7 +39,23 @@ export class ThemeService {
     { name: 'Custom', primaryBg: '#0d3239', primaryText: '#e6e4e4' }
   ];
 
-  constructor() {}
+  private _activeTheme: ITheme;
+  get activeTheme(): ITheme {
+    return this._activeTheme;
+  }
+  set activeTheme(value: ITheme) {
+    if (this._activeTheme !== value) {
+      this._activeTheme = value;
+      this.applyActiveTheme();
+      this._activeThemeSubject.next(value);
+    }
+  }
+
+  get customTheme(): ITheme {
+    return this.theme('Custom');
+  }
+
+  constructor(@Inject(DOCUMENT) private document: any) {}
 
   theme(themeName: string) {
     return this.themes.find(
@@ -73,7 +76,7 @@ export class ThemeService {
   }
 
   applyActiveTheme() {
-    const rootStyle = document.documentElement.style;
+    const rootStyle = this.document.documentElement.style;
     this.updateStyle(
       rootStyle,
       '--hp-panel-background',
@@ -121,8 +124,16 @@ export class ThemeService {
       adjustColor(this.activeTheme.primaryBg, 1.9)
     );
 
-    this.updateStyle(rootStyle, '--hp-menu-color', adjustColor(this.activeTheme.primaryText, 1.9));
-    this.updateStyle(rootStyle, '--hp-menu-background', adjustColor(this.activeTheme.primaryBg, 1.9));
+    this.updateStyle(
+      rootStyle,
+      '--hp-menu-color',
+      adjustColor(this.activeTheme.primaryText, 1.9)
+    );
+    this.updateStyle(
+      rootStyle,
+      '--hp-menu-background',
+      adjustColor(this.activeTheme.primaryBg, 1.9)
+    );
 
     this.updateStyle(
       rootStyle,
@@ -170,10 +181,19 @@ export class ThemeService {
       adjustColor(this.activeTheme.primaryBg, 0.9)
     );
     this.updateStyle(rootStyle, '--hp-input-color', 'rgb(255,255,255)');
-    this.updateStyle(rootStyle, '--hp-highlight-color',  adjustColor(this.activeTheme.primaryBg, 4));
+    this.updateStyle(
+      rootStyle,
+      '--hp-highlight-color',
+      adjustColor(this.activeTheme.primaryBg, 4)
+    );
 
-    this.updateStyle(rootStyle, '--hp-scheduler-border-color', adjustColor(
-      this.activeTheme.primaryBg, { dR: 1.47, dG: 1.45, dB: 1.45 }));
+    this.updateStyle(
+      rootStyle,
+      '--hp-scheduler-border-color',
+      adjustColor(this.activeTheme.primaryBg, { dR: 1.47, dG: 1.45, dB: 1.45 })
+    );
+
+    // this.updateStyle(rootStyle, '--hp-scheduler-separator-color', 'green');
   }
 
   updateStyle(style: CSSStyleDeclaration, propertyName: string, color: string) {

@@ -1,14 +1,12 @@
 import { formatDate} from '@angular/common';
 import { LOCALE_ID } from '@angular/core';
-import { IntervalType, MinuteInterval } from '../types';
+import { IntervalType, MinuteInterval, ITimeSlot, DateRange } from '../types';
 import { isSameYear, isSameQuarter,
   isSameMonth, isSameWeek, isSameDay,
-  isSameHour, differenceInMinutes,
-  getMinutes,
-  closestTo} from 'date-fns';
+  isSameHour, closestTo} from 'date-fns';
 import { minuteTicks, isSameTime, formatDateTime } from '../scripts/datetime';
 
-export class TimeSlot {
+export class TimeSlot implements ITimeSlot {
    startDate: Date;
    endDate: Date;
    dateFormat: string;
@@ -16,6 +14,9 @@ export class TimeSlot {
    minuteInterval: MinuteInterval;
    isEnabled = true;
    timeSlots: TimeSlot[] = [];
+   get dateRange(): DateRange {
+     return { start: this.startDate, end: this.endDate };
+   }
    get formattedDate(): string {
      const result = formatDateTime(this.startDate, this.dateFormat);
      return result;

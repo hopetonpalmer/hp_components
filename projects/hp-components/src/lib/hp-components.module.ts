@@ -51,8 +51,6 @@ import { BooleanPropertyEditorComponent } from './property-grid/editors/property
 // tslint:disable-next-line:max-line-length
 import { AlignmentPropertyEditorComponent } from './property-grid/editors/property-editors/alignment-property-editor/alignment-property-editor.component';
 // tslint:disable-next-line:max-line-length
-import { BrushPropertyEditorComponent } from './property-grid/editors/property-editors/brush-property-editor/brush-property-editor.component';
-// tslint:disable-next-line:max-line-length
 import { BackgroundPropertyEditorComponent } from './property-grid/editors/property-editors/background-property-editor/background-property-editor.component';
 import { FontPropertyEditorComponent } from './property-grid/editors/property-editors/font-property-editor/font-property-editor.component';
 // tslint:disable-next-line:max-line-length
@@ -100,7 +98,6 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     NumberPropertyEditorComponent,
     BooleanPropertyEditorComponent,
     AlignmentPropertyEditorComponent,
-    BrushPropertyEditorComponent,
     BackgroundPropertyEditorComponent,
     FontPropertyEditorComponent,
     ColorPropertyEditorComponent,
@@ -154,7 +151,6 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     NumberPropertyEditorComponent,
     BooleanPropertyEditorComponent,
     AlignmentPropertyEditorComponent,
-    BrushPropertyEditorComponent,
     BackgroundPropertyEditorComponent,
     FontPropertyEditorComponent,
     ColorPropertyEditorComponent,
@@ -196,7 +192,6 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     NumberPropertyEditorComponent,
     BooleanPropertyEditorComponent,
     AlignmentPropertyEditorComponent,
-    BrushPropertyEditorComponent,
     BackgroundPropertyEditorComponent,
     FontPropertyEditorComponent,
     ColorPropertyEditorComponent,

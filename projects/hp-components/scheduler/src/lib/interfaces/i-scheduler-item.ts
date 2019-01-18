@@ -16,5 +16,7 @@ export interface ISchedulerItem extends ITimedItem {
   isReminderSet: boolean;
   isRecurring: boolean;
   isConflict: boolean;
+  isMultiDay: boolean;
+  isFixedDate: boolean;
 }
 

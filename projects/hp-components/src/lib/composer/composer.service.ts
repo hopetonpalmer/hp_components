@@ -13,16 +13,12 @@ export class ComposerService {
   private _widgetsBehaviorSubject = new BehaviorSubject<IWidgetType[]>([]);
   widgets$ = this._widgetsBehaviorSubject.asObservable();
 
-  private _widgetGroupsBehaviorSubject = new BehaviorSubject<
-    IWidgetTypeGroup[]
-  >([]);
+  private _widgetGroupsBehaviorSubject = new BehaviorSubject<IWidgetTypeGroup[]>([]);
   widgetGroups$ = this._widgetGroupsBehaviorSubject.asObservable();
 
   get registeredWidgets(): IWidgetType[] {
     const result = this.widgetGroups.reduce(
-      (array, group) => [...array, ...group.widgets],
-      []
-    );
+      (array, group) => [...array, ...group.widgets], []);
     return result;
   }
 

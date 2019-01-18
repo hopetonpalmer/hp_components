@@ -8,7 +8,7 @@ import { PreviewComponent } from './preview/preview.component';
 @Component({
   selector: 'hp-composer',
   templateUrl: './composer.component.html',
-  styleUrls: ['./composer.component.css', '../hp-components.css']
+  styleUrls: ['./composer.component.css']
 })
 export class ComposerComponent implements OnInit, AfterViewInit {
   zoomChange = new EventEmitter<number>();

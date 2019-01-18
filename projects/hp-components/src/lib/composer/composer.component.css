@@ -33,9 +33,10 @@
 
 .toolbar {
   color: var(--hp-toolbar-color);
-  padding: 10px;
+  padding: 15px 10px;
   width: 100%;
   background: var(--hp-toolbar-background);
+  box-sizing: border-box;
 }
 
 .body {

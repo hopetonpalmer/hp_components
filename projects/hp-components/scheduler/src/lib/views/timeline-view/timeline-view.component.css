@@ -9,6 +9,7 @@
   --border: var(--hp-scheduler-border);
 /*   grid-template-columns: auto;
   grid-template-rows: auto 1fr; */
+  animation: view-enter .25s;
 }
 
 .intervals {

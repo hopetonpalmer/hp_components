@@ -1,0 +1,341 @@
+@import '~@angular/cdk/overlay-prebuilt.css';
+@import '~@angular/cdk/a11y-prebuilt.css';
+
+:root {
+  --hp-primary-bg: rgb(73, 73, 73);
+  --hp-primary-color: rgb(230, 228, 228);
+
+  --hp-input-background: rgb(120, 120, 120);
+  --hp-input-color: rgb(255, 255, 255);
+
+  --hp-panel-background: rgb(73, 73, 73);
+  --hp-panel-color: rgb(230, 228, 228);
+  --hp-panel-main: rgb(63, 63, 63);
+  --hp-panel-border-color: rgb(107, 106, 106);
+  --hp-panel-border: 1px solid var(--hp-panel-border-color);
+  --hp-panel-header-background: rgb(97, 96, 96);
+  --hp-panel-header-color: rgb(255, 255, 255);
+
+  --hp-disable-color: gray;
+  --hp-inactive-color: rgb(182, 182, 182);
+
+  --hp-menu-color: white;
+  --hp-menu-background: rgb(128, 128, 128);
+
+  --hp-toolbar-color: white;
+  --hp-toolbar-background: rgb(128, 128, 128);
+
+  --hp-header-background: transparent;
+  --hp-header-color: rgb(255, 255, 255);
+  --hp-header-padding: 10px;
+
+  --hp-property-editor-background: rgb(77, 76, 76);
+  --hp-property-editor-color: rgb(168, 168, 168);
+  --hp-property-editor-input-background: transparent;
+  --hp-property-editor-input-color: white;
+
+  --hp-popup-background: rgb(255, 255, 255);
+  --hp-popup-color: rgb(14, 14, 14);
+  --hp-popup-border-color: rgb(36, 36, 36);
+
+  --hp-highlight-color: orange;
+
+  --hp-selected-border-color: orange;
+
+  --hp-selected-background: orange;
+  --hp-selected-color: white;
+
+  --hp-hover-border-color: orange;
+  --hp-hover-background: rgb(32, 32, 32);
+  --hp-hover-color: white;
+
+  --hp-danger-color: white;
+  --hp-danger-background: rgb(212, 51, 51);
+
+  --hp-warning-color: white;
+  --hp-warning-background: rgb(247, 71, 7);
+
+  --hp-info-color: white;
+  --hp-info-background: rgb(61, 93, 196);
+
+  --hp-success-color: white;
+  --hp-success-background: rgb(84, 168, 105);
+
+  --hp-input-background: black;
+  --hp-input-color: white;
+
+  --hp-arrow-color: inherit;
+  --hp-arrow-hover: inherit;
+
+  --hp-scheduler-separator-color: orange;
+  --hp-scheduler-border: var(--hp-panel-border);
+  --hp-scheduler-border-color: var(--hp-panel-border-color);
+  --hp-scheduler-border: 1px solid var(--hp-scheduler-border-color);
+  --hp-scheduler-background: var(--hp-panel-background);
+  --hp-scheduler-color: var(--hp-panel-color);
+  --hp-scheduler-work-hour-background: var(--hp-panel-background);
+  --hp-scheduler-weekend-background: var(--hp-panel-background);
+  --hp-scheduler-ruler-background: var(--hp-panel-background);
+  --hp-scheduler-ruler-color: var(--hp-panel-background);
+  --hp-scheduler-ruler-border-color: var(--hp-panel-background);
+}
+
+:host * {
+  box-sizing: border-box;
+  /* transition: background-color .5s; */
+  outline: none;
+}
+
+.hp-hide {
+  display: none !important;
+}
+
+.hp-selected {
+  background-color: var(--hp-selected-background);
+  color: var(--hp-selected-color);
+  opacity: 1 !important;
+}
+
+.hp-text-highlight {
+  color: var(--hp-highlight-color);
+}
+
+:host {
+  background-color: var(--hp-panel-background);
+  color: var(--hp-panel-color);
+}
+
+.hp-popup {
+  background-color: var(--hp-popup-background);
+  color: var(--hp-popup-color);
+  border: 1px solid var(--hp-popup-border-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.hp-dropdown {
+  border-width: 0;
+  box-shadow: none;
+}
+
+.hp-stack-v,
+.hp-stack-vc,
+.hp-stack-vcc,
+.hp-stack-h,
+.hp-stack-hc,
+.hp-stack-hcc,
+.hp-stack-wrap {
+  display: flex;
+}
+
+.hp-stack-wrap {
+  flex-wrap: wrap;
+}
+
+.hp-stack-h,
+.hp-stack-hc,
+.hp-stack-hcc {
+  flex-direction: row;
+}
+
+.hp-stack-hc {
+  justify-content: center;
+}
+
+.hp-stack-hcc,
+.hp-stack-vcc {
+  justify-content: center;
+  justify-items: center;
+}
+
+.hp-stack-v,
+.hp-stack-vc,
+.hp-stack-vcc {
+  flex-direction: column;
+}
+
+.hp-stack-vc {
+  align-items: cener;
+}
+
+.hp-vc {
+  align-items: center;
+}
+
+.hp-hc {
+  justify-content: center;
+}
+
+.hp-fill-parent {
+  height: 100%;
+  width: 100%;
+}
+
+.hp-child-container {}
+
+
+.hp-property-grid {
+  font-size: 0.70em;
+  color: var(--hp-property-editor-color);
+  padding: 10px;
+}
+
+.hp-no-color-line {
+  width: 100%;
+  border-top: 1px solid red;
+  margin-top: -1px;
+  transform: rotate(135deg);
+}
+
+.hp-flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.hp-input-container {
+  display: flex;
+  align-items: center;
+  padding: 3px 3px 3px 5px;
+  margin-bottom: 3px;
+  width: 100%;
+  background: rgb(66, 65, 65);
+  border-radius: 5px;
+}
+
+.hp-input-container input {
+  padding: 2px;
+  color: var(--hp-input-color);
+  border: none;
+  outline: none;
+  /* background: var(--hp-input-background); */
+  background: transparent;
+  margin-left: auto;
+  font-size: 11px;
+}
+
+.hp-input-container * {
+  margin-left: auto;
+}
+
+
+.hp-arrow-up,
+.hp-arrow {
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid;
+  border-top-color: var(--hp-arrow-color);
+  transform: rotate(180deg);
+  transition-duration: .25s;
+  transition-property: transform;
+}
+
+.hp-arrow-up:hover {
+  border-top-color: var(--hp-arrow-hover);
+}
+
+.hp-arrow-down,
+.hp-arrow {
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid;
+  border-top-color: var(--hp-arrow-color);
+  transform: rotate(0deg);
+  transition-duration: .25s;
+  transition-property: transform;
+}
+
+.hp-arrow-down:hover {
+  border-top-color: var(--hp-arrow-hover);
+}
+
+
+.hp-arrow-right,
+.hp-arrow {
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid;
+  border-left-color: var(--hp-arrow-color);
+}
+
+.hp-arrow-right:hover {
+  border-left-color: var(--hp-arrow-hover);
+}
+
+.hp-dropzone {
+  overflow: hidden;
+}
+
+.hp-arrow-left,
+.hp-arrow {
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid;
+  border-right-color: var(--hp-arrow-color);
+}
+
+.hp-arrow-left:hover {
+  border-right-color: var(--hp-arrow-hover);
+}
+
+
+.hp-list-container {
+  padding: 1px;
+  display: flex;
+  flex-direction: column;
+  min-width: 50px;
+}
+
+.hp-list-item {
+  cursor: default;
+  background-color: Transparent;
+  transition: background-color .25s;
+  padding: 5px 10px;
+}
+
+.hp-list-item:hover {
+  background-color: var(--hp-hover-background);
+  color: var(--hp-hover-color);
+}
+
+.hp-item-selected {
+  background-color: var(--hp-selected-background);
+  color: var(--hp-selected-color)
+}
+
+
+.hp-checkers {
+  background-color: white;
+  background-image: url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill-opacity=".25" >\
+        <rect x="100" width="100" height="100" />\
+        <rect y="100" width="100" height="100" />\
+        </svg>');
+  background-size: 20px 20px;
+}
+
+.hp-checkers-small {
+  background-color: white;
+  background-image: url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill-opacity=".25" >\
+        <rect x="25" width="25" height="25" />\
+        <rect y="25" width="25" height="25" />\
+        </svg>');
+  background-size: 8px 8px;
+}
+
+.hp-checkers-tiny-image {
+  background-image: url('data:image/svg+xml,\<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill-opacity=".25" >\
+        <rect x="25" width="25" height="25" />\
+        <rect y="25" width="25" height="25" />\
+        </svg>');
+  background-size: 6px 6px;
+}

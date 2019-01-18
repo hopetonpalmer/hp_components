@@ -8,6 +8,4 @@ import { DayViewComponent } from '../day-view/day-view.component';
   styleUrls: ['../../styles.css', '../day-view/day-view.component.css'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class WeekViewComponent extends DayViewComponent {
-
-}
+export class WeekViewComponent extends DayViewComponent {}

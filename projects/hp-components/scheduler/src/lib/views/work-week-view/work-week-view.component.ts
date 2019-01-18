@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { WeekViewComponent } from '../week-view/week-view.component';
-import { TimeSlot } from '../../time-slot/time-slot';
+
 
 @Component({
   selector: 'hp-work-week-view',
@@ -9,13 +9,14 @@ import { TimeSlot } from '../../time-slot/time-slot';
 })
 export class WorkWeekViewComponent extends WeekViewComponent {
 
-  @Input()
-  workDays = [1, 2, 3, 4, 5];
+  get workDays(): number[] {
+    return this.schedulerDateService.datesSettings.workDays;
+  }
 
-  get viewTimeSlots(): TimeSlot[] {
+  protected setViewTimeSlots(): void {
     const result = this.timeSlots.get('Day').filter(slot => {
       return this.workDays.indexOf(slot.startDate.getDay()) > -1;
     }).slice(0, this.workDays.length);
-    return result;
+    this.viewTimeSlots = result;
   }
 }

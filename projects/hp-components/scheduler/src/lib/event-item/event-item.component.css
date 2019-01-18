@@ -1,0 +1,62 @@
+:host {
+  position: absolute;
+  display: flex;
+  grid-template-rows: 1fr auto;
+  border: 1px solid black;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 5px;
+  opacity: .98;
+  transition: border-width .3s, border-color .3s;
+}
+
+:host:hover, :host.selected {
+  border-color: orange;
+}
+
+:host.selected {
+  border-style: dashed;
+}
+
+.event-item {
+   pointer-events: none;
+   height: auto;
+   width: 100%;
+   display: flex;
+   flex-wrap: wrap;
+   font-size: 14px;
+}
+
+.event-item.horizontal {
+  align-items: center;
+  font-size: 12px;
+  justify-content: space-between;
+}
+
+
+.from-caption, .to-caption {
+  font-size: 10px;
+}
+
+
+.event-item-subject {
+  margin-right: 5px;
+  height: 20px;
+}
+
+.event-item-time {
+  height: 20px;
+}
+
+:host.more-before {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+:host.more-after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+

@@ -7,13 +7,17 @@
 </div>
 
 <div class="event-grid">
-    <div hpEventCell [timeSlot]=daySlot class="day event-slot"
-     *ngFor="let daySlot of viewTimeSlots; let i = index">
-        <div class="date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)" >
-          <span *ngIf="i === 0 || daySlot.startDate.getDate() === 1 || daySlot.isNow"
-           class="show-month">{{formatDate(daySlot.startDate, 'MMM')}}</span>
-          <span class="slot-date">{{daySlot.formattedDate}}</span>
-        </div>
-    </div>
-</div>
+    <hp-timeline-day-view [isEmbedded]=true [headerTemplate]=dayHeader [minHeight]="rowHeight" [growToFitEvents]=true
+    [strictMinHeight]=false [subDateRange]=dateRange *ngFor="let dateRange of dateRanges"></hp-timeline-day-view>
+<div>
+
+<ng-template #dayHeader let-daySlot="slot">
+  <div class="date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)">
+    <span *ngIf="daySlot.startDate === dateRanges[0].start || daySlot.startDate.getDate() === 1 || daySlot.isNow" class="show-month">{{formatDate(daySlot.startDate,
+      'MMM')}}</span>
+    <span class="slot-date">{{daySlot.formattedDate}}</span>
+  </div>
+</ng-template>
+
+
 

@@ -8,7 +8,6 @@ export {InteractionService} from './lib/interaction/interaction.service';
 export {PreviewService} from './lib/composer/preview/preview.service';
 export {ComposerService} from './lib/composer/composer.service';
 export {PageLoaderService} from './lib/services/page-loader.service';
-export {ThemeService, ITheme} from './lib/services/theme.service';
 
 export {InteractionComponent} from './lib/interaction/interaction.component';
 export {ComposerComponent} from './lib/composer/composer.component';

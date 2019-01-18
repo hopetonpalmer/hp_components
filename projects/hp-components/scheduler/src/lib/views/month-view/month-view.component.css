@@ -7,13 +7,15 @@
   width: 100%;
 }
 
-.slot-grid, .event-grid {
+.slot-grid {
   width: 100%;
   display: grid;
   grid-template-columns: var(--column-sizing);
 }
 
 .event-grid {
+  width: 100%;
+  display: grid;
   grid-template-rows: var(--row-sizing);
   overflow: auto;
 }
@@ -42,6 +44,13 @@
 
 .date-header {
   border-left: none;
+  font-size: 14px;
+  align-items: center;
+  padding: 5px;
+}
+
+.date-header:hover {
+  color: orange;
 }
 
 .month-header.date-header {

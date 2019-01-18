@@ -1,10 +1,16 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy, ElementRef, AfterViewInit, Optional, Injector } from '@angular/core';
 import { SchedulerService } from './services/scheduler.service';
 import { SchedulerViewType, MinuteInterval } from './types';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { SchedulerViewService } from './views/scheduler-view.service';
 import { SchedulerDateService, ISchedulerDateSettings } from './services/scheduler-date.service';
-import { SlotSelectionService } from './services/slot-selection.service';
+import { TimeSlotService } from './time-slot/time-slot.service';
+import { EventItem } from './event-item/event-item';
+import { ResizeObserver } from 'resize-observer';
+import { SchedulerEventService } from './services/scheduler-event.service';
+
+
+
 
 @Component({
   selector: 'hp-scheduler',
@@ -27,9 +33,9 @@ import { SlotSelectionService } from './services/slot-selection.service';
       *ngIf="viewType === 'Timeline'"
       [minuteInterval]="15"
     ></hp-timeline-view>
-    <hp-timeline-week-view
+    <hp-timeline-day-view
       *ngIf="viewType === 'TimelineWeek'"
-    ></hp-timeline-week-view>
+    ></hp-timeline-day-view>
     <hp-timeline-month-view
       *ngIf="viewType === 'TimelineMonth'"
     ></hp-timeline-month-view>
@@ -44,10 +50,11 @@ import { SlotSelectionService } from './services/slot-selection.service';
       }
     `
   ],
-  providers: [SchedulerDateService, SchedulerViewService, SlotSelectionService]
+  providers: [SchedulerDateService, SchedulerViewService, TimeSlotService]
 })
-export class HpSchedulerComponent implements OnInit, OnDestroy {
+export class HpSchedulerComponent implements OnInit, OnDestroy, AfterViewInit {
   private _viewTypeSubscription: Subscription;
+  private _eventItemsSubscription: Subscription;
 
   /**
    * Emits a SchedulerViewType change event
@@ -86,11 +93,25 @@ export class HpSchedulerComponent implements OnInit, OnDestroy {
   customDays = [0, 1, 2, 3, 4, 5, 6];
 
   @Input()
-  minuteInterval: MinuteInterval = 15;
+  minuteInterval: MinuteInterval = 30;
+
+  private _eventItems = [];
+  @Input()
+  set eventItems(value: EventItem[]) {
+    this.eventService.addEventItems(value);
+  }
+
+  get eventItems(): EventItem[] {
+    return this._eventItems;
+  }
 
   constructor(
     public viewService: SchedulerViewService,
-    public dateService: SchedulerDateService
+    public dateService: SchedulerDateService,
+    public schedulerViewService: SchedulerViewService,
+    public schedulerService: SchedulerService,
+    public eventService: SchedulerEventService,
+    private _elRef: ElementRef
   ) {}
 
   ngOnInit() {
@@ -99,13 +120,27 @@ export class HpSchedulerComponent implements OnInit, OnDestroy {
         this.viewTypeChange.next(viewType);
       }
     );
-    /*     this._schedulerService.addAppointment(new Appointment());
-    this._schedulerService.addAppointment(new Appointment());
-    this._schedulerService.addAppointment(new Appointment());
-    this._schedulerService.addAppointment(new Appointment()); */
+
+    this._eventItemsSubscription = this.eventService.eventItems$.subscribe(
+      eventItems => {
+        this._eventItems = eventItems;
+      }
+    );
+  }
+
+  ngAfterViewInit(): void {
+    const ro = new ResizeObserver(event => {
+      // this.schedulerViewService.invalidateView(event);
+    });
+    ro.observe(this._elRef.nativeElement);
   }
 
   ngOnDestroy(): void {
     this._viewTypeSubscription.unsubscribe();
+    this._eventItemsSubscription.unsubscribe();
   }
 }
+
+
+
+

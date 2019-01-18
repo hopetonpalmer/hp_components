@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SchedulerResource } from '../models';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { DateRange, DayTimeRange, IntervalType, MinuteInterval, SchedulerViewType } from '../types';
 import {
   addYears,
@@ -28,11 +28,9 @@ import { EventItem } from '../event-item/event-item';
   providedIn: 'root'
 })
 export class SchedulerService {
-  private _eventItemsSubject = new BehaviorSubject<EventItem[]>([]);
   private _resourcesSubject = new BehaviorSubject<SchedulerResource[]>([]);
-
   private _activeDateSubject = new BehaviorSubject<Date>(null);
-  eventItems$ = this._eventItemsSubject.asObservable();
+
   resources$ = this._resourcesSubject.asObservable();
   activeDate$ = this._activeDateSubject.asObservable();
 
@@ -41,19 +39,6 @@ export class SchedulerService {
   }
 
   constructor() {}
-
-  addEventItem(eventItem: EventItem) {
-    this._eventItemsSubject.next([
-      ...this._eventItemsSubject.value,
-      ...[eventItem]
-    ]);
-  }
-
-  deleteEventItem(eventItem: EventItem) {
-    const eventItems = this._eventItemsSubject.value;
-    eventItems.splice(eventItems.indexOf(eventItem));
-    this._eventItemsSubject.next(eventItems);
-  }
 
   addResource(resource: SchedulerResource) {
     this._resourcesSubject.next([
@@ -67,7 +52,6 @@ export class SchedulerService {
     resources.splice(resources.indexOf(resource));
     this._resourcesSubject.next(resources);
   }
-
 
   setActiveDate(date: Date) {
     this._activeDateSubject.next(date);

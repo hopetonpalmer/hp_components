@@ -11,7 +11,7 @@
   <hp-pixel-input [(value)]="fontSize"></hp-pixel-input>
   <hp-combo-box [(selectedItem)]="fontStyle" [itemsSource]="styles"></hp-combo-box>
   <hp-combo-box [(selectedItem)]="fontWeight" [itemsSource]="weights"></hp-combo-box>
-  <hp-color-combo-box style="height: 100%" [(selectedColor)]="fontColor"></hp-color-combo-box>
+  <hp-color-combo-box [(selectedColor)]="fontColor"></hp-color-combo-box>
 </div>
 <hp-shadow-property-editor [shadowType]="'text'"></hp-shadow-property-editor>
 <!-- <textarea rows=5 [value]="text" (change)="text = $event.target.value" ></textarea> -->

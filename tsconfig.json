@@ -69,6 +69,9 @@
       "@hp-components/common": [
         "dist/hp-components/common"
       ],
+      "@hp-components/common-src": [
+        "projects/hp-components/common/src/public_api"
+      ],
       "@hp-components/common/*": [
         "dist/hp-components/common/*"
       ],

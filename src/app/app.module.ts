@@ -7,7 +7,13 @@ import { VideoPlayerComponent } from './widgets/video-player/video-player.compon
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
 import { HpSchedulerModule } from '@hp-components/scheduler-src';
-import { HpCoreModule } from '@hp-components/core-src';
+import { HpCommonModule } from '@hp-components/common-src';
+import { SchedulerEventService } from 'projects/hp-components/scheduler/src/lib/services/scheduler-event.service';
+
+
+
+
+
 
 
 @NgModule({
@@ -19,12 +25,12 @@ import { HpCoreModule } from '@hp-components/core-src';
   ],
   imports: [
     BrowserModule,
-    HpComponentsModule,
     HpSchedulerModule,
-    HpCoreModule
+    HpComponentsModule,
+    HpCommonModule
   ],
   exports: [],
-  providers: [],
+  providers: [SchedulerEventService],
   entryComponents: [
     VideoPlayerComponent,
     ImageViewerComponent,

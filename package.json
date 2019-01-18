@@ -26,7 +26,10 @@
     "package-core": "npm run build_core && npm run npm_pack_core",
     "build_fm": "ng build --prod filemanager",
     "npm_pack_fm": "cd dist/hp-components/filemanager && npm pack",
-    "package-fm": "npm run build_fm && npm run npm_pack_fm"
+    "package-fm": "npm run build_fm && npm run npm_pack_fm",
+    "build_common": "ng build --prod common",
+    "npm_pack_common": "cd dist/hp-components/common && npm pack",
+    "package-common": "npm run build_common && npm run npm_pack_common"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +43,8 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@ctrl/tinycolor": "^2.2.1",
+    "@hp-components/common": "file:dist/hp-components/common/hp-components-common-0.0.1.tgz",
     "@hp-components/core": "file:dist/hp-components/core/hp-components-core-0.0.1.tgz",
     "@hp-components/scheduler": "file:dist/hp-components/scheduler/hp-components-scheduler-0.0.1.tgz",
     "core-js": "^2.5.4",

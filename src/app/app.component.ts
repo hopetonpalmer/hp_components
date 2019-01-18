@@ -1,10 +1,16 @@
-import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterViewInit, Type, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, AfterContentInit, AfterViewInit, Type, ChangeDetectorRef, Host } from '@angular/core';
 import { VideoPlayerComponent } from './widgets/video-player/video-player.component';
 import { ImageViewerComponent } from './widgets/image-viewer/image-viewer.component';
 import { MystringPropertyEditorComponent } from './widgets/editors/mystring-property-editor/mystring-property-editor.component';
-import { ITheme, ThemeService, ComposerService, InteractionService } from 'hp-components-src';
-import { startOfWeek, addDays, addMonths, addWeeks, startOfDay } from 'date-fns';
+import { ComposerService, InteractionService } from 'hp-components-src';
+import { startOfWeek, addDays, addMonths, addWeeks, startOfDay, addHours, addMinutes } from 'date-fns';
 import { SchedulerService} from '@hp-components/scheduler-src';
+import { ITheme, ThemeService } from '@hp-components/common-src';
+import { Observable } from 'rxjs';
+import { EventItem } from 'projects/hp-components/scheduler/src/lib/event-item/event-item';
+import { random as randomColor } from '@ctrl/tinycolor';
+import { SchedulerEventService } from 'projects/hp-components/scheduler/src/lib/services/scheduler-event.service';
+
 
 
 
@@ -30,14 +36,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   dateSettings = {
-    startDate: addMonths(new Date(), -1),
     firstDayOfWeek: 1
   };
+
+  eventItems: EventItem[];
 
   title = 'hp-components-app';
   constructor(private cdRef: ChangeDetectorRef, public interactionService: InteractionService,
     public themeService: ThemeService,
     public schedulerService: SchedulerService,
+    public eventService: SchedulerEventService,
     public composerService: ComposerService) {}
 
   updateCustomTheme(changes: {}) {
@@ -45,8 +53,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.loadEvents();
     this.themes = this.themeService.themes;
-    this.activeTheme = this.themeService.theme('Deep Green');
+    this.activeTheme = this.themeService.theme('Dark');
     // this.inspectorService.registerPropertyInspector('string', MystringPropertyEditorComponent);
     const widgets = [
       {
@@ -111,16 +120,124 @@ export class AppComponent implements OnInit, AfterViewInit {
     ];
     this.composerService.registerWidgetGroups(widgets, true);
 
-/*     const date = startOfWeek(new Date());
-    this.schedulerService.setDayTimeRange('8:00 am', '7:00 pm');
-    this.schedulerService.setDateRange(date, addDays(date, 6));
-    this.schedulerDateService.setSchedulerDates({startDate: date}); */
-    // this.schedulerService.setRangeFromMonth();
   }
 
   ngAfterViewInit(): void {
     this.interactionService.load('interaction-data');
     this.cdRef.detectChanges();
+  }
+
+  loadEvents() {
+    const start = new Date();
+    start.setHours(7);
+    const eventItems = [
+      new EventItem(
+        addDays(addHours(start, -5), -3),
+        addDays(addMinutes(start, 125), 25),
+        'Test Two',
+        this.randomColor()
+      ),
+      new EventItem(
+        addHours(start, 2.5),
+        addHours(start, 4.5),
+        'Test Two',
+        this.randomColor()
+      ),
+      new EventItem(
+        addHours(start, 3.5),
+        addHours(start, 5.5),
+        'Test Two',
+        this.randomColor()
+      ),
+      new EventItem(
+        addMinutes(start, 45),
+        addDays(addMinutes(start, 60), 4),
+        'Test One with long subject',
+        this.randomColor()
+      ),
+      /*  new EventItem(
+         addHours(start, 4.0),
+         addHours(start, 10.5),
+         'Test One',
+         'brown'
+       ),
+       new EventItem(
+         addDays(addMinutes(start, 30), 0),
+         addDays(addHours(start, 2), 3),
+         'Multi Days',
+         'limegreen'
+       ),
+       new EventItem(
+         addDays(addMinutes(start, 45), -4),
+         addDays(addHours(start, 3), -3),
+         'Test One',
+         'orange'
+       ),
+       new EventItem(
+         addHours(start, 3.5),
+         addHours(start, 5.5),
+         'Test One',
+         'gray'
+       ),
+       new EventItem(
+         addHours(start, 4.5),
+         addHours(start, 6.5),
+         'Test One',
+         'purple'
+       ),
+       new EventItem(
+         addHours(start, 3.5),
+         addHours(start, 5.5),
+         'Test One',
+         'teal'
+       ),
+       new EventItem(
+         addHours(start, 3.5),
+         addHours(start, 7.5),
+         'Test One',
+         'orange'
+       ),
+       new EventItem(
+         addHours(start, 3.5),
+         addHours(start, 5.5),
+         'Test One',
+         'gray'
+       ) */
+    ];
+    // this.eventItems = eventItems;
+     this.eventService.addEventItems(eventItems);
+     this.eventService.addEventItem(
+      new EventItem(
+        addHours(start, 3.5),
+        addHours(start, 5.5),
+        'Test One',
+        this.randomColor()
+      )
+    );
+  }
+
+  addEvent() {
+    const start = new Date().setHours(7);
+    const event = new EventItem(
+      addHours(start, 3.5),
+      addHours(start, 5.5),
+      'Test One',
+      this.randomColor()
+    );
+    event.isAllDay = true;
+    this.eventService.addEventItem(
+      event
+    );
+  }
+
+  deleteEvent() {
+    const items = this.eventService.getEventItems();
+    this.eventService.deleteEventItem();
+  }
+
+  randomColor(): string {
+    const result = '#' + randomColor().toHex();
+    return result;
   }
 }
 

@@ -1,10 +1,12 @@
-<hp-scheduler [dateSettings]="dateSettings" ></hp-scheduler>
+<button (click)="addEvent()" >Add Event</button>
+<button (click)="deleteEvent()">Delete Event</button>
+<hp-scheduler style="height: 100%" [dateSettings]="dateSettings"></hp-scheduler>
+
 <!-- <div style="width: 100%; display: grid; grid-column-gap: 10px; grid-template-rows: 100%; grid-template-columns: 1fr 1fr;  overflow: scroll">
    <hp-scheduler [viewType]="'Month'"></hp-scheduler>
    <hp-scheduler [viewType]="'Month'"></hp-scheduler>
 </div> -->
-
-<hp-composer style="display: none" #composer>
+<!-- <hp-composer style="display: none" #composer>
     <div toolbar style="display: flex">
       <button (click)="interactionService.save('interaction-data')">Save</button>
       <button>Save As</button>
@@ -12,7 +14,7 @@
       <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.deleteSelectedElements()">Delete Selected</button>
       <button (click)="interactionService.deleteAll()">Delete All</button>
       <button [disabled]="!interactionService.canSelectElements" (click)="interactionService.selectAll()">Select All</button>
-      <button [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.unSelectAll()">Unselect All</button>
+      <button style="margin-right: 10Px" [disabled]="!interactionService.hasSelectedElements" (click)="interactionService.unSelectAll()">Unselect All</button>
       <label>Widgets
         <input type="checkbox" [checked]="composer.widgetGridVisible" (change)="composer.widgetGridVisible = $event.target.checked" >
       </label>
@@ -28,7 +30,7 @@
       </div>
       <button style="margin-left: auto" (click)="composer.preview()" >Preview</button>
     </div>
-</hp-composer>
+</hp-composer> -->
 
 <ng-template #themeItemTemplate let-item >
   <div class="hp-stack-h hp-vc theme-template">

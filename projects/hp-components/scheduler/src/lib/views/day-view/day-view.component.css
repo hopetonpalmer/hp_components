@@ -1,14 +1,29 @@
+:host /deep/ hp-timeline-day-view .event-grid {
+  background-color: rgb(241, 240, 240);
+}
+
 :host {
   display: grid;
   --column-sizing: 60px 1fr;
   height: 100%;
   grid-template-rows: minmax(80px, auto) 1fr;
+  animation: view-enter .6s forwards;
 }
 
-.slot-grid, .event-grid {
+.all-day-grid, .event-grid {
   width: 100%;
   display: grid;
   grid-template-columns: var(--column-sizing);
+}
+
+@keyframes allday {
+  from {max-height: 36px}
+  to {max-height: 200px}
+}
+
+.all-day-grid {
+  grid-template-columns: 61px 1fr;
+/*   animation: allday 1s linear 1s; */
 }
 
 .event-grid {
@@ -22,6 +37,11 @@
   grid-template-rows: auto 1fr;
 }
 
+.all-day-spacer {
+  border-right: var(--hp-scheduler-border);
+  box-sizing: border-box;
+}
+
 .all-day-area {
   height: 100%;
   border-left: var(--hp-panel-border);
@@ -31,9 +51,12 @@
   text-align: right;
   font-size: 10px;
   border-bottom: 1px solid transparent;
-  height: 22px;
-  line-height: 22px;
+  min-height: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding-right: 4px;
+  flex: 1;
 }
 
 .minute:first-child {
@@ -51,6 +74,8 @@
 }
 
 .interval.hour {
+  display: flex;
+  flex-direction: column;
   border-top: var(--hp-scheduler-border);
   border-left: var(--hp-scheduler-border);
 }
@@ -79,5 +104,10 @@
 
 .show-month {
   margin-right: 8px;
+}
+
+.intervals-container {
+  display: flex;
+  flex-direction: column;
 }
 

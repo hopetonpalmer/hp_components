@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SchedulerViewType } from '../types';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { SlotSelectionService } from '../services/slot-selection.service';
+import { TimeSlotService } from '../time-slot/time-slot.service';
+import { SchedulerEventService } from '../services/scheduler-event.service';
 
 
 @Injectable()
@@ -12,7 +13,10 @@ export class SchedulerViewService {
   private _startDateRequestSubject = new Subject<Date>();
   startDateUpdateRequest$ = this._startDateRequestSubject.asObservable();
 
-  constructor(private _dateSelectionService: SlotSelectionService) {}
+  private _invalidateViewSubject = new Subject<Event>();
+  invalidateView$ = this._invalidateViewSubject.asObservable();
+  constructor(private _timeSlotService: TimeSlotService,
+     private _schedulerEventService: SchedulerEventService) {}
 
   getActiveViewType(): SchedulerViewType {
      return this._viewTypeSubject.value;
@@ -20,7 +24,8 @@ export class SchedulerViewService {
 
   setViewType(viewType: SchedulerViewType) {
     if (viewType !== this._viewTypeSubject.value) {
-      this._dateSelectionService.clearSelection();
+      this._timeSlotService.clearSlotSelection();
+      this._schedulerEventService.unSelectAll();
       this._viewTypeSubject.next(viewType);
     }
   }
@@ -40,5 +45,9 @@ export class SchedulerViewService {
   jumpToDayView(date: Date) {
     this.setViewType('Day');
     this._startDateRequestSubject.next(date);
+  }
+
+  invalidateView(data: any = null) {
+    this._invalidateViewSubject.next(data);
   }
 }

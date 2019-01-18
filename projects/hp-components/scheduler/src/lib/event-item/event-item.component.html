@@ -1,3 +1,14 @@
-<p>
-  event-item works!
-</p>
+<ng-container *ngTemplateOutlet="template ? template : defaultTemplate, context: {$implicit: this}"></ng-container>
+<ng-template #defaultTemplate>
+   <div *ngIf="orientation === 'vertical'" class="event-item">
+     <div class="event-item-subject">{{eventItem.subject}}</div>
+<!--      <div class="event-item-time">{{getShortTime(eventItem.start) + ' - ' + getShortTime(eventItem.end)}}</div> -->
+   </div>
+   <div *ngIf="orientation === 'horizontal'" class="event-item horizontal">
+    <div class="from-caption">{{fromCaption}}</div>
+    <div >{{eventItem.subject}}</div>
+    <div class="to-caption">{{toCaption}}</div>
+   </div>
+</ng-template>
+
+

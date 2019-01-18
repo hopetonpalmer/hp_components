@@ -1,32 +1,6 @@
-<div class="intervals">
-    <ng-container *ngIf="timeSlots.get('Month')">
-      <ng-container *ngTemplateOutlet="timeline_month_Template; context:{$implicit: viewTimeSlots}"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="timeSlots.get('Day')">
-      <ng-container *ngTemplateOutlet="timeline_day_Template; context:{$implicit: viewTimeSlots}"></ng-container>
-    </ng-container>
-</div>
-
-
-<ng-template #timeline_month_Template let-slotMonths>
-  <div style="height: 100%" class="months">
-    <div style="height: 100%" class="interval month" [ngClass]="{'separator-border': isMasterSlot(slotMonth)}"
-     *ngFor="let slotMonth of slotMonths">
-      <div class="header-container">
-        <!-- Month Row -->
-        <div class="intervals-container" *ngIf="hasInterval('Month')">
-          <div class="slot-text">{{slotMonth.formattedDate}}</div>
-        </div>
-      </div>
-      <ng-container *ngTemplateOutlet="timeline_day_Template; context:{$implicit: slotMonth.timeSlots}"></ng-container>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #timeline_day_Template let-daySlots>
+<div class="intervals" >
   <div style="height: 100%" class="days">
-    <div style="height: 100%" class="interval day" [ngClass]="{'separator-border': isMasterSlot(daySlot)}"
-     *ngFor="let daySlot of daySlots">
+    <div style="height: 100%" class="interval day" [ngClass]="{'separator-border': isMasterSlot(daySlot)}" *ngFor="let daySlot of viewTimeSlots; let index = index">
       <div class="header-container">
         <!-- Day Row -->
         <div class="intervals-container" *ngIf="hasInterval('Day')">
@@ -48,29 +22,33 @@
           </div>
         </div>
       </div>
-      <div class="event-grid" [style.display]="hasInterval('Hour') ? 'flex' : 'block'">
+      <div #event_grid class="event-grid" [style.display]="hasInterval('Hour') ? 'flex' : 'block'">
         <ng-container *ngIf="hasInterval('Hour')">
           <ng-container *ngIf="hasInterval('Minute')">
             <div style="display: flex; height: 100%" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
-              <div hpEventCell [timeSlot]=minuteSlot class="interval minute event-slot"  *ngFor="let minuteSlot of hourSlot.timeSlots">
-                  <div style="opacity: 0" class="slot-text">{{minuteSlot.formattedDate}}</div>
+              <div hpEventCell [timeSlot]=minuteSlot class="interval minute event-slot" *ngFor="let minuteSlot of hourSlot.timeSlots">
+                <div style="opacity: 0" class="slot-text">{{minuteSlot.formattedDate}}</div>
               </div>
             </div>
           </ng-container>
 
           <ng-container *ngIf="!hasInterval('Minute')">
             <div hpEventCell [timeSlot]=hourSlot style="display: flex; height: 100%" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
-                <div style="opacity: 0" class="slot-text">{{hourSlot.formattedDate}}</div>
+              <div style="opacity: 0" class="slot-text">{{hourSlot.formattedDate}}</div>
             </div>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="!hasInterval('Hour')">
-          <div hpEventCell [timeSlot]=daySlot style="display: flex; height: 100%" >
+          <div hpEventCell [timeSlot]=daySlot style="display: flex; height: 100%">
             <div style="opacity: 0" class="slot-text">{{daySlot.formattedDate}}</div>
           </div>
+        </ng-container>
+        <ng-container *ngIf="index === 0">
+            <hp-event-item [eventItem]=item *ngFor="let item of eventItems"></hp-event-item>
         </ng-container>
       </div>
     </div>
   </div>
-</ng-template>
+</div>
+
 

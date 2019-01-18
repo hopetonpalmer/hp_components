@@ -1,10 +1,14 @@
-import { Component, OnInit, Input, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, Optional } from '@angular/core';
 import { SchedulerView } from '../scheduler-view';
 import { SchedulerService } from '../../services/scheduler.service';
 import { TimeSlot } from '../../time-slot/time-slot';
-import { formatDateTime } from '../../scripts/datetime';
+import { dateRangesOfRange, isBetween } from '../../scripts/datetime';
 import { SchedulerViewService } from '../scheduler-view.service';
 import { SchedulerDateService } from '../../services/scheduler-date.service';
+import { TimeSlotService } from '../../time-slot/time-slot.service';
+import { DateRange } from '../../types';
+import { SchedulerEventService } from '../../services/scheduler-event.service';
+
 
 @Component({
   selector: 'hp-month-view',
@@ -14,7 +18,7 @@ import { SchedulerDateService } from '../../services/scheduler-date.service';
 })
 export class MonthViewComponent extends SchedulerView implements OnInit {
   private _rowSizing: string;
-
+  rowHeight: number;
   get firstWeekSlots(): TimeSlot[] {
     const timeSlots = this.timeSlots.get('Day');
     if (timeSlots) {
@@ -23,17 +27,39 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
     return [];
   }
 
-  constructor(
-    public schedulerService: SchedulerService,
-    schedulerViewService: SchedulerViewService,
-    public schedulerDateService: SchedulerDateService,
-    private _elRef: ElementRef
-  ) {
-    super(schedulerService, schedulerViewService, schedulerDateService);
+  get monthSlots(): Array<TimeSlot[]> {
+    const timeSlots = this.viewTimeSlots;
+    const result = [];
+    const dateRanges = dateRangesOfRange(this.dateRange.start, this.dateRange.end, 7);
+    if (timeSlots) {
+       dateRanges.forEach(dateRange => {
+         result.push(timeSlots.filter(ts => isBetween(dateRange.start, dateRange.end, [ts.startDate, ts.endDate])));
+       });
+    }
+    return result;
   }
 
-  formatDate(date: Date, format: string): string {
-    return formatDateTime(date, format);
+  dateRanges: DateRange[];
+
+  protected lastCellInclusive = true;
+
+  constructor(
+    public schedulerService: SchedulerService,
+    public schedulerViewService: SchedulerViewService,
+    public schedulerDateService: SchedulerDateService,
+    public schedulerEventService: SchedulerEventService,
+    public timeSlotService: TimeSlotService,
+    protected elRef: ElementRef,
+    protected cdRef: ChangeDetectorRef
+  ) {
+    super(
+      schedulerService,
+      schedulerViewService,
+      schedulerDateService,
+      schedulerEventService,
+      timeSlotService,
+      elRef
+    );
   }
 
   ngOnInit() {
@@ -44,16 +70,26 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
   }
 
   setRowSizeStyle() {
-    const style = this._elRef.nativeElement.style;
+    const headerHeight = 36;
+    const el = this.elRef.nativeElement as HTMLElement;
+    const style = el.style;
     const rowCount = this.viewTimeSlots.length / 7;
+    this.rowHeight = (el.offsetHeight - headerHeight) / rowCount;
     const rowSizing = `repeat(${rowCount}, minmax(auto, 1fr))`;
     if (this._rowSizing !== rowSizing) {
       style.setProperty('--row-sizing', rowSizing);
       this._rowSizing = rowSizing;
     }
+    this.cdRef.markForCheck();
   }
 
   protected slotsGenerated() {
     this.setRowSizeStyle();
+  }
+
+  protected layoutEvents(): void {}
+
+  protected dateRangeChanged() {
+    this.dateRanges = dateRangesOfRange(this.dateRange.start, this.dateRange.end, 7);
   }
 }

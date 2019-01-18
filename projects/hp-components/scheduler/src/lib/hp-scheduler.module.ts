@@ -7,18 +7,20 @@ import { MonthViewComponent } from './views/month-view/month-view.component';
 import { TimelineViewComponent} from './views/timeline-view/timeline-view.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { EventItemComponent } from './event-item/event-item.component';
-import { EventCellDirective } from './event-cell/event-cell.directive';
+import { EventCellDirective } from './event-grid/event-cell/event-cell.directive';
 import { WeekViewComponent } from './views/week-view/week-view.component';
 import { WorkWeekViewComponent } from './views/work-week-view/work-week-view.component';
 import { TimelineWeekViewComponent } from './views/timeline-week-view/timeline-week-view.component';
 import { TimelineMonthViewComponent } from './views/timeline-month-view/timeline-month-view.component';
-
-
+import { HpCommonModule } from '@hp-components/common';
+import { EventGridComponent } from './event-grid/event-grid.component';
+import { TimelineDayViewComponent } from './views/timeline-day-view/timeline-day-view.component';
 
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HpCommonModule
   ],
   declarations: [
     HpSchedulerComponent,
@@ -31,7 +33,9 @@ import { TimelineMonthViewComponent } from './views/timeline-month-view/timeline
     WeekViewComponent,
     WorkWeekViewComponent,
     TimelineWeekViewComponent,
-    TimelineMonthViewComponent
+    TimelineMonthViewComponent,
+    EventGridComponent,
+    TimelineDayViewComponent,
   ],
   exports: [
     HpSchedulerComponent,
@@ -41,7 +45,7 @@ import { TimelineMonthViewComponent } from './views/timeline-month-view/timeline
     DayViewComponent,
     WeekViewComponent,
     WorkWeekViewComponent,
-    MonthViewComponent
+    MonthViewComponent,
   ],
   providers: [{ provide: LOCALE_ID, useValue: navigator.language }],
 })

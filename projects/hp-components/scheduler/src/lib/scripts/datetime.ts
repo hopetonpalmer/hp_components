@@ -1,5 +1,5 @@
-import { startOfHour, addMinutes, isEqual } from 'date-fns';
-import { IntervalType, MinuteInterval } from '../types';
+import { startOfHour, addMinutes, isEqual, addDays } from 'date-fns';
+import { IntervalType, MinuteInterval, DateRange } from '../types';
 import { formatDate } from '@angular/common';
 
 export interface Time {
@@ -51,6 +51,48 @@ export function isMidnight(date: Date): boolean {
   return date.getHours() === 23 && date.getMinutes() === 59;
 }
 
+export function isBetween(start: Date, end: Date, date: Date | Date[]): boolean {
+  if (date.constructor === Array) {
+    const dates = (date as Array<Date>);
+    for (let index = 0; index < dates.length; index++) {
+      const dateItem = dates[index];
+      if (isBetween(start, end, dateItem)) {
+        return true;
+      }
+    }
+  }
+  return date >= start && date <= end;
+}
+
+export function datesOfRange(start: Date, end: Date): Date[] {
+  const result = [];
+  let date = new Date(start);
+  while (date <= end) {
+     result.push(date);
+     date = addDays(date, 1);
+  }
+  result[result.length - 1] = end;
+  return result;
+}
+
+export function dateRangesOfRange(start: Date, end: Date, daysPerRange: number): DateRange[] {
+   const dates = datesOfRange(start, end);
+   let startIndex = 0;
+   const result = [];
+   while (startIndex < dates.length) {
+      let endIndex = startIndex + daysPerRange - 1;
+      if (endIndex >= dates.length) {
+        endIndex = dates.length - 1;
+      }
+      const startDate = dates[startIndex];
+      const endDate = dates[endIndex];
+      const dateRange = {start: startDate, end: endDate};
+      result.push(dateRange);
+      startIndex = endIndex + 1;
+   }
+   return result;
+}
+
 export function xstrToTime(time: string): Time {
   time = time.toLowerCase();
   const isAm = time.indexOf('am') > -1;
@@ -96,6 +138,10 @@ export function minuteTicks(date: Date, interval: MinuteInterval): Date[] {
 
 export function formatDateTime(date: Date, format: string, language = 'en-US'): string {
   return formatDate(date, format, language);
+}
+
+export function shortTime(date: Date, format: string = 'h:mma'): string {
+  return formatDateTime(date, format).toLowerCase();
 }
 
 

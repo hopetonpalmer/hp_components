@@ -1,0 +1,17 @@
+:host {
+  /* transition: height .5s linear ; */
+}
+.event-grid {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.day-name {
+  font-size: .65em;
+  margin-left: 10px;
+}
+
+.show-month {
+  margin-right: 8px;
+}

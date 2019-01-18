@@ -3,6 +3,10 @@
   margin-left: 5px;
 }
 
+.selector-button-container div {
+  box-sizing: border-box;
+}
+
 .btn-fill,
 .btn-fill-border {
   cursor: pointer;

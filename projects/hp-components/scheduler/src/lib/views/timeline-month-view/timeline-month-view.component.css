@@ -8,9 +8,9 @@
   border-top: var(--hp-scheduler-border);
 }
 
-.interval.month {
-  font-size: 1.3em;
-  border-left: var(--hp-scheduler-border);
+.date-header {
+  text-align: center;
+  font-size: .6em;
 }
 
 .interval.month:first-child {

@@ -3,7 +3,8 @@ import { BehaviorSubject, Subscription, Subject } from 'rxjs';
 import { setTime, getDateTime } from '../scripts/datetime';
 import { SchedulerViewService } from '../views/scheduler-view.service';
 import { DateRange } from '../types';
-import { startOfWeek, addDays, startOfMonth, endOfMonth, subDays, isAfter, addWeeks, addMonths } from 'date-fns';
+import { startOfWeek, addDays, startOfMonth, endOfMonth, subDays,
+  isAfter, addWeeks, addMonths, isSameDay, startOfDay, endOfDay, addSeconds } from 'date-fns';
 
 @Injectable()
 export class SchedulerDateService implements OnDestroy {
@@ -27,7 +28,8 @@ export class SchedulerDateService implements OnDestroy {
   get dateRange(): DateRange {
     let start = this.startDate;
     let result = {start: start, end: start};
-    switch (this._schedulerViewService.getActiveViewType()) {
+    const activeType = this._schedulerViewService.getActiveViewType();
+    switch (activeType) {
       case 'Day':
       case 'Timeline':
       case 'Agenda':
@@ -39,7 +41,10 @@ export class SchedulerDateService implements OnDestroy {
         result = { start: start, end: addDays(start, 6) };
         break;
       case 'WorkWeek':
-        result = { start: start, end: addDays(start, 6) };
+        const workDays = this.datesSettings.workDays;
+        start = startOfWeek(start);
+        start = addDays(start, workDays[0] - start.getDay());
+        result = { start: start, end: addDays(start, workDays.length - 1) };
         break;
       case 'Month':
         result = this.getMonthRange(start);
@@ -49,7 +54,8 @@ export class SchedulerDateService implements OnDestroy {
         result = { start: start, end: endOfMonth(start) };
         break;
     }
-    result = {start: this.getStartDateTime(result.start), end: this.getEndDateTime(result.end)};
+    const ignoreTime = activeType === 'TimelineWeek' || activeType === 'Month' || activeType === 'TimelineMonth';
+    result = {start: this.getStartDateTime(result.start, ignoreTime), end: this.getEndDateTime(result.end, ignoreTime)};
     return result;
   }
 
@@ -72,15 +78,23 @@ export class SchedulerDateService implements OnDestroy {
   }
 
   setDateSettings(dates: ISchedulerDateSettings) {
-    const newDates = { ...this.datesSettings, ...dates };
-    this._schedulerDatesSubject.next(newDates);
+    if (this.datesSettings !== dates) {
+      const newDates = { ...this.datesSettings, ...dates };
+      this._schedulerDatesSubject.next(newDates);
+    }
   }
 
-  getStartDateTime(date: Date): Date {
+  getStartDateTime(date: Date, ignoreTime: boolean): Date {
+    if (ignoreTime) {
+      return addSeconds(startOfDay(date), 1);
+    }
     return getDateTime(date, this.datesSettings.startTime);
   }
 
-  getEndDateTime(date: Date): Date {
+  getEndDateTime(date: Date, ignoreTime: boolean): Date {
+    if (ignoreTime) {
+      return endOfDay(date);
+    }
     return getDateTime(date, this.datesSettings.endTime);
   }
 
@@ -110,7 +124,9 @@ export class SchedulerDateService implements OnDestroy {
   }
 
   gotoDate(date: Date) {
-    this.startDate = date;
+    if (!isSameDay(date, this.startDate)) {
+      this.startDate = date;
+    }
   }
 
   gotoNextDate() {
@@ -133,6 +149,7 @@ export interface ISchedulerDateSettings {
   endTime?: string;
   startWorkTime?: string;
   endWorkTime?: string;
+  workDays?: number[];
   firstDayOfWeek?: number;
 }
 
@@ -143,6 +160,7 @@ class DateSettings implements ISchedulerDateSettings {
   endTime = '9:00 PM';
   startWorkTime = '9:00 AM';
   endWorkTime = '5:00 PM';
+  workDays = [1, 2, 3, 4, 5];
   firstDayOfWeek = 0;
 }
 
