@@ -21,3 +21,10 @@
   <button (click)="gotoPreviousDate()">Previous</button>
   <button (click)="gotoNextDate()">Next</button>
 </ng-template>
+
+<ng-template #eventOperationsTemplate>
+  <button (click)="createEvent()">New</button>
+  <button (click)="editEvent()">Edit</button>
+  <button (click)="deleteEvent()">Delete</button>
+  <button (click)="deleteAllEvents()">Delete All</button>
+</ng-template>

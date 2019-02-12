@@ -6,12 +6,18 @@ import { Subscription, Observable } from 'rxjs';
 import { TimeSlot } from '../../time-slot/time-slot';
 import { SchedulerService } from '../../services/scheduler.service';
 import { IRect, Orientation } from '@hp-components/common';
+import { ColorScheme } from '../../color-scheme/color-scheme';
+import { SchedulerDateService } from '../../services/scheduler-date.service';
+import { isWeekend, isSameMonth, addDays, startOfDay } from 'date-fns';
+import { formatDateTime, shortTime } from '../../scripts/datetime';
+import { DragService } from '../../draggable/drag.service';
+
 
 
 
 @Directive({
   exportAs: 'hpEventCell',
-  selector: '[hpEventCell]'
+  selector: '[hpEventCell], hpEventCell'
 })
 export class EventCellDirective implements OnInit, OnDestroy {
   private _isSelected = false;
@@ -46,10 +52,15 @@ export class EventCellDirective implements OnInit, OnDestroy {
   }
 
   @Input()
+  isAllDay = false;
+
+  @Input()
   orientation: Orientation;
 
   get cellRect(): IRect {
     const el = this._host.nativeElement as HTMLElement;
+    // -- todo - Need to optimize possible performance issue with
+    // -- ui thrashing when calling getBoundingClientRect
     const clientRect = el.getBoundingClientRect();
     const top = clientRect.top;
     const left = clientRect.left;
@@ -62,20 +73,14 @@ export class EventCellDirective implements OnInit, OnDestroy {
     return result;
   }
 
-
-  get parentRect(): DOMRect | ClientRect {
-    const el = this._host.nativeElement as HTMLElement;
-    return el.parentElement.getBoundingClientRect();
-  }
-
   constructor(
     private _timeSlotService: TimeSlotService,
     private _schedulerService: SchedulerService,
+    private _schedulerDateService: SchedulerDateService,
+    private _colorScheme: ColorScheme,
     private _host: ElementRef,
-    private _cdRef: ChangeDetectorRef,
-  ) {
-
-  }
+    private _cdRef: ChangeDetectorRef
+  ) {}
   private _selectedDatesSubscription: Subscription;
 
   private _timeSlot: TimeSlot;
@@ -87,14 +92,14 @@ export class EventCellDirective implements OnInit, OnDestroy {
     );
   }
 
-  @HostListener('mousedown')
+  @HostListener('pointerdown')
   beginSlotSelection() {
     this.selectSlot();
     this.timeSlotServiceProvider.beginSlotSelection(this.timeSlot.dateRange);
     this._schedulerService.setActiveDate(this.timeSlot.startDate);
   }
 
-  @HostListener('mouseenter')
+  @HostListener('pointerenter')
   adjustSlotSelection() {
     const dateFilter = this.isMultiDaySelection
       ? null
@@ -105,9 +110,21 @@ export class EventCellDirective implements OnInit, OnDestroy {
     );
   }
 
-  @HostListener('mouseup')
+  @HostListener('pointerup')
   endSlotSelection() {
-    this.timeSlotServiceProvider.endSlotSelection();
+    if (this.timeSlotServiceProvider.isSelecting) {
+      this.timeSlotServiceProvider.endSlotSelection();
+    }
+  }
+
+  @HostBinding('style.background-color')
+  get backgroundColor() {
+    return this.getCellColor('backColor');
+  }
+
+  @HostBinding('style.border-color')
+  get borderColor() {
+    return this.getCellColor('borderColor');
   }
 
   isSlotSelected(): boolean {
@@ -121,9 +138,38 @@ export class EventCellDirective implements OnInit, OnDestroy {
     this._selectedDatesSubscription = this.timeSlotServiceProvider.selectedSlotsDateRange$.subscribe(
       () => {
         this._isSelected = this.isSlotSelected();
-        // this._cdRef.detectChanges();
+        this._cdRef.markForCheck();
       }
     );
+    const parent = this._host.nativeElement.parentElement as HTMLElement;
+    parent.style.borderColor = this._colorScheme.cellContainerColors.borderColor;
+  }
+
+  getCellColor(prop: string) {
+    if (this.isSelected) {
+      return this._colorScheme.selectedCellColors[prop];
+    }
+    if (this.isAllDay) {
+      return this._colorScheme.allDayAreaColors[prop];
+    }
+    if (this.timeSlot.viewType === 'Month') {
+      if (
+        isSameMonth(
+          this.timeSlot.startDate,
+          addDays(this._schedulerDateService.dateRange.start, 15)
+        )
+      ) {
+        return this._colorScheme.workHoursColors[prop];
+      }
+      return this._colorScheme.eventCellColors[prop];
+    }
+    if (isWeekend(this.timeSlot.startDate)) {
+      return this._colorScheme.weekEndColors[prop];
+    }
+    if (this._schedulerDateService.isWorkHour(this.timeSlot.startDate)) {
+      return this._colorScheme.workHoursColors[prop];
+    }
+    return this._colorScheme.eventCellColors[prop];
   }
 
   ngOnDestroy() {

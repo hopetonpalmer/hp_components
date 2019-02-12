@@ -1,12 +1,19 @@
 import { Component, OnInit, Input, TemplateRef, HostBinding,
-  ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, HostListener } from '@angular/core';
+  ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, HostListener,
+   OnDestroy, ComponentFactoryResolver, Injector, ApplicationRef } from '@angular/core';
 import { EventItem } from './event-item';
-import { IRect, Orientation, adjustColor } from '@hp-components/common-src';
+import { IRect, Orientation, getStyleValue } from '@hp-components/common';
 import { TimeSlotService } from '../time-slot/time-slot.service';
 import { shortTime, formatDateTime } from '../scripts/datetime';
-import { DateRange } from '../types';
 import { TinyColor } from '@ctrl/tinycolor';
 import { SchedulerEventService } from '../services/scheduler-event.service';
+import { ColorScheme } from '../color-scheme/color-scheme';
+import { Subscription } from 'rxjs';
+import { DomPortalHost, ComponentPortal, PortalHost } from '@angular/cdk/portal';
+import { EventSelectorComponent } from '../event-selector/event-selector.component';
+import { DragService } from '../draggable/drag.service';
+
+
 
 
 
@@ -16,7 +23,12 @@ import { SchedulerEventService } from '../services/scheduler-event.service';
   styleUrls: ['./event-item.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventItemComponent implements OnInit {
+export class EventItemComponent implements OnInit, OnDestroy {
+  private _eventSelectionSubscription: Subscription;
+  private _dragCancelSubscription: Subscription;
+  private _isSelected = false;
+  private _selectorPortalHost: PortalHost;
+
   mediaBreak = 150;
 
   @HostBinding('style.top.px')
@@ -33,12 +45,13 @@ export class EventItemComponent implements OnInit {
 
   @HostBinding('style.pointer-events')
   get pointerEvents() {
-    return this._tss.isSelecting ? 'none' : 'all';
+    return this.timeSlotService.isSelecting ? 'none' : 'all';
   }
 
   @HostBinding('style.visibility')
+  // visibility = 'hidden';
   get visibility() {
-    return this.eventRect.width > 0 && this.eventRect.height > 0
+    return this.eventRect.width && this.eventRect.height
       ? 'visible'
       : 'hidden';
   }
@@ -58,7 +71,7 @@ export class EventItemComponent implements OnInit {
 
   @HostBinding('class.selected')
   get isSelected(): boolean {
-    return this._ses.isEventSelected(this.eventItem);
+    return this._isSelected;
   }
 
   @HostBinding('attr.title')
@@ -72,16 +85,19 @@ export class EventItemComponent implements OnInit {
 
   @HostBinding('style.backgroundColor')
   get color() {
-    return this.eventItem.color;
+    if (this.eventItem.color) {
+      return this.eventItem.color;
+    }
+    return this.colorScheme.eventColors.backColor;
   }
 
   @HostBinding('style.color')
   get fontColor() {
-    const color = new TinyColor(this.eventItem.color);
+    const color = new TinyColor(this.color);
     if (color.isDark()) {
-      return new TinyColor(this.eventItem.color).lighten(50);
+      return color.lighten(50);
     } else {
-      return new TinyColor(this.eventItem.color).darken(60);
+      return color.darken(60);
     }
   }
 
@@ -90,7 +106,7 @@ export class EventItemComponent implements OnInit {
     if (this.isHovered || this.isSelected) {
       return '';
     }
-    return new TinyColor(this.eventItem.color).darken(30);
+    return new TinyColor(this.color).darken(30);
   }
 
   @Input()
@@ -106,7 +122,8 @@ export class EventItemComponent implements OnInit {
     this.top = value.top;
     this.height = value.height;
     this.width = value.width;
-    this._cdRef.markForCheck();
+    this.cdRef.markForCheck();
+    this.detachEventSelector();
   }
 
   get eventRect(): IRect {
@@ -118,6 +135,8 @@ export class EventItemComponent implements OnInit {
 
   @Input()
   orientation: Orientation = 'horizontal';
+
+  colorSchemeColor = '';
 
   get fromCaption() {
     if (this.width < this.mediaBreak) {
@@ -143,40 +162,93 @@ export class EventItemComponent implements OnInit {
     }
   }
 
+  pointerId: number;
   displayStart: Date;
   displayEnd: Date;
   isHovered = false;
 
   constructor(
-    private _elRef: ElementRef,
-    private _cdRef: ChangeDetectorRef,
-    private _ses: SchedulerEventService,
-    private _tss: TimeSlotService
+    private elRef: ElementRef,
+    private cdRef: ChangeDetectorRef,
+    private cfr: ComponentFactoryResolver,
+    private injector: Injector,
+    private appRef: ApplicationRef,
+    private schedulerEventService: SchedulerEventService,
+    private timeSlotService: TimeSlotService,
+    private colorScheme: ColorScheme,
+    private dragService: DragService
   ) {}
 
-  @HostListener('mousedown')
-  onMouseDown() {
-    this._ses.selectEventItem(this.eventItem);
+  @HostListener('pointerdown', ['$event'])
+  onPointerDown(event: PointerEvent) {
+
   }
 
   @HostListener('dblclick')
   onDblClick() {
-    this._ses.editEventItem(this.eventItem);
+    this.schedulerEventService.editEventItem(this.eventItem);
   }
 
-  @HostListener('mouseenter')
-  onMouseEnter() {
+  @HostListener('pointerenter', ['$event'])
+  onPointerEnter(event) {
     this.isHovered = true;
+    this.pointerId = event.pointerId;
+    this.timeSlotService.clearSlotSelection();
+    this.schedulerEventService.selectEventItem(this.eventItem);
   }
 
-  @HostListener('mouseleave')
-  onMouseLeave() {
+  @HostListener('pointerleave')
+  onPointerLeave() {
     this.isHovered = false;
   }
 
-  ngOnInit() {}
-
   getShortTime(date: Date): string {
     return formatDateTime(date, 'EE MMM d, ') + shortTime(date);
+  }
+
+  detachEventSelector() {
+    if (this._selectorPortalHost) {
+      this._selectorPortalHost.detach();
+    }
+  }
+
+  setEventSelector(selected: boolean) {
+    if (selected === this.isSelected) {
+      return;
+    }
+    this.detachEventSelector();
+    if (selected) {
+      this.createSelector();
+    }
+  }
+
+  private createSelector() {
+    const el = this.elRef.nativeElement as HTMLElement;
+    const parent = el.parentElement;
+    this._selectorPortalHost = new DomPortalHost(parent, this.cfr, this.appRef, this.injector);
+    const portal = new ComponentPortal(EventSelectorComponent);
+    const componentRef = this._selectorPortalHost.attach(portal);
+    componentRef.instance.eventItem = this.eventItem;
+    componentRef.instance.eventRect = this.eventRect;
+    componentRef.instance.orientation = this.orientation;
+    componentRef.instance.borderRadius = getStyleValue('border-radius', this.elRef.nativeElement);
+  }
+
+  ngOnInit() {
+    this._eventSelectionSubscription = this.schedulerEventService.selectedEvents$.subscribe(() => {
+        const isSelected = this.schedulerEventService.isEventSelected(this.eventItem);
+        this.setEventSelector(isSelected);
+        this._isSelected = isSelected;
+      }
+    );
+    this._dragCancelSubscription = this.dragService.dragCancel$.subscribe(() => {
+       this.detachEventSelector();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._eventSelectionSubscription.unsubscribe();
+    this._dragCancelSubscription.unsubscribe();
+    this.detachEventSelector();
   }
 }

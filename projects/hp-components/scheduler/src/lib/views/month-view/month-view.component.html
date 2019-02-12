@@ -1,4 +1,4 @@
-<div class="slot-grid interval day header-container">
+<div hpColorScheme [colorSetName]="'headingColors'" class="slot-grid interval day header-container">
   <div *ngFor="let daySlot of firstWeekSlots">
     <div class="slot-text month-header date-header">
       <span>{{formatDate(daySlot.startDate, 'EEEE')}}</span>
@@ -7,15 +7,18 @@
 </div>
 
 <div class="event-grid">
-    <hp-timeline-day-view [isEmbedded]=true [headerTemplate]=dayHeader [minHeight]="rowHeight" [growToFitEvents]=true
+    <hp-timeline-day-view hpDropZone [viewType]="'Month'" [isEmbedded]=true [headerTemplate]=dayHeader [minHeight]=120 [growToFitEvents]=true
     [strictMinHeight]=false [subDateRange]=dateRange *ngFor="let dateRange of dateRanges"></hp-timeline-day-view>
 <div>
 
 <ng-template #dayHeader let-daySlot="slot">
-  <div class="date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)">
-    <span *ngIf="daySlot.startDate === dateRanges[0].start || daySlot.startDate.getDate() === 1 || daySlot.isNow" class="show-month">{{formatDate(daySlot.startDate,
-      'MMM')}}</span>
-    <span class="slot-date">{{daySlot.formattedDate}}</span>
+  <div hpColorScheme [colorSetName]="getColorSet(daySlot.startDate)">
+    <div class="date-header" [ngClass]="{'now': daySlot.isNow}"
+      (click)="jumpToDayView(daySlot.startDate)">
+      <span *ngIf="daySlot.startDate === dateRanges[0].start || daySlot.startDate.getDate() === 1 || daySlot.isNow" class="show-month">{{formatDate(daySlot.startDate,
+        'MMM')}}</span>
+      <span class="slot-date">{{daySlot.formattedDate}}</span>
+    </div>
   </div>
 </ng-template>
 

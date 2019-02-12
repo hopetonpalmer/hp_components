@@ -1,4 +1,4 @@
-import { startOfHour, addMinutes, isEqual, addDays } from 'date-fns';
+import { startOfHour, addMinutes, isEqual, addDays, startOfDay, endOfDay } from 'date-fns';
 import { IntervalType, MinuteInterval, DateRange } from '../types';
 import { formatDate } from '@angular/common';
 
@@ -16,7 +16,7 @@ export function setTime(date: Date, time: string | number | Date) {
      date.setSeconds(time.getSeconds());
      date.setMilliseconds(time.getMilliseconds());
    } else if (typeof time === 'number') {
-     date.setTime(time);
+     date.setHours(time);
    } else {
     const t = strToTime(time);
     date.setHours(t.hours);
@@ -84,8 +84,8 @@ export function dateRangesOfRange(start: Date, end: Date, daysPerRange: number):
       if (endIndex >= dates.length) {
         endIndex = dates.length - 1;
       }
-      const startDate = dates[startIndex];
-      const endDate = dates[endIndex];
+      const startDate = startOfDay(dates[startIndex]);
+      const endDate = endOfDay(dates[endIndex]);
       const dateRange = {start: startDate, end: endDate};
       result.push(dateRange);
       startIndex = endIndex + 1;

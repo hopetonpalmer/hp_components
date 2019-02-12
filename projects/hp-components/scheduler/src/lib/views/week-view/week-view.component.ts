@@ -6,6 +6,6 @@ import { DayViewComponent } from '../day-view/day-view.component';
   selector: 'hp-week-view',
   templateUrl: '../day-view/day-view.component.html',
   styleUrls: ['../../styles.css', '../day-view/day-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WeekViewComponent extends DayViewComponent {}

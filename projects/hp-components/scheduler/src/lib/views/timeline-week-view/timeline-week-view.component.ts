@@ -12,7 +12,7 @@ import { startOfWeek, isWeekend } from 'date-fns';
     '../timeline-view/timeline-view.component.css',
     './timeline-week-view.component.css'
   ],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineWeekViewComponent extends TimelineViewComponent {
   @Input()

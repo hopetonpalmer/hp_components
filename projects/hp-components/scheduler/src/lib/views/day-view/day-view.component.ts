@@ -1,23 +1,25 @@
 import { Component, OnInit, ElementRef, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef, Optional } from '@angular/core';
 import { SchedulerView, ISizingGroup } from '../scheduler-view';
 import { SchedulerService } from '../../services/scheduler.service';
-import { formatDateTime, isBetween, datesOfRange } from '../../scripts/datetime';
+import { formatDateTime, isBetween, datesOfRange, isMidnight } from '../../scripts/datetime';
 import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { Subscription } from 'rxjs';
 import { TimeSlot } from '../../time-slot/time-slot';
-import { addDays, isSameDay, addSeconds } from 'date-fns';
+import { addDays, isSameDay, addSeconds, endOfDay, startOfDay } from 'date-fns';
 import { SchedulerViewService } from '../scheduler-view.service';
 import { SchedulerDateService } from '../../services/scheduler-date.service';
 import { IRect, intersectRect, intersectedRects, Rect, Orientation } from '@hp-components/common';
 import { EventItem } from '../../event-item/event-item';
 import { DayViewLayoutService } from './day-view-layout.service';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
+import { DateRange } from '../../types';
+import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 
 @Component({
   selector: 'hp-day-view',
   templateUrl: './day-view.component.html',
   styleUrls: ['../../styles.css', './day-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DayViewComponent extends SchedulerView
   implements OnInit, OnDestroy {
@@ -33,7 +35,9 @@ export class DayViewComponent extends SchedulerView
     return this.timeSlots.get('Day');
   }
 
+  protected isTimeInterval = true;
   orientation: Orientation = 'vertical';
+  allDayDateRange: DateRange;
 
   constructor(
     public schedulerService: SchedulerService,
@@ -41,8 +45,9 @@ export class DayViewComponent extends SchedulerView
     public schedulerDateService: SchedulerDateService,
     public schedulerEventService: SchedulerEventService,
     public timeSlotService: TimeSlotService,
+    public colorSchemeService: ColorSchemeService,
     protected elRef: ElementRef,
-    private _cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef
   ) {
     super(
       schedulerService,
@@ -50,6 +55,7 @@ export class DayViewComponent extends SchedulerView
       schedulerDateService,
       schedulerEventService,
       timeSlotService,
+      colorSchemeService,
       elRef
     );
     this.dateFormats['day'] = 'd';
@@ -74,6 +80,7 @@ export class DayViewComponent extends SchedulerView
         }
       }
     );
+
     super.ngOnInit();
     this.setColumSizeStyle();
   }
@@ -133,7 +140,7 @@ export class DayViewComponent extends SchedulerView
     );
 
     const doLayout = () => {
-      const sizingGroups = this.getSizingGroups(eventItems);
+      const sizingGroups = this.getSizingGroups(eventItems, date);
 
       // -- set rects initial size
       if (sizingGroups) {
@@ -191,12 +198,16 @@ export class DayViewComponent extends SchedulerView
    * @param EventItem[] The visible event items
    * @returns ISizingGroup[]
    */
-  protected getSizingGroups(eventItems: EventItem[]): ISizingGroup[] {
+  protected getSizingGroups(eventItems: EventItem[], date: Date): ISizingGroup[] {
     let newGroup = true;
-    const result = this.eventCells.reduce((groups, cell) => {
+    const result = this.eventCells.filter(x => isSameDay(x.timeSlot.startDate, date)).reduce((groups, cell) => {
       const eventsInRange = eventItems.filter(item =>
-        // -- add 1 second to force sharing of borders
-        isBetween(addSeconds(item.start, 1), item.end, cell.timeSlot.startDate)
+        // -- adjust by 1 second to force sharing of borders
+        isBetween(
+          addSeconds(item.start, isMidnight(item.end) ? 0 : 1),
+          addSeconds(item.end, isMidnight(item.end) ? 0 : -1),
+          [cell.timeSlot.startDate, cell.timeSlot.endDate]
+        )
       );
       if (eventsInRange.length === 0 ) {
         newGroup = true;
@@ -226,7 +237,9 @@ export class DayViewComponent extends SchedulerView
   }
 
   protected dateRangeChanged() {
-    this._cdRef.markForCheck();
+    super.dateRangeChanged();
+    this.allDayDateRange = {start: startOfDay(this.dateRange.start), end: endOfDay(this.dateRange.end)};
+    this.cdRef.markForCheck();
   }
 
   arrayContainsAny(array1: Array<any>, array2: Array<any>): boolean {
@@ -239,5 +252,9 @@ export class DayViewComponent extends SchedulerView
       }
     }
     return result;
+  }
+
+  protected excludeEvent(event: EventItem): boolean {
+    return event.isMultiDay || event.isAllDay;
   }
 }

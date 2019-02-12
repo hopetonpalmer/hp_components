@@ -33,6 +33,9 @@ export class TimeSlotService {
   }
 
   endSlotSelection() {
+    if (!this._isSelecting) {
+      return;
+    }
     this._isSelecting = false;
     const selectedRange = this._selectedSlotsDateRangeSubject.value;
     let endDate = addSeconds(selectedRange.end, 1);

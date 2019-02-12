@@ -2,6 +2,7 @@ import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import { SchedulerViewType } from '../types';
 import { SchedulerViewService } from '../views/scheduler-view.service';
 import { SchedulerDateService } from '../services/scheduler-date.service';
+import { SchedulerEventService } from '../services/scheduler-event.service';
 
 @Component({
   selector: 'hp-toolbar',
@@ -16,23 +17,30 @@ export class ToolbarComponent implements OnInit {
   @Input()
   viewTypeNavigationTemplate: TemplateRef<any>;
 
-  constructor(private _schedulerViewService: SchedulerViewService, private _dateService: SchedulerDateService) { }
+  constructor(private schedulerViewService: SchedulerViewService,
+    private schedulerEventService: SchedulerEventService,
+    private dateService: SchedulerDateService) { }
 
   ngOnInit() {
   }
 
   setViewType(viewType: SchedulerViewType) {
-    this._schedulerViewService.setViewType(viewType);
+    this.schedulerViewService.setViewType(viewType);
   }
 
   gotoToday() {
-    this._dateService.gotoToday();
+    this.dateService.gotoToday();
   }
 
   gotoNextDate() {
-    this._dateService.gotoNextDate();
+    this.dateService.gotoNextDate();
   }
   gotoPreviousDate() {
-    this._dateService.gotoPreviousDate();
+    this.dateService.gotoPreviousDate();
   }
+
+  createEvent() {}
+  editEvent() {}
+  deleteEvent() {}
+  deleteAllEvents() {}
 }

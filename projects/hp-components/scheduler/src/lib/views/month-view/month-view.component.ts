@@ -8,13 +8,14 @@ import { SchedulerDateService } from '../../services/scheduler-date.service';
 import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { DateRange } from '../../types';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
+import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 
 
 @Component({
   selector: 'hp-month-view',
   templateUrl: './month-view.component.html',
   styleUrls: ['../../styles.css', './month-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthViewComponent extends SchedulerView implements OnInit {
   private _rowSizing: string;
@@ -49,6 +50,7 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
     public schedulerDateService: SchedulerDateService,
     public schedulerEventService: SchedulerEventService,
     public timeSlotService: TimeSlotService,
+    public colorSchemeService: ColorSchemeService,
     protected elRef: ElementRef,
     protected cdRef: ChangeDetectorRef
   ) {
@@ -58,6 +60,7 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
       schedulerDateService,
       schedulerEventService,
       timeSlotService,
+      colorSchemeService,
       elRef
     );
   }
@@ -70,7 +73,7 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
   }
 
   setRowSizeStyle() {
-    const headerHeight = 36;
+    const headerHeight = 32;
     const el = this.elRef.nativeElement as HTMLElement;
     const style = el.style;
     const rowCount = this.viewTimeSlots.length / 7;
@@ -90,6 +93,14 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
   protected layoutEvents(): void {}
 
   protected dateRangeChanged() {
+    super.dateRangeChanged();
     this.dateRanges = dateRangesOfRange(this.dateRange.start, this.dateRange.end, 7);
+  }
+
+  getColorSet(date: Date): string {
+     if (this.schedulerDateService.isDateInCurrentMonth(date)) {
+       return 'workHoursColors';
+     }
+    return 'eventCellColors';
   }
 }

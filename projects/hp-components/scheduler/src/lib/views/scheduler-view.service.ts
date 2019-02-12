@@ -24,10 +24,14 @@ export class SchedulerViewService {
 
   setViewType(viewType: SchedulerViewType) {
     if (viewType !== this._viewTypeSubject.value) {
-      this._timeSlotService.clearSlotSelection();
-      this._schedulerEventService.unSelectAll();
+      this.clearSelection();
       this._viewTypeSubject.next(viewType);
     }
+  }
+
+  clearSelection() {
+    this._timeSlotService.clearSlotSelection();
+    this._schedulerEventService.unSelectAll();
   }
 
   isDayView(viewType = this._viewTypeSubject.value): boolean {
@@ -50,4 +54,5 @@ export class SchedulerViewService {
   invalidateView(data: any = null) {
     this._invalidateViewSubject.next(data);
   }
+
 }

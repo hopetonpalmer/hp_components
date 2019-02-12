@@ -15,7 +15,7 @@ export class HpCommonModule {
      cfr: ComponentFactoryResolver,
      injector: Injector,
      appRef: ApplicationRef ) {
-      if (!document.body.querySelector(('hp-theme'))) {
+      if (!document.body.querySelector('hp-theme')) {
         const portalHost = new DomPortalHost(document.body, cfr, appRef, injector);
         const portal = new ComponentPortal(ThemeComponent);
         portalHost.attach(portal);

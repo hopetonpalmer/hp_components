@@ -4,6 +4,8 @@ export type DayViewType = 'Day' | 'Week' | 'WorkWeek' | 'Custom';
 export type TimelineViewType = 'Day' | 'Week' | 'WorkWeek' | 'Month' | 'Quarter' | 'Custom';
 export type IntervalType = 'Year' | 'Quarter' | 'Month' | 'Week' | 'Day' | 'Hour' | 'Minute';
 export type MinuteInterval = 1 | 2 | 3 | 4 | 5 | 6 | 10 | 15 | 20 | 30 | 60 ;
+export type NotifyEvent = 'Add' | 'Delete' | 'Edit' | 'Save' | 'Cancel' | 'Selected' ;
+
 export interface DateRange {start: Date; end: Date; }
 export interface DayTimeRange { dayStarts: number | string; dayEnds: number | string; }
 
@@ -16,6 +18,7 @@ export interface ITimeSlot {
   isEnabled: boolean;
   timeSlots: ITimeSlot[];
   dateRange: DateRange;
+  viewType: SchedulerViewType;
 }
 
 export interface IEventCell { timeSlot: ITimeSlot; }

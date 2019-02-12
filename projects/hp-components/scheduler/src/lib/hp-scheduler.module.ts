@@ -15,6 +15,11 @@ import { TimelineMonthViewComponent } from './views/timeline-month-view/timeline
 import { HpCommonModule } from '@hp-components/common';
 import { EventGridComponent } from './event-grid/event-grid.component';
 import { TimelineDayViewComponent } from './views/timeline-day-view/timeline-day-view.component';
+import { ColorSchemeDirective } from './color-scheme/color-scheme.directive';
+import { DragDropDirective } from './draggable/drag-drop.directive';
+import { DragSizeDirective } from './draggable/drag-size.directive';
+import { DropZoneDirective } from './draggable/drop-zone.directive';
+import { EventSelectorComponent } from './event-selector/event-selector.component';
 
 
 @NgModule({
@@ -36,6 +41,11 @@ import { TimelineDayViewComponent } from './views/timeline-day-view/timeline-day
     TimelineMonthViewComponent,
     EventGridComponent,
     TimelineDayViewComponent,
+    ColorSchemeDirective,
+    DragDropDirective,
+    DragSizeDirective,
+    DropZoneDirective,
+    EventSelectorComponent,
   ],
   exports: [
     HpSchedulerComponent,
@@ -48,5 +58,6 @@ import { TimelineDayViewComponent } from './views/timeline-day-view/timeline-day
     MonthViewComponent,
   ],
   providers: [{ provide: LOCALE_ID, useValue: navigator.language }],
+  entryComponents: [EventSelectorComponent]
 })
 export class HpSchedulerModule { }

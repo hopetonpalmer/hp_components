@@ -1,20 +1,21 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, Subject } from 'rxjs';
-import { setTime, getDateTime } from '../scripts/datetime';
+import { setTime, getDateTime, isBetween } from '../scripts/datetime';
 import { SchedulerViewService } from '../views/scheduler-view.service';
 import { DateRange } from '../types';
 import { startOfWeek, addDays, startOfMonth, endOfMonth, subDays,
-  isAfter, addWeeks, addMonths, isSameDay, startOfDay, endOfDay, addSeconds } from 'date-fns';
+  isAfter, addWeeks, addMonths, isSameDay, startOfDay, endOfDay,
+   addSeconds, isSameMonth } from 'date-fns';
 
 @Injectable()
 export class SchedulerDateService implements OnDestroy {
-  private _startDateUpdateRequestSubscription: Subscription;
+  private startDateUpdateRequestSubscription: Subscription;
 
-  private _schedulerDatesSubject = new BehaviorSubject<ISchedulerDateSettings>(new DateSettings());
-  schedulerDates$ = this._schedulerDatesSubject.asObservable();
+  private schedulerDatesSubject = new BehaviorSubject<ISchedulerDateSettings>(new DateSettings());
+  schedulerDates$ = this.schedulerDatesSubject.asObservable();
 
   get datesSettings(): ISchedulerDateSettings {
-    return this._schedulerDatesSubject.value;
+    return this.schedulerDatesSubject.value;
   }
 
   set startDate(date: Date) {
@@ -28,7 +29,7 @@ export class SchedulerDateService implements OnDestroy {
   get dateRange(): DateRange {
     let start = this.startDate;
     let result = {start: start, end: start};
-    const activeType = this._schedulerViewService.getActiveViewType();
+    const activeType = this.schedulerViewService.getActiveViewType();
     switch (activeType) {
       case 'Day':
       case 'Timeline':
@@ -59,6 +60,17 @@ export class SchedulerDateService implements OnDestroy {
     return result;
   }
 
+  isWorkHour(date: Date): boolean {
+     const hour = date.getHours();
+     return hour >= this.datesSettings.startWorkHour && hour < this.datesSettings.endWorkHour;
+  }
+
+  isDateInCurrentMonth(date: Date): boolean {
+    const dateRange = this.dateRange;
+    const midMonth = 15;
+    return isSameMonth(addDays(dateRange.start, midMonth), date);
+  }
+
   getMonthRange(date: Date, weeks = 5): DateRange {
     const daysPerWeek = 7;
     const days = weeks * daysPerWeek;
@@ -70,8 +82,8 @@ export class SchedulerDateService implements OnDestroy {
     return {start: startDate, end: endDate};
   }
 
-  constructor(private _schedulerViewService: SchedulerViewService) {
-    this._startDateUpdateRequestSubscription = this._schedulerViewService.startDateUpdateRequest$.subscribe(
+  constructor(private schedulerViewService: SchedulerViewService) {
+    this.startDateUpdateRequestSubscription = this.schedulerViewService.startDateUpdateRequest$.subscribe(
       date => {
         this.startDate = date;
       });
@@ -80,7 +92,8 @@ export class SchedulerDateService implements OnDestroy {
   setDateSettings(dates: ISchedulerDateSettings) {
     if (this.datesSettings !== dates) {
       const newDates = { ...this.datesSettings, ...dates };
-      this._schedulerDatesSubject.next(newDates);
+      this.schedulerViewService.clearSelection();
+      this.schedulerDatesSubject.next(newDates);
     }
   }
 
@@ -88,19 +101,26 @@ export class SchedulerDateService implements OnDestroy {
     if (ignoreTime) {
       return addSeconds(startOfDay(date), 1);
     }
-    return getDateTime(date, this.datesSettings.startTime);
+    const result = startOfDay(date);
+    result.setHours(this.datesSettings.startHour);
+    return result;
   }
 
   getEndDateTime(date: Date, ignoreTime: boolean): Date {
     if (ignoreTime) {
       return endOfDay(date);
     }
-    return getDateTime(date, this.datesSettings.endTime);
+    let result = startOfDay(date);
+    result.setHours(this.datesSettings.endHour);
+    if (!isSameDay(result, date)) {
+      result = endOfDay(subDays(result, 1));
+    }
+    return result;
   }
 
   incStartDate(delta: number) {
     let start = this.startDate;
-    switch (this._schedulerViewService.getActiveViewType()) {
+    switch (this.schedulerViewService.getActiveViewType()) {
       case 'Day':
       case 'Timeline':
       case 'Agenda':
@@ -138,17 +158,17 @@ export class SchedulerDateService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._startDateUpdateRequestSubscription.unsubscribe();
+    this.startDateUpdateRequestSubscription.unsubscribe();
   }
 
 }
 
 export interface ISchedulerDateSettings {
   startDate?: Date;
-  startTime?: string;
-  endTime?: string;
-  startWorkTime?: string;
-  endWorkTime?: string;
+  startHour?: number;
+  endHour?: number;
+  startWorkHour?: number;
+  endWorkHour?: number;
   workDays?: number[];
   firstDayOfWeek?: number;
 }
@@ -156,10 +176,10 @@ export interface ISchedulerDateSettings {
 
 class DateSettings implements ISchedulerDateSettings {
   startDate =  new Date();
-  startTime = '7:00 AM';
-  endTime = '9:00 PM';
-  startWorkTime = '9:00 AM';
-  endWorkTime = '5:00 PM';
+  startHour = 0;
+  endHour = 24;
+  startWorkHour = 9;
+  endWorkHour = 18;
   workDays = [1, 2, 3, 4, 5];
   firstDayOfWeek = 0;
 }

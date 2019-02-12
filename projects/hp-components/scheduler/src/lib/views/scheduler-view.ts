@@ -23,7 +23,7 @@ import { OnDestroy, OnInit, Input, Injectable, QueryList, ViewChildren,
   AfterViewInit, OnChanges, ContentChildren, AfterContentInit, ElementRef, ViewChild, TemplateRef, HostListener } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { TimeSlot } from '../time-slot/time-slot';
-import { setTime, isMidnight, isBetween, formatDateTime } from '../scripts/datetime';
+import { setTime, isMidnight, isBetween, formatDateTime, shortTime } from '../scripts/datetime';
 import { SchedulerViewService } from './scheduler-view.service';
 import { EventItem } from '../event-item/event-item';
 import { SchedulerDateService } from '../services/scheduler-date.service';
@@ -32,9 +32,13 @@ import { TimeSlotService } from '../time-slot/time-slot.service';
 import { EventItemComponent } from '../event-item/event-item.component';
 import { EventCellDirective } from '../event-grid/event-cell/event-cell.directive';
 import { SchedulerViewLayoutService } from './scheduler-view-layout.service';
-import { IRect, Orientation, intersectRect } from '@hp-components/common';
+import { IRect, Orientation, intersectRect, Point } from '@hp-components/common';
 import { SchedulerEventService } from '../services/scheduler-event.service';
 import { ResizeObserver } from 'resize-observer';
+import { ColorSchemeService } from '../color-scheme/color-scheme.service';
+import { DropEventItemArgs } from '../event-args';
+import { pointInRect, Rect } from '@hp-components/common';
+
 
 
 export interface ISchedulerView {
@@ -61,6 +65,7 @@ export abstract class SchedulerView
   private _eventRescheduledSubscription: Subscription;
   private _beginSlotSelectionSubscription: Subscription;
   private _endSlotSelectionSubscription: Subscription;
+  private _eventSelectionSubscription: Subscription;
 
   @ViewChildren(EventItemComponent) eventComps: QueryList<EventItemComponent>;
   @ViewChildren(EventCellDirective) eventCells: QueryList<EventCellDirective>;
@@ -72,6 +77,7 @@ export abstract class SchedulerView
   timeSlots = new Map<string, TimeSlot[]>();
   eventSlots: Array<TimeSlot[]> = new Array<TimeSlot[]>();
 
+  private _isLayoutScheduled = false;
   private _resources: SchedulerResource[];
   set resources(value: SchedulerResource[]) {}
   get resources(): SchedulerResource[] {
@@ -83,7 +89,7 @@ export abstract class SchedulerView
     this._eventItems = value;
   }
   get eventItems(): EventItem[] {
-    return this.getEventItemsByRange(this.dateRange).filter(x => this.includeEvent(x));
+    return this.getEventItemsByRange(this.dateRange).filter(x => !this.excludeEvent(x));
   }
 
   get dateRange(): DateRange {
@@ -109,10 +115,6 @@ export abstract class SchedulerView
     return this.intervalTypes[0];
   }
 
-  get isTimeInterval(): boolean {
-    const result = this.masterIntervalType === 'Minute' || this.masterIntervalType === 'Hour';
-    return result;
-  }
 
   // viewRect: ClientRect;
   get viewRect(): ClientRect {
@@ -120,9 +122,13 @@ export abstract class SchedulerView
   }
 
   protected orientation: Orientation;
+  protected isTimeInterval = false;
 
   @Input()
   isEmbedded = false;
+
+  @Input()
+  isFullDayEventsOnly = false;
 
   private _hasTimeSlotServiceProvider = false;
   @Input()
@@ -177,6 +183,7 @@ export abstract class SchedulerView
     public schedulerDateService: SchedulerDateService,
     public schedulerEventService: SchedulerEventService,
     public timeSlotService: TimeSlotService,
+    public colorSchemeService: ColorSchemeService,
     protected elRef: ElementRef
   ) {
     this.setViewDefaults();
@@ -187,8 +194,8 @@ export abstract class SchedulerView
   }
   protected setViewDefaults() {}
   protected setViewHeight(_rects: IRect[], margin: number) {}
-  protected includeEvent(_event: EventItem): boolean {
-    return true;
+  protected excludeEvent(_event: EventItem): boolean {
+    return false;
   }
   protected setViewTimeSlots() {
     const result = this.timeSlots.get(this.intervalTypes[0]);
@@ -226,6 +233,15 @@ export abstract class SchedulerView
     }
   }
 
+  protected cellAtPos(point: Point): EventCellDirective {
+    const cell = this.eventCells.find(x => pointInRect(point, this.getRect(x.cellRect)));
+    return cell;
+  }
+
+  getRect(r: IRect): Rect {
+      return new Rect(r.left, r.top, r.width, r.height);
+  }
+
   protected cellOfDate(date: Date): EventCellDirective {
     if (!this.eventCells || !this.eventCells.length) {
       return null;
@@ -256,19 +272,6 @@ export abstract class SchedulerView
     if (!startCell || !endCell) {
       return rect;
     }
-
-    /*     if (
-      this.lastCellInclusive &&
-      endCell !== this.eventCells.last &&
-      startCell &&
-      startCell.intervalType !== 'Minute' &&
-      startCell.intervalType !== 'Hour'
-    ) {
-      const cells = this.eventCells.toArray();
-      const nextCell = cells[cells.indexOf(endCell) + 1];
-      endCell = nextCell;
-    } */
-
     const startRect = startCell.cellRect;
     const endRect = endCell.cellRect;
     if (startRect && endRect) {
@@ -297,15 +300,15 @@ export abstract class SchedulerView
           startRect.top -
           parentRect.top +
           parentEl.scrollTop +
-          startMinutePixels + 0;
+          startMinutePixels - 0.5;
         left = startRect.left - parentRect.left + parentEl.scrollLeft + indent;
         height =
-          (item.end > this.eventCells.last.timeSlot.endDate
+          (item.end >= this.eventCells.last.timeSlot.endDate
             ? endRect.top + endRect.height
             : endRect.top) -
           startRect.top +
           endMinutePixels -
-          startMinutePixels - 0;
+          startMinutePixels - 0.0;
         width = startRect.width;
       } else {
         top = startRect.top - parentRect.top + parentEl.scrollTop + indent;
@@ -316,7 +319,7 @@ export abstract class SchedulerView
           startMinutePixels;
         height = this.eventHeight;
         width =
-          (item.end > this.eventCells.last.timeSlot.endDate
+          (item.end >= this.eventCells.last.timeSlot.endDate
             ? endRect.left + endRect.width
             : endRect.left) - startRect.left;
         if (intervalType !== 'Minute' && width === 0) {
@@ -335,7 +338,12 @@ export abstract class SchedulerView
     rects: IRect[],
     margin: number
   ) {
+
+    // -- nudge slightly so that events that start immediately
+    // -- after a previous event do not visually overlap
     rect.height = rect.height - 0.01;
+    rect.width = rect.width - 0.01;
+
     for (let i = 0; i < rectIndex; i++) {
       const nextRect = rects[i];
       if (nextRect.width === 0) {
@@ -399,11 +407,12 @@ export abstract class SchedulerView
         if (this.hasInterval('Minute')) {
           endDate = endOfHour(endDate);
         }
+
         let result = differenceInHours(endDate, startDate);
 
-        // -- account for midnight
-        if (isMidnight(endDate)) {
-          result = result + 1;
+        // -- account for midnight (23:59)
+        if (this.schedulerDateService.datesSettings.endHour === 24) {
+           result = result + 1;
         }
         return result;
       case 'Minute':
@@ -494,6 +503,7 @@ export abstract class SchedulerView
     slot.intervalType = intervalType;
     slot.dateFormat = this.dateFormats[intervalType.toLowerCase()];
     slot.minuteInterval = this.minuteInterval;
+    slot.viewType = this.viewType;
     return slot;
   }
 
@@ -514,9 +524,7 @@ export abstract class SchedulerView
    * @returns passed in date plus the current time range start time
    */
   getStartDate(date: Date) {
-    const result = new Date(date);
-    setTime(result, this.dateRange.start);
-    return result;
+    return this.schedulerDateService.getStartDateTime(date, !this.isTimeInterval);
   }
 
   /**
@@ -526,9 +534,9 @@ export abstract class SchedulerView
    * @returns passed in date plus the current time range end time
    */
   getEndDate(date: Date) {
-    const result = new Date(date);
-    setTime(result, this.dateRange.end);
-    return result;
+    // const result = new Date(date);
+    // setTime(result, this.dateRange.end);
+    return this.schedulerDateService.getEndDateTime(date, !this.isTimeInterval);
   }
 
   /**
@@ -540,17 +548,18 @@ export abstract class SchedulerView
     this.schedulerViewService.jumpToDayView(date);
   }
 
-  protected setSubscriptions() {
+  protected setSubscriptions(): void {
     this._schedularDatesSubscription = this.schedulerDateService.schedulerDates$.subscribe(() => {
-        this.dateRangeChanged();
-        this.createTimeSlots();
-      }
+      this.dateRangeChanged();
+      this.createTimeSlots();
+    }
     );
     this._invalidateViewSubscription = this.schedulerViewService.invalidateView$.subscribe(() => {
       this.invalidate();
     });
-    this._eventRescheduledSubscription = this.schedulerEventService.rescheduleEventItem$.subscribe(() => {
-      this.invalidate();
+    this._eventRescheduledSubscription = this.schedulerEventService.rescheduleEventItem$.subscribe((rescheduleInfo) => {
+        this.eventItems = rescheduleInfo.currentEvents;
+        this.eventRescheduled(rescheduleInfo);
     });
 
     this._beginSlotSelectionSubscription = this.timeSlotService.beginTimeSlotSelection$.subscribe(
@@ -563,52 +572,68 @@ export abstract class SchedulerView
       (selectedRange: DateRange) => {
         if (!this.isEmbedded || this._hasTimeSlotServiceProvider) {
           const newEvent = new EventItem(selectedRange.start, selectedRange.end, '(No Title)');
-          newEvent.isAllDay = !isSameDay(selectedRange.start, addSeconds(selectedRange.end, 1));
+          newEvent.isAllDay = !this.isTimeInterval;
           this.schedulerEventService.addEventItem(newEvent);
         }
       }
     );
+
+    this._eventSelectionSubscription = this.schedulerEventService.selectedEvents$.subscribe(
+      (events) => {
+
+      }
+    );
   }
 
-  removeSubscriptions() {
+  cellHint(date: Date): string {
+    const result = formatDateTime(date, 'EEEE MMMM d, ') + shortTime(date);
+    return result;
+  }
+
+  protected removeSubscriptions(): void {
     this._schedularDatesSubscription.unsubscribe();
     this._eventCompChangeSubscription.unsubscribe();
     this._invalidateViewSubscription.unsubscribe();
     this._eventRescheduledSubscription.unsubscribe();
     this._beginSlotSelectionSubscription.unsubscribe();
     this._endSlotSelectionSubscription.unsubscribe();
+    this._eventSelectionSubscription.unsubscribe();
   }
 
-  protected dateRangeChanged() {}
-  protected slotsGenerated() {}
+  protected dateRangeChanged() {
+    // this.invalidate();
+  }
+  protected slotsGenerated(): void {}
+
+  protected eventRescheduled(_info: { oldEvent: EventItem; newEvent: EventItem; currentEvents: EventItem[]; }): void {}
 
   ngOnInit(): void {
     this.setSubscriptions();
     this.connectDataSource();
-    const ro = new ResizeObserver(() => {
-      this.invalidate();
-    });
-    ro.observe(this.elRef.nativeElement);
   }
 
-  ngOnChanges(): void {
-    this.layoutEvents();
+  ngOnChanges(changes): void {
+    // this.layoutEventsAsync();
   }
 
   ngAfterViewInit(): void {
     if (this.eventComps) {
       this._eventCompChangeSubscription = this.eventComps.changes.subscribe(
-        () => {
-          setTimeout(() => {
-            this.layoutEvents();
-          }, 0);
+        (changes) => {
+           setTimeout(() => {
+            this.layoutEventsAsync();
+           }, 0);
         }
       );
     }
-    setTimeout(() => {
-      this.layoutEvents();
-    }, 0);
+     setTimeout(() => {
+      this.layoutEventsAsync();
+     }, 0);
     this.setViewSize();
+    const ro = new ResizeObserver((size) => {
+        this.invalidate();
+    });
+    ro.observe(this.elRef.nativeElement);
   }
 
   protected setViewSize() {
@@ -619,11 +644,36 @@ export abstract class SchedulerView
 
   protected invalidate() {
     this.setViewSize();
-    this.layoutEvents();
+    this.layoutEventsAsync();
+  }
+
+  layoutEventsAsync() {
+    // requestAnimationFrame( () => {
+    //  this.eventComps.forEach(comp => comp.visibility = 'hidden');
+      this.layoutEvents();
+    //  this.eventComps.forEach(comp => comp.visibility = 'visible');
+    // });
   }
 
   ngOnDestroy(): void {
     this.disconnectDataSource();
     this.removeSubscriptions();
+  }
+
+  @HostListener('animationend', ['$event'] )
+  animationEnd(event: { animationName: string; }) {
+     if (event.animationName === 'view-enter') {
+       // this.invalidate();
+     }
+  }
+
+  @HostListener('drop', ['$event'])
+  onDrop(e: DropEventItemArgs) {
+      const dropCell = this.cellAtPos(new Point(e.event.pageX - e.event.offsetX, e.event.pageY - e.event.offsetY));
+      this.schedulerEventService.unSelectAll();
+      if (dropCell) {
+        const eventItem = e.item as EventItem;
+        this.schedulerEventService.rescheduleEvent(eventItem, dropCell.timeSlot.startDate, null, this.isFullDayEventsOnly);
+      }
   }
 }

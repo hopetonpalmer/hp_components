@@ -6,9 +6,14 @@
   overflow: hidden;
   box-sizing: border-box;
   border-radius: 6px;
-  padding: 5px;
+  padding: 2px 5px;
   opacity: .98;
-  transition: border-width .3s, border-color .3s;
+  transition: border-color .3s, left .2s, top .2s, height .05s ease-in-out, width .05s ease-in-out ;
+  box-shadow: 3px 3px 6px -3px rgba(0, 0, 0, 0.75);
+}
+
+@keyframes {
+  from {}
 }
 
 :host:hover, :host.selected {
@@ -16,7 +21,7 @@
 }
 
 :host.selected {
-  border-style: dashed;
+  border-style: dotted;
 }
 
 .event-item {
@@ -32,6 +37,7 @@
   align-items: center;
   font-size: 12px;
   justify-content: space-between;
+  flex-wrap: nowrap;
 }
 
 

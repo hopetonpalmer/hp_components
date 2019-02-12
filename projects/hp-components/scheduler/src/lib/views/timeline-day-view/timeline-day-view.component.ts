@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Input, OnDestroy } from '@angular/core';
 import { TimelineViewComponent } from '../timeline-view/timeline-view.component';
 import { EventItem } from '../../event-item/event-item';
 import { IRect, intersectedRects } from '@hp-components/common';
 import { Rect } from '@hp-components/common';
+import { Subscription } from 'rxjs';
+import { SchedulerViewType } from '../../types';
 
 @Component({
   selector: 'hp-timeline-day-view',
@@ -12,7 +14,7 @@ import { Rect } from '@hp-components/common';
     '../timeline-view/timeline-view.component.css',
     './timeline-day-view.component.css'
   ],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineDayViewComponent extends TimelineViewComponent {
 
@@ -20,6 +22,8 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
   viewHeight: number; */
 
   protected lastCellInclusive = true;
+
+  private _schedulerEventNotifyChangeSubscription: Subscription;
 
   @Input()
   growToFitEvents = false;
@@ -35,10 +39,10 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
   footerOffset = 0;
 
   @Input()
-  fullDayEventsOnly = false;
+  strictMinHeight = true;
 
   @Input()
-  strictMinHeight = true;
+  viewType: SchedulerViewType;
 
   protected setViewDefaults() {
     this.dateFormats['day'] = 'd';
@@ -46,14 +50,19 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
     this.minuteInterval = 30;
   }
 
-  protected includeEvent(event: EventItem): boolean {
-    if (this.fullDayEventsOnly) {
-      return event.isAllDay || event.isMultiDay;
+  protected excludeEvent(event: EventItem): boolean {
+    if (this.isFullDayEventsOnly) {
+      return !(event.isAllDay || event.isMultiDay);
     }
-    return super.includeEvent(event);
+    return super.excludeEvent(event);
   }
   protected setViewHeight(rects: IRect[], margin: number) {
      if (!this.growToFitEvents) {
+       return;
+     }
+     const el = this.elRef.nativeElement as HTMLElement;
+     if (!rects.length) {
+       el.style.minHeight = this.minHeight + 'px';
        return;
      }
      const rectangles = rects.reduce((r, rect) => {
@@ -61,18 +70,19 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
        return r;
      }, new Array<Rect>());
 
-     const el = this.elRef.nativeElement as HTMLElement;
      const sortedRects = this.sortRects(rectangles);
      const height = sortedRects[sortedRects.length - 1].bottom - sortedRects[0].top +
       margin + this.headerOffset + this.footerOffset;
 
-     if (this.strictMinHeight) {
+     el.style.minHeight = Math.max(this.minHeight, height) + 'px';
+
+    /*  if (this.strictMinHeight) {
         el.style.height = Math.max(this.minHeight, height) + 'px';
      } else {
        if (height > this.minHeight) {
          el.style.height = height + 'px';
        }
-     }
+     } */
   }
 
   private sortRects(rectangles: Rect[]) {
@@ -107,4 +117,19 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
     return rect;
   }
 
+  protected setSubscriptions(): void {
+    super.setSubscriptions();
+    this._schedulerEventNotifyChangeSubscription = this.schedulerEventService.notify$.subscribe((changeType => {
+       this.cdRef.markForCheck();
+    }));
+  }
+
+  protected removeSubscriptions(): void {
+    super.removeSubscriptions();
+    this._schedulerEventNotifyChangeSubscription.unsubscribe();
+  }
+
+  protected eventRescheduled() {
+    this.cdRef.markForCheck();
+  }
 }

@@ -1,29 +1,30 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy,
-   ContentChildren, TemplateRef, QueryList, AfterContentInit, ViewChildren, AfterViewInit, ElementRef, Optional } from '@angular/core';
+    ElementRef, Optional, ChangeDetectorRef } from '@angular/core';
 import { SchedulerService } from '../../services/scheduler.service';
 import { SchedulerView } from '../scheduler-view';
 import { SchedulerViewService } from '../scheduler-view.service';
 import { SchedulerDateService } from '../../services/scheduler-date.service';
 import { TimeSlotService } from '../../time-slot/time-slot.service';
-import { EventCellDirective } from '../../event-grid/event-cell/event-cell.directive';
 import { Orientation, IRect } from '@hp-components/common';
-import { EventItem } from '../../event-item/event-item';
-import { addDays } from 'date-fns';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
+import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 
 
 @Component({
   selector: 'hp-timeline-view',
   templateUrl: './timeline-view.component.html',
   styleUrls: ['../../styles.css', './timeline-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineViewComponent extends SchedulerView {
   protected maxDays = 1;
 
-  eventHeight = 22;
+  eventHeight = 40;
 
   protected orientation: Orientation = 'horizontal';
+
+  @Input()
+  isAllDay = false;
 
   constructor(
     public schedulerService: SchedulerService,
@@ -31,7 +32,9 @@ export class TimelineViewComponent extends SchedulerView {
     public schedulerDateService: SchedulerDateService,
     public schedulerEventService: SchedulerEventService,
     public timeSlotService: TimeSlotService,
-    protected elRef: ElementRef
+    public colorSchemeService: ColorSchemeService,
+    protected elRef: ElementRef,
+    protected cdRef: ChangeDetectorRef
   ) {
     super(
       schedulerService,
@@ -39,6 +42,7 @@ export class TimelineViewComponent extends SchedulerView {
       schedulerDateService,
       schedulerEventService,
       timeSlotService,
+      colorSchemeService,
       elRef
     );
   }
@@ -53,6 +57,7 @@ export class TimelineViewComponent extends SchedulerView {
 
   protected layoutEvents(): void {
     if (!this.eventComps || !this.eventComps.length) {
+      this.setViewHeight([], 0);
       return;
     }
     const eventComps = this.eventComps.toArray();
@@ -71,5 +76,9 @@ export class TimelineViewComponent extends SchedulerView {
     });
 
     this.setViewHeight(rects, margin);
+  }
+
+  protected dateRangeChanged() {
+    this.cdRef.markForCheck();
   }
 }

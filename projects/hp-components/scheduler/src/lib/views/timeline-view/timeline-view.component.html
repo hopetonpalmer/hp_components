@@ -1,7 +1,7 @@
 <div class="intervals" >
   <div style="height: 100%" class="days">
     <div style="height: 100%" class="interval day" [ngClass]="{'separator-border': isMasterSlot(daySlot)}" *ngFor="let daySlot of viewTimeSlots; let index = index">
-      <div class="header-container">
+      <div hpColorScheme [colorSetName]="'headingColors'" class="header-container">
         <!-- Day Row -->
         <div class="intervals-container" *ngIf="hasInterval('Day')">
           <div class="slot-text" [ngClass]="{'now': daySlot.isNow}">

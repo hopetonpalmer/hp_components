@@ -1,18 +1,18 @@
 <div #event_grid style="height: 100%" class="days event-grid">
   <div style="height: 100%" class="interval day" *ngFor="let daySlot of viewTimeSlots; let first=first">
     <!-- Day Header -->
-    <div *ngIf="headerVisible && !headerTemplate" class="header-container">
-      <div class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)">
+    <div hpColorScheme [colorSetName]="'headingColors'" *ngIf="headerVisible" class="header-container">
+      <div *ngIf="!headerTemplate" class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)">
         <span *ngIf="first || daySlot.startDate.getDate() === 1" class="show-month">{{formatDayName(daySlot.startDate,
           'MMM')}}</span>
         <span>{{daySlot.formattedDate}}</span>
         <span class='day-name'>{{formatDayName(daySlot.startDate, 'EEE')}}</span>
       </div>
+      <ng-container *ngIf="headerTemplate" [ngTemplateOutlet]="headerTemplate"
+        [ngTemplateOutletContext]="{slot: daySlot, first: first}"></ng-container>
     </div>
-    <ng-container *ngTemplateOutlet="headerTemplate; context:{slot: daySlot, first: first}" ></ng-container>
-    <div hpEventCell [timeSlotServiceProvider]="timeSlotServiceProvider" [timeSlot]=daySlot style="height: 100%">
-        <!-- <div style="opacity: 0" class="slot-text">{{daySlot.formattedDate}}</div> -->
-    </div>
+    <div hpEventCell [isAllDay]="isAllDay" [timeSlotServiceProvider]="timeSlotServiceProvider"
+     [timeSlot]=daySlot style="height: 100%"></div>
   </div>
   <hp-event-item [eventItem]=item *ngFor="let item of eventItems"></hp-event-item>
 </div>

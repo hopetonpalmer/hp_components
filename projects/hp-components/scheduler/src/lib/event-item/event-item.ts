@@ -1,5 +1,5 @@
 import { SchedulerResource } from '../models/schedulerResource';
-import { addHours, isSameDay, differenceInCalendarDays } from 'date-fns';
+import { addHours, isSameDay, differenceInCalendarDays, differenceInMinutes } from 'date-fns';
 import { ISchedulerItem } from '../interfaces/i-scheduler-item';
 import { DateRange } from '../types';
 
@@ -32,7 +32,12 @@ export class EventItem implements ISchedulerItem {
   get dateRange(): DateRange {
     return {start: this.start, end: this.end};
   }
-  constructor(public start = new Date(), public end = addHours(new Date(), 1), public subject = 'New Appointment', public color = 'gray') {
-
+  get durationMinutes(): number {
+     return differenceInMinutes(this.end, this.start);
   }
+  constructor(
+    public start = new Date(),
+    public end = addHours(new Date(), 1),
+    public subject = 'No Title',
+    public color = '#ffffff') {}
 }

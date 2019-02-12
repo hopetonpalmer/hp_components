@@ -78,8 +78,8 @@
 
 .event-slot.minute {
   border-top: 0;
-  border-right-style: dashed;
-  opacity: .3;
+  border-right-style: dotted;
+  /* opacity: .3; */
 }
 
 

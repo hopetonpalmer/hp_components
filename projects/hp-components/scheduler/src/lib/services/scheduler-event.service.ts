@@ -1,8 +1,11 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { EventItem } from '../event-item/event-item';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { addHours } from 'date-fns';
-import { DateRange } from '../types';
+import { addHours, addMinutes } from 'date-fns';
+import { DateRange, NotifyEvent } from '../types';
+import { ISchedulerItem } from '../interfaces/i-scheduler-item';
+import { deepEqual } from 'assert';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class SchedulerEventService {
@@ -22,10 +25,13 @@ export class SchedulerEventService {
   private _saveEventItemSubject = new Subject<EventItem>();
   saveEventItem$ = this._saveEventItemSubject.asObservable();
 
+  private _notifySubject = new Subject<NotifyEvent>();
+  notify$ = this._notifySubject.asObservable();
+
   private _rescheduleEventItemSubject = new Subject<{
-    eventItem: EventItem;
-    oldDates: DateRange;
-    newDates: DateRange;
+    oldEvent: EventItem;
+    newEvent: EventItem;
+    currentEvents: EventItem[];
   }>();
   rescheduleEventItem$ = this._rescheduleEventItemSubject.asObservable();
 
@@ -40,10 +46,12 @@ export class SchedulerEventService {
       ...this._eventItemsSubject.value,
       ...[eventItem]
     ]);
+    this._notifySubject.next('Add');
   }
 
   addEventItems(eventItems: EventItem[]) {
     this._eventItemsSubject.next(eventItems);
+    this._notifySubject.next('Add');
   }
 
   deleteEventItem(eventItem: EventItem = null) {
@@ -61,27 +69,26 @@ export class SchedulerEventService {
     eventItems.splice(eventItems.indexOf(eventItem), 1);
     this.unSelectEventItem(eventItem);
     this._eventItemsSubject.next(eventItems);
+    this._notifySubject.next('Delete');
   }
 
   editEventItem(eventItem: EventItem) {
     this._preEditedItem = Object.assign({}, eventItem);
     this._editEventItemSubject.next(eventItem);
-
-    eventItem.subject = 'This one was edited!';
-    eventItem.end = addHours(eventItem.end, 2);
-    this.saveEventItem(eventItem);
+    this._notifySubject.next('Edit');
   }
 
   saveEventItem(eventItem: EventItem) {
     const pei = this._preEditedItem;
     if (pei && (pei.start !== eventItem.start || pei.end !== eventItem.end)) {
-      this._rescheduleEventItemSubject.next({
+/*       this._rescheduleEventItemSubject.next({
         eventItem: eventItem,
         oldDates: pei.dateRange,
         newDates: eventItem.dateRange
-      });
+      }); */
     }
     this._saveEventItemSubject.next(eventItem);
+    this._notifySubject.next('Save');
   }
   getSelectedEventItems(): EventItem[] {
     return this._selectedEventsSubject.value;
@@ -89,28 +96,57 @@ export class SchedulerEventService {
 
   selectEventItem(eventItem: EventItem) {
     this._selectedEventsSubject.next([eventItem]);
+    this._notifySubject.next('Selected');
   }
 
   selectEventItems(eventItems: EventItem[]) {
     this._selectedEventsSubject.next(eventItems);
+    this._notifySubject.next('Selected');
   }
 
   unSelectEventItem(eventItem: EventItem) {
     const eventItems = this._selectedEventsSubject.value;
     eventItems.splice(eventItems.indexOf(eventItem), 1);
     this._selectedEventsSubject.next(eventItems);
+    this._notifySubject.next('Selected');
   }
 
   unSelectAll() {
     this._selectedEventsSubject.next([]);
+    this._notifySubject.next('Selected');
   }
 
   selectAll() {
     this._selectedEventsSubject.next(this.getEventItems());
+    this._notifySubject.next('Selected');
   }
 
   isEventSelected(eventItem: EventItem): boolean {
     const result = this.getSelectedEventItems().indexOf(eventItem) > -1;
     return result;
   }
+
+  rescheduleEvent(eventItem: EventItem, startDate: Date, endDate: Date = null, isAllDay = false) {
+    if (!endDate) {
+      endDate = addMinutes(startDate, eventItem.durationMinutes);
+    }
+    const newEvent = Object.assign(new EventItem(), eventItem);
+    newEvent.start = startDate;
+    newEvent.end = endDate;
+    newEvent.isAllDay = isAllDay;
+    if (!isEqual(newEvent, eventItem)) {
+      this.replaceEvent(eventItem, newEvent, false);
+      this._rescheduleEventItemSubject.next({oldEvent: eventItem, newEvent: newEvent, currentEvents: this.getEventItems()});
+    }
+  }
+
+  private replaceEvent(oldEvent: EventItem, newEvent: EventItem, notify = true) {
+      const events = this.getEventItems();
+      events.splice(events.indexOf(oldEvent), 1, newEvent);
+      if (notify) {
+        this._eventItemsSubject.next(events);
+      }
+  }
 }
+
+

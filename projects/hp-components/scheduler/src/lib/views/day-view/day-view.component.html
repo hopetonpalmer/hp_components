@@ -1,10 +1,10 @@
 <div style="overflow-y: scroll; overflow-x: hidden" class="all-day-grid interval day header-container">
-  <div class="all-day-spacer"></div>
-  <hp-timeline-day-view [isEmbedded]=true [minHeight]=80  [growToFitEvents]=true [timeSlotServiceProvider]="allDayTimeSlotService"
-    [headerTemplate]=dayHeader [fullDayEventsOnly]=true ></hp-timeline-day-view>
+  <div hpColorScheme [colorSetName]="'rulerColors'" class="all-day-spacer"></div>
+  <hp-timeline-day-view hpDropZone [isAllDay]=true [isEmbedded]=true [minHeight]=80  [growToFitEvents]=true [timeSlotServiceProvider]="allDayTimeSlotService"
+    [headerTemplate]=dayHeader [isFullDayEventsOnly]=true ></hp-timeline-day-view>
 </div>
 <div #event_grid class="event-grid">
-  <div class="time-ruler time-intervals intervals-container">
+  <div hpColorScheme [colorSetName]="'rulerColors'" class="time-ruler time-intervals intervals-container">
     <div class="interval hour" *ngFor="let hourSlot of viewTimeSlots[0].timeSlots">
       <div class="minute ruler" *ngFor="let minuteSlot of hourSlot.timeSlots; let i=index">
         {{i == 0 ? hourSlot.formattedDate : minuteSlot.formattedDate}}
@@ -13,19 +13,22 @@
   </div>
   <div class="intervals-container event-intervals" *ngFor="let daySlot of viewTimeSlots; let last=last">
     <div class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
-      <div hpEventCell [isMultiDaySelection]="false" [timeSlot]=minuteSlot class="minute event-slot" *ngFor="let minuteSlot of hourSlot.timeSlots"></div>
+      <div hpEventCell [isMultiDaySelection]="false"
+           [timeSlot]=minuteSlot [attr.title]="cellHint(minuteSlot.startDate)"
+           class="minute event-slot" *ngFor="let minuteSlot of hourSlot.timeSlots"></div>
     </div>
-    <ng-container *ngIf="last">
-
-    </ng-container>
   </div>
   <hp-event-item [orientation]="orientation" [eventItem]=item *ngFor="let item of eventItems"></hp-event-item>
 </div>
 
 <ng-template #dayHeader let-daySlot="slot" let-first="first">
-    <div class="slot-text date-header header-container" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)" >
-        <span *ngIf="first || daySlot.startDate.getDate() === 1" class="show-month">{{formatDayName(daySlot.startDate, 'MMM')}}</span>
-        <span>{{daySlot.formattedDate}}</span>
-        <span class='day-name'>{{formatDayName(daySlot.startDate, 'EEE')}}</span>
+  <div hpColorScheme [colorSetName]="'headingColors'">
+    <div class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}"
+      (click)="jumpToDayView(daySlot.startDate)">
+      <span *ngIf="first || daySlot.startDate.getDate() === 1" class="show-month">{{formatDayName(daySlot.startDate,
+        'MMM')}}</span>
+      <span>{{daySlot.formattedDate}}</span>
+      <span class='day-name'>{{formatDayName(daySlot.startDate, 'EEE')}}</span>
     </div>
+  </div>
 </ng-template>

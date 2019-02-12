@@ -15,28 +15,34 @@ import { SchedulerEventService } from './services/scheduler-event.service';
 @Component({
   selector: 'hp-scheduler',
   template: `
-    <hp-toolbar style="height: 50px"></hp-toolbar>
+    <hp-toolbar></hp-toolbar>
     <hp-day-view
+      hpDropZone
       *ngIf="viewType === 'Day'"
       [minuteInterval]="minuteInterval"
     ></hp-day-view>
     <hp-week-view
+      hpDropZone
       *ngIf="viewType === 'Week'"
       [minuteInterval]="minuteInterval"
     ></hp-week-view>
     <hp-work-week-view
+      hpDropZone
       *ngIf="viewType === 'WorkWeek'"
       [minuteInterval]="minuteInterval"
     ></hp-work-week-view>
     <hp-month-view *ngIf="viewType === 'Month'"></hp-month-view>
     <hp-timeline-view
+      hpDropZone
       *ngIf="viewType === 'Timeline'"
       [minuteInterval]="15"
     ></hp-timeline-view>
     <hp-timeline-day-view
+      hpDropZone
       *ngIf="viewType === 'TimelineWeek'"
     ></hp-timeline-day-view>
     <hp-timeline-month-view
+      hpDropZone
       *ngIf="viewType === 'TimelineMonth'"
     ></hp-timeline-month-view>
   `,

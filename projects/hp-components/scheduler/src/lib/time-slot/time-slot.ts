@@ -1,6 +1,6 @@
 import { formatDate} from '@angular/common';
 import { LOCALE_ID } from '@angular/core';
-import { IntervalType, MinuteInterval, ITimeSlot, DateRange } from '../types';
+import { IntervalType, MinuteInterval, ITimeSlot, DateRange, SchedulerViewType } from '../types';
 import { isSameYear, isSameQuarter,
   isSameMonth, isSameWeek, isSameDay,
   isSameHour, closestTo} from 'date-fns';
@@ -14,6 +14,8 @@ export class TimeSlot implements ITimeSlot {
    minuteInterval: MinuteInterval;
    isEnabled = true;
    timeSlots: TimeSlot[] = [];
+   viewType: SchedulerViewType;
+
    get dateRange(): DateRange {
      return { start: this.startDate, end: this.endDate };
    }
