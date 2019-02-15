@@ -47,8 +47,7 @@ import { SchedulerEventService } from './services/scheduler-event.service';
     ></hp-timeline-month-view>
   `,
   styles: [
-    `
-      :host {
+    ` :host {
         display: flex;
         flex-direction: column;
         height: 100%;

@@ -16,6 +16,7 @@
   display: grid;
   --column-sizing: 60px 1fr;
   height: 100%;
+  min-height: 0;
   grid-template-rows: minmax(80px, auto) 1fr;
   animation: view-enter .6s forwards;
 }
