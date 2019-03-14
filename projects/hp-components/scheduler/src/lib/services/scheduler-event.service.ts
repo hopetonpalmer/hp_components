@@ -6,6 +6,7 @@ import { DateRange, NotifyEvent } from '../types';
 import { ISchedulerItem } from '../interfaces/i-scheduler-item';
 import { deepEqual } from 'assert';
 import { isEqual } from 'lodash';
+import { DropEventItemArgs as MoveEventItemArgs, CancellableArgs } from '../event-args';
 
 @Injectable()
 export class SchedulerEventService {
@@ -22,8 +23,14 @@ export class SchedulerEventService {
   private _deleteEventItemSubject = new Subject<EventItem>();
   deleteEventItem$ = this._deleteEventItemSubject.asObservable();
 
+  private _confirmDeleteEventItemSubject = new Subject<CancellableArgs>();
+  confirmDeleteEventItem$ = this._confirmDeleteEventItemSubject.asObservable();
+
   private _saveEventItemSubject = new Subject<EventItem>();
   saveEventItem$ = this._saveEventItemSubject.asObservable();
+
+  private _eventMovedSubject = new Subject<MoveEventItemArgs>();
+  eventMoved$ = this._eventMovedSubject.asObservable();
 
   private _notifySubject = new Subject<NotifyEvent>();
   notify$ = this._notifySubject.asObservable();
@@ -64,6 +71,12 @@ export class SchedulerEventService {
     if (!eventItem) {
       return;
     }
+
+/*     const confirmArgs = { cancel: false, data: eventItem };
+    this._confirmDeleteEventItemSubject.next(confirmArgs);
+    if (confirmArgs.cancel) {
+       return;
+    } */
     this._deleteEventItemSubject.next(eventItem);
     const eventItems = this._eventItemsSubject.value;
     eventItems.splice(eventItems.indexOf(eventItem), 1);
@@ -97,6 +110,7 @@ export class SchedulerEventService {
   selectEventItem(eventItem: EventItem) {
     this._selectedEventsSubject.next([eventItem]);
     this._notifySubject.next('Selected');
+    console.log('event selected!');
   }
 
   selectEventItems(eventItems: EventItem[]) {
@@ -109,6 +123,7 @@ export class SchedulerEventService {
     eventItems.splice(eventItems.indexOf(eventItem), 1);
     this._selectedEventsSubject.next(eventItems);
     this._notifySubject.next('Selected');
+    console.log('event unselected!');
   }
 
   unSelectAll() {
@@ -138,6 +153,11 @@ export class SchedulerEventService {
       this.replaceEvent(eventItem, newEvent, false);
       this._rescheduleEventItemSubject.next({oldEvent: eventItem, newEvent: newEvent, currentEvents: this.getEventItems()});
     }
+  }
+
+  moveEventItem(moveEventArgs: MoveEventItemArgs) {
+    this._eventMovedSubject.next(moveEventArgs);
+    console.log('moved!');
   }
 
   private replaceEvent(oldEvent: EventItem, newEvent: EventItem, notify = true) {

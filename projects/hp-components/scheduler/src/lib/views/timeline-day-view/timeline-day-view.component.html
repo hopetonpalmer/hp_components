@@ -1,5 +1,6 @@
 <div #event_grid style="height: 100%" class="days event-grid">
-  <div style="height: 100%" class="interval day" *ngFor="let daySlot of viewTimeSlots; let first=first">
+  <div style="height: 100%" class="interval day"
+    *ngFor="let daySlot of viewTimeSlots; trackBy: trackSlotFn; let first=first">
     <!-- Day Header -->
     <div hpColorScheme [colorSetName]="'headingColors'" *ngIf="headerVisible" class="header-container">
       <div *ngIf="!headerTemplate" class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)">

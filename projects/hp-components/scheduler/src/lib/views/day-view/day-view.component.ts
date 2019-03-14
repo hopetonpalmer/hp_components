@@ -1,4 +1,5 @@
-import { Component, OnInit, ElementRef, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef, Optional } from '@angular/core';
+import { Component, OnInit, ElementRef, OnDestroy, Input,
+   ChangeDetectionStrategy, ChangeDetectorRef, Optional } from '@angular/core';
 import { SchedulerView, ISizingGroup } from '../scheduler-view';
 import { SchedulerService } from '../../services/scheduler.service';
 import { formatDateTime, isBetween, datesOfRange, isMidnight } from '../../scripts/datetime';
@@ -14,6 +15,7 @@ import { DayViewLayoutService } from './day-view-layout.service';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
 import { DateRange } from '../../types';
 import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
+import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
 
 @Component({
   selector: 'hp-day-view',
@@ -40,12 +42,13 @@ export class DayViewComponent extends SchedulerView
   allDayDateRange: DateRange;
 
   constructor(
-    public schedulerService: SchedulerService,
-    public schedulerViewService: SchedulerViewService,
-    public schedulerDateService: SchedulerDateService,
-    public schedulerEventService: SchedulerEventService,
-    public timeSlotService: TimeSlotService,
-    public colorSchemeService: ColorSchemeService,
+    protected schedulerService: SchedulerService,
+    protected schedulerViewService: SchedulerViewService,
+    protected schedulerDateService: SchedulerDateService,
+    protected schedulerEventService: SchedulerEventService,
+    protected timeSlotService: TimeSlotService,
+    protected colorSchemeService: ColorSchemeService,
+    protected cellService: EventCellService,
     protected elRef: ElementRef,
     private cdRef: ChangeDetectorRef
   ) {
@@ -56,6 +59,7 @@ export class DayViewComponent extends SchedulerView
       schedulerEventService,
       timeSlotService,
       colorSchemeService,
+      cellService,
       elRef
     );
     this.dateFormats['day'] = 'd';
@@ -165,7 +169,9 @@ export class DayViewComponent extends SchedulerView
       // -- set rects final size
       rects.forEach((rect, index) => {
         this.finalizeRectSize(rect, rects, containerRect, margin);
-        eventComps[index].eventRect = rect;
+        const eventComp = eventComps[index];
+        eventComp.eventRect = rect;
+        eventComp.parentRect = containerRect;
       });
     };
     doLayout();

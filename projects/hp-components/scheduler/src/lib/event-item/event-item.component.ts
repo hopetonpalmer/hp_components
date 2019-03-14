@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, TemplateRef, HostBinding,
   ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, HostListener,
-   OnDestroy, ComponentFactoryResolver, Injector, ApplicationRef } from '@angular/core';
+   OnDestroy, ComponentFactoryResolver, Injector, ApplicationRef, ComponentRef } from '@angular/core';
 import { EventItem } from './event-item';
-import { IRect, Orientation, getStyleValue } from '@hp-components/common';
+import { IRect, Orientation, getStyleValue, Point, pointInRect, Rect } from '@hp-components/common';
 import { TimeSlotService } from '../time-slot/time-slot.service';
 import { shortTime, formatDateTime } from '../scripts/datetime';
 import { TinyColor } from '@ctrl/tinycolor';
@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 import { DomPortalHost, ComponentPortal, PortalHost } from '@angular/cdk/portal';
 import { EventSelectorComponent } from '../event-selector/event-selector.component';
 import { DragService } from '../draggable/drag.service';
+import { Overlay } from '@angular/cdk/overlay';
+import { EventSelectorManagerComponent } from '../event-selector/event-selector-manager/event-selector-manager.component';
 
 
 
@@ -45,7 +47,7 @@ export class EventItemComponent implements OnInit, OnDestroy {
 
   @HostBinding('style.pointer-events')
   get pointerEvents() {
-    return this.timeSlotService.isSelecting ? 'none' : 'all';
+      return this.timeSlotService.isSelecting && !this.isSelected ? 'none' : 'all';
   }
 
   @HostBinding('style.visibility')
@@ -130,6 +132,12 @@ export class EventItemComponent implements OnInit, OnDestroy {
     return this._eventRect;
   }
 
+  get clientRect() {
+    return (this.elRef.nativeElement as HTMLElement).getBoundingClientRect();
+  }
+
+  parentRect: IRect;
+
   @Input()
   icon: string;
 
@@ -173,28 +181,28 @@ export class EventItemComponent implements OnInit, OnDestroy {
     private cfr: ComponentFactoryResolver,
     private injector: Injector,
     private appRef: ApplicationRef,
+    private overlay: Overlay,
     private schedulerEventService: SchedulerEventService,
     private timeSlotService: TimeSlotService,
     private colorScheme: ColorScheme,
     private dragService: DragService
   ) {}
 
-  @HostListener('pointerdown', ['$event'])
-  onPointerDown(event: PointerEvent) {
-
-  }
 
   @HostListener('dblclick')
   onDblClick() {
     this.schedulerEventService.editEventItem(this.eventItem);
   }
 
-  @HostListener('pointerenter', ['$event'])
-  onPointerEnter(event) {
-    this.isHovered = true;
-    this.pointerId = event.pointerId;
-    this.timeSlotService.clearSlotSelection();
-    this.schedulerEventService.selectEventItem(this.eventItem);
+  @HostListener('pointerdown', ['$event'])
+  onPointerDown(event: PointerEvent) {
+    event.preventDefault();
+    if (!this.isSelected) {
+      this.isHovered = true;
+      this.pointerId = event.pointerId;
+      this.timeSlotService.clearSlotSelection();
+      this.schedulerEventService.selectEventItem(this.eventItem);
+    }
   }
 
   @HostListener('pointerleave')
@@ -209,6 +217,8 @@ export class EventItemComponent implements OnInit, OnDestroy {
   detachEventSelector() {
     if (this._selectorPortalHost) {
       this._selectorPortalHost.detach();
+      // this._selectorPortalHost.dispose();
+      // this._selectorPortalHost = null;
     }
   }
 
@@ -222,7 +232,7 @@ export class EventItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createSelector() {
+  private xcreateSelector() {
     const el = this.elRef.nativeElement as HTMLElement;
     const parent = el.parentElement;
     this._selectorPortalHost = new DomPortalHost(parent, this.cfr, this.appRef, this.injector);
@@ -232,6 +242,29 @@ export class EventItemComponent implements OnInit, OnDestroy {
     componentRef.instance.eventRect = this.eventRect;
     componentRef.instance.orientation = this.orientation;
     componentRef.instance.borderRadius = getStyleValue('border-radius', this.elRef.nativeElement);
+
+  }
+
+  private createSelector() {
+    this._selectorPortalHost = new DomPortalHost(document.body, this.cfr, this.appRef, this.injector);
+    const portal = new ComponentPortal(EventSelectorManagerComponent);
+    const componentRef = this._selectorPortalHost.attach(portal);
+
+    const borderRadius = getStyleValue('border-top-left-radius', this.elRef.nativeElement) + ' ' +
+      getStyleValue('border-top-right-radius', this.elRef.nativeElement) + ' ' +
+      getStyleValue('border-bottom-right-radius', this.elRef.nativeElement) + ' ' +
+      getStyleValue('border-bottom-left-radius', this.elRef.nativeElement);
+
+    componentRef.instance.pointerId = this.pointerId;
+    componentRef.instance.orientation = this.orientation;
+    componentRef.instance.setEventSelector(
+      this.eventItem,
+      this.elRef.nativeElement as HTMLElement,
+      borderRadius,
+      this.parentRect,
+      this.moreBefore,
+      this.moreAfter
+      );
   }
 
   ngOnInit() {
@@ -246,9 +279,17 @@ export class EventItemComponent implements OnInit, OnDestroy {
     });
   }
 
+  isMouseOver(event: PointerEvent): boolean {
+    const mousePoint = new Point(event.pageX, event.pageY);
+    const r = this.clientRect;
+    const isInRect = pointInRect(mousePoint, new Rect(r.left, r.top, r.width, r.height));
+    return isInRect;
+  }
+
   ngOnDestroy(): void {
     this._eventSelectionSubscription.unsubscribe();
     this._dragCancelSubscription.unsubscribe();
-    this.detachEventSelector();
+    // this.detachEventSelector();
+    // this._selectorPortalHost.dispose();
   }
 }

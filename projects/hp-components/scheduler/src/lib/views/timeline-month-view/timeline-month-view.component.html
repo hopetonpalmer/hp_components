@@ -2,7 +2,7 @@
   <!-- Months Container-->
   <div style="height: 100%" class="months">
     <div style="height: 100%" class="interval month" [ngClass]="{'separator-border': isMasterSlot(slotMonth)}"
-     *ngFor="let slotMonth of viewTimeSlots">
+     *ngFor="let slotMonth of viewTimeSlots; trackBy: trackSlotFn">
       <div hpColorScheme [colorSetName]="'headingColors'" class="header-container">
         <!-- Month Row -->
         <div class="intervals-container" *ngIf="hasInterval('Month')">

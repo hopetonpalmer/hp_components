@@ -19,7 +19,7 @@ import {
   isAfter,
   endOfToday,
   startOfToday} from 'date-fns';
-import { setTime } from '../scripts/datetime';
+import { setTime, addUtcMinutes, addUtcHours } from '../scripts/datetime';
 import { EventItem } from '../event-item/event-item';
 
 
@@ -78,7 +78,7 @@ export class SchedulerService {
       case 'Day':
         return addDays(startOfDay(date), increment);
       case 'Hour':
-        return addHours(date, increment);
+         return addHours(date, increment);
       case 'Minute':
         return addMinutes(date, increment * minuteInterval);
       default:

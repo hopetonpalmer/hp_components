@@ -5,6 +5,7 @@ import { IRect, intersectedRects } from '@hp-components/common';
 import { Rect } from '@hp-components/common';
 import { Subscription } from 'rxjs';
 import { SchedulerViewType } from '../../types';
+import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
 
 @Component({
   selector: 'hp-timeline-day-view',

@@ -1,6 +1,7 @@
 <div class="intervals" >
   <div style="height: 100%" class="days">
-    <div style="height: 100%" class="interval day" [ngClass]="{'separator-border': isMasterSlot(daySlot)}" *ngFor="let daySlot of viewTimeSlots; let index = index">
+    <div style="height: 100%" class="interval day" [ngClass]="{'separator-border': isMasterSlot(daySlot)}"
+     *ngFor="let daySlot of viewTimeSlots; trackBy: trackSlotFn; let index = index">
       <div hpColorScheme [colorSetName]="'headingColors'" class="header-container">
         <!-- Day Row -->
         <div class="intervals-container" *ngIf="hasInterval('Day')">
@@ -11,11 +12,11 @@
 
         <!-- Hour Row -->
         <div class="intervals-container" *ngIf="hasInterval('Hour')">
-          <div class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
+          <div class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots; trackBy: trackSlotFn">
             <div class="slot-text" [ngClass]="{'now': hourSlot.isNow}">{{hourSlot.formattedDate}}</div>
             <!-- Minute Row -->
             <div class="intervals-container" *ngIf="hasInterval('Minute')">
-              <div class="interval minute" *ngFor="let minuteSlot of hourSlot.timeSlots">
+              <div class="interval minute" *ngFor="let minuteSlot of hourSlot.timeSlots; trackBy: trackSlotFn">
                 <div class="slot-text" [ngClass]="{'now': minuteSlot.isNow}">{{minuteSlot.formattedDate}}</div>
               </div>
             </div>
@@ -25,15 +26,18 @@
       <div #event_grid class="event-grid" [style.display]="hasInterval('Hour') ? 'flex' : 'block'">
         <ng-container *ngIf="hasInterval('Hour')">
           <ng-container *ngIf="hasInterval('Minute')">
-            <div style="display: flex; height: 100%" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
-              <div hpEventCell [timeSlot]=minuteSlot class="interval minute event-slot" *ngFor="let minuteSlot of hourSlot.timeSlots">
+            <div style="display: flex; height: 100%" class="interval hour"
+             *ngFor="let hourSlot of daySlot.timeSlots; trackBy: trackSlotFn">
+              <div hpEventCell [timeSlot]=minuteSlot class="interval minute event-slot"
+               *ngFor="let minuteSlot of hourSlot.timeSlots; trackBy: trackSlotFn">
                 <div style="opacity: 0" class="slot-text">{{minuteSlot.formattedDate}}</div>
               </div>
             </div>
           </ng-container>
 
           <ng-container *ngIf="!hasInterval('Minute')">
-            <div hpEventCell [timeSlot]=hourSlot style="display: flex; height: 100%" class="interval hour" *ngFor="let hourSlot of daySlot.timeSlots">
+            <div hpEventCell [timeSlot]=hourSlot style="display: flex; height: 100%" class="interval hour"
+             *ngFor="let hourSlot of daySlot.timeSlots; trackBy: trackSlotFn">
               <div style="opacity: 0" class="slot-text">{{hourSlot.formattedDate}}</div>
             </div>
           </ng-container>

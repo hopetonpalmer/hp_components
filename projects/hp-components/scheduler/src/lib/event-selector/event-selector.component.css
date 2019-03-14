@@ -7,10 +7,31 @@
   border-color: orange;
   box-sizing: border-box;
   transition: border-color 0.5s;
-  animation: enter 0.5s forwards;
+  animation: enter 0.1s forwards;
+  min-height: 10px;
+  min-width: 10px;
 }
 
 @keyframes enter {
   from {opacity: 0}
   to {opacity: 0.5}
+}
+
+.sizer-left, .sizer-right {
+  width: 10px;
+  height: 100%;
+  cursor: nw-resize;
+}
+.sizer-right {
+  margin-left: calc(100% - 10px)
+}
+
+.sizer-top, .sizer-bottom {
+  width: 100%;
+  height: 10px;
+  cursor: ns-resize;
+}
+
+.sizer-bottom {
+  margin-bottom: calc(100% - 10px);
 }

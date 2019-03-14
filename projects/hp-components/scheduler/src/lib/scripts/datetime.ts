@@ -2,6 +2,23 @@ import { startOfHour, addMinutes, isEqual, addDays, startOfDay, endOfDay } from 
 import { IntervalType, MinuteInterval, DateRange } from '../types';
 import { formatDate } from '@angular/common';
 
+declare global {
+  interface Date {
+    stdTimezoneOffset(): number;
+    isDst(): boolean;
+  }
+}
+
+Date.prototype.stdTimezoneOffset = function () {
+  const jan = new Date(this.getFullYear(), 0, 1);
+  const jul = new Date(this.getFullYear(), 6, 1);
+  return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+};
+
+Date.prototype.isDst = function () {
+  return startOfDay(this).getTimezoneOffset() !== endOfDay(this).getTimezoneOffset();
+};
+
 export interface Time {
   hours: number;
   minutes: number;
@@ -143,5 +160,33 @@ export function formatDateTime(date: Date, format: string, language = 'en-US'): 
 export function shortTime(date: Date, format: string = 'h:mma'): string {
   return formatDateTime(date, format).toLowerCase();
 }
+
+export function dateDiff(dateNow: Date, dateFuture: Date) {
+  const seconds = (dateFuture.getTime() - dateNow.getTime()) / 1000;
+  const minutes = Math.ceil(seconds / 60);
+  let hours = Math.ceil(minutes / 60);
+  if (dateNow.isDst()) {
+    hours++;
+  }
+  const days = Math.ceil(hours / 24);
+  return {days: days, hours: hours, minutes: minutes, seconds: seconds};
+}
+
+export function addUtcMinutes(date: Date, minutes: number): Date {
+    const result = addMinutes(utcDate(date), minutes);
+    return result;
+}
+
+export function addUtcHours(date: Date, hours: number): Date {
+  const result = addUtcMinutes(date, hours * 60);
+  return result;
+}
+
+export function utcDate(date: Date): Date {
+  const result = new Date(date.toUTCString());
+  return result;
+}
+
+
 
 

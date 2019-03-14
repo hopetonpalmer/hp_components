@@ -11,6 +11,7 @@ import { SchedulerDateService } from '../../services/scheduler-date.service';
 import { isWeekend, isSameMonth, addDays, startOfDay } from 'date-fns';
 import { formatDateTime, shortTime } from '../../scripts/datetime';
 import { DragService } from '../../draggable/drag.service';
+import { exitFullScreen } from 'hp-components/lib/scripts/dom';
 
 
 
@@ -25,6 +26,7 @@ export class EventCellDirective implements OnInit, OnDestroy {
   get isSelected(): boolean {
     return this._isSelected;
   }
+
 
   @Input()
   set timeSlot(value: TimeSlot) {
@@ -79,7 +81,8 @@ export class EventCellDirective implements OnInit, OnDestroy {
     private _schedulerDateService: SchedulerDateService,
     private _colorScheme: ColorScheme,
     private _host: ElementRef,
-    private _cdRef: ChangeDetectorRef
+    private _cdRef: ChangeDetectorRef,
+    private _eleRef: ElementRef
   ) {}
   private _selectedDatesSubscription: Subscription;
 
@@ -92,15 +95,19 @@ export class EventCellDirective implements OnInit, OnDestroy {
     );
   }
 
-  @HostListener('pointerdown')
-  beginSlotSelection() {
-    this.selectSlot();
-    this.timeSlotServiceProvider.beginSlotSelection(this.timeSlot.dateRange);
-    this._schedulerService.setActiveDate(this.timeSlot.startDate);
+  @HostListener('pointerdown', ['$event'])
+  beginSlotSelection(event: PointerEvent) {
+      this.selectSlot();
+      this.timeSlotServiceProvider.beginSlotSelection(this.timeSlot.dateRange);
+      this._schedulerService.setActiveDate(this.timeSlot.startDate);
   }
 
-  @HostListener('pointerenter')
-  adjustSlotSelection() {
+  @HostListener('pointerenter', ['$event'])
+  adjustSlotSelection(event: PointerEvent) {
+    if (event.buttons === 0 && this.timeSlotServiceProvider.isSelecting) {
+      this.timeSlotServiceProvider.clearSlotSelection();
+      return;
+    }
     const dateFilter = this.isMultiDaySelection
       ? null
       : this._schedulerService.activeDate;

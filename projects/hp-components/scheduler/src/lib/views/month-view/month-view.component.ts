@@ -9,6 +9,7 @@ import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { DateRange } from '../../types';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
 import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
+import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
 
 
 @Component({
@@ -45,12 +46,13 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
   protected lastCellInclusive = true;
 
   constructor(
-    public schedulerService: SchedulerService,
-    public schedulerViewService: SchedulerViewService,
-    public schedulerDateService: SchedulerDateService,
-    public schedulerEventService: SchedulerEventService,
-    public timeSlotService: TimeSlotService,
-    public colorSchemeService: ColorSchemeService,
+    protected schedulerService: SchedulerService,
+    protected schedulerViewService: SchedulerViewService,
+    protected schedulerDateService: SchedulerDateService,
+    protected schedulerEventService: SchedulerEventService,
+    protected timeSlotService: TimeSlotService,
+    protected colorSchemeService: ColorSchemeService,
+    protected cellService: EventCellService,
     protected elRef: ElementRef,
     protected cdRef: ChangeDetectorRef
   ) {
@@ -61,6 +63,7 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
       schedulerEventService,
       timeSlotService,
       colorSchemeService,
+      cellService,
       elRef
     );
   }
@@ -95,6 +98,10 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
   protected dateRangeChanged() {
     super.dateRangeChanged();
     this.dateRanges = dateRangesOfRange(this.dateRange.start, this.dateRange.end, 7);
+  }
+
+  trackDateRangeFn(index: number, dateRange: DateRange) {
+     return index;
   }
 
   getColorSet(date: Date): string {

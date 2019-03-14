@@ -8,6 +8,7 @@ import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { Orientation, IRect } from '@hp-components/common';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
 import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
+import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
 
 
 @Component({
@@ -27,12 +28,13 @@ export class TimelineViewComponent extends SchedulerView {
   isAllDay = false;
 
   constructor(
-    public schedulerService: SchedulerService,
-    public schedulerViewService: SchedulerViewService,
-    public schedulerDateService: SchedulerDateService,
-    public schedulerEventService: SchedulerEventService,
-    public timeSlotService: TimeSlotService,
-    public colorSchemeService: ColorSchemeService,
+    protected schedulerService: SchedulerService,
+    protected schedulerViewService: SchedulerViewService,
+    protected schedulerDateService: SchedulerDateService,
+    protected schedulerEventService: SchedulerEventService,
+    protected timeSlotService: TimeSlotService,
+    protected colorSchemeService: ColorSchemeService,
+    protected cellService: EventCellService,
     protected elRef: ElementRef,
     protected cdRef: ChangeDetectorRef
   ) {
@@ -43,6 +45,7 @@ export class TimelineViewComponent extends SchedulerView {
       schedulerEventService,
       timeSlotService,
       colorSchemeService,
+      cellService,
       elRef
     );
   }

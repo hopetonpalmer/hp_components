@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ISchedulerItem } from '../interfaces/i-scheduler-item';
 import { DropEventItemArgs } from '../event-args';
 import { Point } from '@hp-components/common';
+import { IDragData } from '../interfaces/i-drag-data';
 
 
 
@@ -14,7 +14,7 @@ export class DragService {
   private _startPos: Point;
   private _currentPos: Point;
 
-  private dragData: ISchedulerItem;
+  private dragData: IDragData;
   private dragStartSubject = new Subject<PointerEvent>();
   private dragMoveSubject = new Subject<PointerEvent>();
   private dragEndSubject = new Subject<DropEventItemArgs>();
@@ -37,7 +37,7 @@ export class DragService {
     return result;
   }
 
-  onDragStart(event: PointerEvent, dragData: ISchedulerItem): void {
+  onDragStart(event: PointerEvent, dragData: IDragData): void {
     this.reset();
     this._isActive = true;
     this._startPos = new Point(event.pageX, event.pageY);

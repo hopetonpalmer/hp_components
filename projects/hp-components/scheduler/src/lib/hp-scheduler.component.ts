@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy, ElementRef, AfterViewInit, Optional, Injector } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy, ElementRef, AfterViewInit, Optional, Injector, HostBinding } from '@angular/core';
 import { SchedulerService } from './services/scheduler.service';
 import { SchedulerViewType, MinuteInterval } from './types';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -8,6 +8,8 @@ import { TimeSlotService } from './time-slot/time-slot.service';
 import { EventItem } from './event-item/event-item';
 import { ResizeObserver } from 'resize-observer';
 import { SchedulerEventService } from './services/scheduler-event.service';
+import { EventCellService } from './event-grid/event-cell/event-cell-service';
+import { EventSelectorService } from './event-selector/event-selector-service';
 
 
 
@@ -17,7 +19,6 @@ import { SchedulerEventService } from './services/scheduler-event.service';
   template: `
     <hp-toolbar></hp-toolbar>
     <hp-day-view
-      hpDropZone
       *ngIf="viewType === 'Day'"
       [minuteInterval]="minuteInterval"
     ></hp-day-view>
@@ -55,7 +56,12 @@ import { SchedulerEventService } from './services/scheduler-event.service';
       }
     `
   ],
-  providers: [SchedulerDateService, SchedulerViewService, TimeSlotService]
+  providers: [
+    SchedulerDateService,
+    SchedulerViewService,
+    TimeSlotService,
+    EventCellService,
+    EventSelectorService]
 })
 export class HpSchedulerComponent implements OnInit, OnDestroy, AfterViewInit {
   private _viewTypeSubscription: Subscription;

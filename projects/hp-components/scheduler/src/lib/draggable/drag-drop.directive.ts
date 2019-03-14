@@ -1,7 +1,7 @@
 import { Directive, ElementRef, EventEmitter, Output, HostBinding, HostListener, Input } from '@angular/core';
 import { DragService } from './drag.service';
-import { ISchedulerItem } from '../interfaces/i-scheduler-item';
 import { Point } from '@hp-components/common';
+import { IDragData } from '../interfaces/i-drag-data';
 
 
 @Directive({
@@ -11,11 +11,16 @@ export class DragDropDirective {
   private pointerId?: number;
   private pointerDownPos: Point;
 
-  @Input()
-  startDragOffset = 5;
+
+  get startDragOffset() {
+    if (this.dragData.isSizing) {
+      return 0;
+    }
+    return 2;
+  }
 
   @Input()
-  dragData: ISchedulerItem;
+  dragData: IDragData;
 
   @Output() dragStart = new EventEmitter<PointerEvent>();
   @Output() dragMove = new EventEmitter<PointerEvent>();
@@ -75,7 +80,9 @@ export class DragDropDirective {
   @HostListener('dragStart', ['$event'])
   onDragStart(event: PointerEvent): void {
     this.dragService.onDragStart(event, this.dragData);
-    (this.elRef.nativeElement as HTMLElement).style.cursor = 'move';
+    if (!this.dragData.isSizing) {
+      (this.elRef.nativeElement as HTMLElement).style.cursor = 'move';
+    }
   }
 
   @HostListener('dragMove', ['$event'])
@@ -100,8 +107,8 @@ export class DragDropDirective {
   }
 
   canDrag(event: PointerEvent): boolean {
-    return this.pointerDownPos && (Math.abs(this.pointerDownPos.x - event.pageX) >= this.startDragOffset ||
-      Math.abs(this.pointerDownPos.y - event.pageY) >= this.startDragOffset);
+     return this.pointerDownPos && (Math.abs(this.pointerDownPos.x - event.pageX) >= this.startDragOffset ||
+       Math.abs(this.pointerDownPos.y - event.pageY) >= this.startDragOffset);
   }
 
   cancelDrag() {
