@@ -15,5 +15,5 @@
     <div hpEventCell [isAllDay]="isAllDay" [timeSlotServiceProvider]="timeSlotServiceProvider"
      [timeSlot]=daySlot style="height: 100%"></div>
   </div>
-  <hp-event-item [eventItem]=item *ngFor="let item of eventItems"></hp-event-item>
+  <hp-event-item [orientation]="orientation" [eventItem]=item *ngFor="let item of eventItems"></hp-event-item>
 </div>

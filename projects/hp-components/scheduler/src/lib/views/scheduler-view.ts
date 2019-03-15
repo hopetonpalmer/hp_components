@@ -699,39 +699,8 @@ export abstract class SchedulerView
     if (targetStartCell) {
       const eventItem = e.item.schedulerItem as EventItem;
       this.schedulerEventService.rescheduleEvent(eventItem, e.item.startDate,
-        e.item.endDate, this.isFullDayEventsOnly);
+        e.item.endDate, this.isFullDayEventsOnly || !this.isTimeInterval);
     }
   }
 
-  // @HostListener('drop', ['$event'])
-  xonEventDropped(e: DropEventItemArgs) {
-      const el = e.event.target as HTMLElement;
-      let endPoint: Point;
-      let endDate: Date = null;
-      const startPoint = e.item.isSizing ?
-        new Point(e.event.pageX - e.event.offsetX, e.event.pageY - e.event.offsetY) :
-        new Point(e.item.dropRect.left, e.item.dropRect.top);
-
-      if (this.orientation === 'vertical') {
-        endPoint = new Point(startPoint.x, startPoint.y + el.offsetHeight);
-      } else {
-        endPoint = new Point(startPoint.x + el.offsetWidth, startPoint.y);
-      }
-      const startCell = this.cellService.cellAtPos(startPoint);
-      this.schedulerEventService.unSelectAll();
-
-      if (e.item.isSizing) {
-        const endCell = this.cellService.cellAtPos(endPoint);
-        if (!endCell) {
-          return;
-        }
-        endDate = endCell.timeSlot.endDate;
-      }
-
-      if (startCell) {
-        const eventItem = e.item.schedulerItem as EventItem;
-        this.schedulerEventService.rescheduleEvent(eventItem, startCell.timeSlot.startDate,
-           endDate, this.isFullDayEventsOnly);
-      }
-  }
 }

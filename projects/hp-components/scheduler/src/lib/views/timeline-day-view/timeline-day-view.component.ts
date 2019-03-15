@@ -3,9 +3,7 @@ import { TimelineViewComponent } from '../timeline-view/timeline-view.component'
 import { EventItem } from '../../event-item/event-item';
 import { IRect, intersectedRects } from '@hp-components/common';
 import { Rect } from '@hp-components/common';
-import { Subscription } from 'rxjs';
 import { SchedulerViewType } from '../../types';
-import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
 
 @Component({
   selector: 'hp-timeline-day-view',
@@ -24,7 +22,6 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
 
   protected lastCellInclusive = true;
 
-  private _schedulerEventNotifyChangeSubscription: Subscription;
 
   @Input()
   growToFitEvents = false;
@@ -116,21 +113,5 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
       rect = { top: top, left: left, width: width, height: height };
     }
     return rect;
-  }
-
-  protected setSubscriptions(): void {
-    super.setSubscriptions();
-    this._schedulerEventNotifyChangeSubscription = this.schedulerEventService.notify$.subscribe((changeType => {
-       this.cdRef.markForCheck();
-    }));
-  }
-
-  protected removeSubscriptions(): void {
-    super.removeSubscriptions();
-    this._schedulerEventNotifyChangeSubscription.unsubscribe();
-  }
-
-  protected eventRescheduled() {
-    this.cdRef.markForCheck();
   }
 }

@@ -9,6 +9,7 @@ import { Orientation, IRect } from '@hp-components/common';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
 import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { EventCellService } from '../../event-grid/event-cell/event-cell-service
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineViewComponent extends SchedulerView {
+  private _schedulerEventNotifyChangeSubscription: Subscription;
   protected maxDays = 1;
 
   eventHeight = 40;
@@ -73,12 +75,36 @@ export class TimelineViewComponent extends SchedulerView {
     rects.forEach((rect, index) => {
       this.positionRect(rect, index, rects, margin);
       const eventComp = eventComps[index];
-      eventComp.displayStart = this.dateRange.start > eventComp.eventItem.start ? this.dateRange.start : eventComp.eventItem.start;
-      eventComp.displayEnd = this.dateRange.end < eventComp.eventItem.end ? this.dateRange.end : eventComp.eventItem.end;
+      eventComp.displayStart =
+        this.dateRange.start > eventComp.eventItem.start
+          ? this.dateRange.start
+          : eventComp.eventItem.start;
+      eventComp.displayEnd =
+        this.dateRange.end < eventComp.eventItem.end
+          ? this.dateRange.end
+          : eventComp.eventItem.end;
       eventComp.eventRect = rect;
     });
 
     this.setViewHeight(rects, margin);
+  }
+
+  protected setSubscriptions(): void {
+    super.setSubscriptions();
+    this._schedulerEventNotifyChangeSubscription = this.schedulerEventService.notify$.subscribe(
+      changeType => {
+        this.cdRef.markForCheck();
+      }
+    );
+  }
+
+  protected removeSubscriptions(): void {
+    super.removeSubscriptions();
+    this._schedulerEventNotifyChangeSubscription.unsubscribe();
+  }
+
+  protected eventRescheduled() {
+    this.cdRef.markForCheck();
   }
 
   protected dateRangeChanged() {

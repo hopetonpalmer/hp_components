@@ -78,9 +78,9 @@ export class SchedulerEventService {
        return;
     } */
     this._deleteEventItemSubject.next(eventItem);
+    this.unSelectEventItem(eventItem);
     const eventItems = this._eventItemsSubject.value;
     eventItems.splice(eventItems.indexOf(eventItem), 1);
-    this.unSelectEventItem(eventItem);
     this._eventItemsSubject.next(eventItems);
     this._notifySubject.next('Delete');
   }

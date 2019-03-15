@@ -1,17 +1,16 @@
 import { Component, OnInit, ElementRef, OnDestroy, Input,
-   ChangeDetectionStrategy, ChangeDetectorRef, Optional } from '@angular/core';
+   ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SchedulerView, ISizingGroup } from '../scheduler-view';
 import { SchedulerService } from '../../services/scheduler.service';
-import { formatDateTime, isBetween, datesOfRange, isMidnight } from '../../scripts/datetime';
+import { isBetween, datesOfRange, isMidnight } from '../../scripts/datetime';
 import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { Subscription } from 'rxjs';
 import { TimeSlot } from '../../time-slot/time-slot';
-import { addDays, isSameDay, addSeconds, endOfDay, startOfDay } from 'date-fns';
+import { isSameDay, addSeconds, endOfDay, startOfDay } from 'date-fns';
 import { SchedulerViewService } from '../scheduler-view.service';
 import { SchedulerDateService } from '../../services/scheduler-date.service';
-import { IRect, intersectRect, intersectedRects, Rect, Orientation } from '@hp-components/common';
+import { IRect, intersectedRects, Rect, Orientation } from '@hp-components/common';
 import { EventItem } from '../../event-item/event-item';
-import { DayViewLayoutService } from './day-view-layout.service';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
 import { DateRange } from '../../types';
 import { ColorSchemeService } from '../../color-scheme/color-scheme.service';

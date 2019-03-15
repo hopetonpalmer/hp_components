@@ -285,16 +285,16 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
       const top = this.eventRect.top + delta.y;
       const pos = new Point(event.pageX, top);
       this.top = pos.y;
-     /*  const cell = this.cellService.cellAtPos(pos);
+     const cell = this.cellService.cellAtPos(pos);
       if (cell) {
          this.top = cell.cellRect.top;
-      } */
+      }
     }
 
     {
       const left = this.eventRect.left + delta.x;
       this.left = left;
-     /*  const top = this.eventRect.top + delta.y;
+      const top = this.eventRect.top + delta.y;
       const pos = new Point(event.pageX, top);
       let cell = this.cellService.cellAtPos(pos);
       if (!cell) {
@@ -307,7 +307,7 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
         this.left = cell.cellRect.left;
       } else {
         console.log(this.left);
-      } */
+      }
     }
   }
 
