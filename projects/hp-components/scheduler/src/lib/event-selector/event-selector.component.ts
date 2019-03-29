@@ -9,10 +9,16 @@ import { IDragData } from '../interfaces/i-drag-data';
 import { EventSelectorService } from './event-selector-service';
 import { EventCellService } from '../event-grid/event-cell/event-cell-service';
 import { EventCellDirective } from '../event-grid/event-cell/event-cell.directive';
-import { addMinutes } from 'date-fns';
+import { addMinutes, subHours, differenceInCalendarDays, isSameDay } from 'date-fns';
+import { SchedulerViewService } from '../views/scheduler-view.service';
 
 
-
+export enum DragState {
+  Idle,
+  Sizing,
+  Dragging,
+  PrepareToDrag
+}
 
 export enum SizePos {
   None,
@@ -31,11 +37,11 @@ export enum SizePos {
 export class EventSelectorComponent implements OnInit, OnDestroy {
   private _dragCancelSubscription: Subscription;
   private _sizePos = SizePos.None;
-  private _isSizing = false;
   private _minSize = 20;
   private _startPos: Point;
   private _currentPos = new Point();
   private _cellAtMouse: EventCellDirective;
+  private _pointerId: number;
 
   dragData: IDragData;
 
@@ -101,16 +107,19 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
       rect.width !== this.width;
   }
 
-  protected get isSizing(): boolean {
-    return this._isSizing;
+  private _dragState: DragState;
+  get dragState(): DragState {
+    return this._dragState;
   }
 
-  protected set isSizing(value: boolean) {
-    this._isSizing = value;
+  set dragState(value: DragState) {
+    this._dragState = value;
   }
 
-  constructor(private elRef: ElementRef, private selectorService: EventSelectorService,
+  constructor(private elRef: ElementRef,
+    private selectorService: EventSelectorService,
     private cellService: EventCellService,
+    private schedulerViewService: SchedulerViewService,
     private schedulerEventService: SchedulerEventService) { }
 
 
@@ -140,13 +149,16 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
       }
       this._cellAtMouse = cellAtMouse; */
 
-      if (!this.isSizing) {
-        if (this.canDrag(event)) {
+      if ((this.dragState === DragState.Dragging || this.dragState === DragState.PrepareToDrag) && this.canDrag(event)) {
           this.fillParent();
-          this.setCursor('move');
+          if (this.dragState === DragState.PrepareToDrag) {
+            this.dragState = DragState.Dragging;
+            this.setCursor('move');
+          }
           this.dragMove(event, delta);
-        }
-      } else {
+      }
+
+      if (this.dragState === DragState.Sizing) {
         this.fillParent();
         this.dragSize(event, delta);
       }
@@ -155,7 +167,13 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
 
   @HostListener('document:pointerdown', ['$event'])
   onPointerDown(event: PointerEvent) {
-    this.isSizing = this._sizePos !== SizePos.None;
+    this._pointerId = event.pointerId;
+    this.elRef.nativeElement.setPointerCapture(event.pointerId);
+    if (this._sizePos === SizePos.None) {
+      this.dragState = DragState.PrepareToDrag;
+    } else {
+      this.dragState = DragState.Sizing;
+    }
     this._startPos = new Point(event.pageX, event.pageY);
   }
 
@@ -171,13 +189,12 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
       if (dragData) {
         this.schedulerEventService.moveEventItem({ event: e, item: dragData });
       }
-      this.isSizing = false;
+      this.dragState = DragState.Idle;
     }
     this.setCursor();
   }
 
   getDragData(e: PointerEvent): IDragData {
-    const el = this.elRef.nativeElement as HTMLElement;
     const rect = new Rect(this.left + 1, this.top + 1, this.width - 1, this.height - 1);
     let endPoint: Point;
     let endDate: Date = null;
@@ -197,7 +214,7 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
     }
 
     const startDate = startCell.timeSlot.startDate;
-    if (this.isSizing) {
+    if (this.dragState === DragState.Sizing) {
       const endCell = this.cellService.cellAtPos(endPoint);
       if (!endCell) {
         return null;
@@ -205,13 +222,16 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
       endDate = endCell.timeSlot.startDate;
     } else {
       endDate = addMinutes(startDate, this.eventItem.durationMinutes);
+      if (startDate.isDst() && this.eventItem.durationMinutes < 1440 && !isSameDay(startDate, endDate)) {
+        endDate = subHours(endDate, 1);
+      }
     }
     const dragData = {
       schedulerItem: this.eventItem,
       startDate: startDate,
       endDate: endDate,
       orientation: this.orientation,
-      isSizing: this._isSizing, dropRect: rect
+      isSizing: this.dragState === DragState.Sizing, dropRect: rect
     };
 
     return dragData;
@@ -237,12 +257,13 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
     this.elRef.nativeElement.style.cursor = cursor;
     const parentElement = this.elRef.nativeElement.parentElement;
     if (parentElement) {
-      parentElement.style.cursor = cursor;
+     // parentElement.style.cursor = cursor;
     }
+    console.log(cursor);
   }
 
   trySetSizer(event: PointerEvent) {
-    if (this.isSizing || event.buttons === 1) {
+    if (event.buttons === 1) {
       return;
     }
     const target = event.target as HTMLElement;
@@ -256,7 +277,7 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
         this._sizePos = SizePos.Bottom;
         this.setCursor('ns-resize');
       } else {
-        this.setCursor();
+        this.setCursor('move');
       }
     }
     if (this.orientation === 'horizontal') {
@@ -268,7 +289,7 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
         this._sizePos = SizePos.Right;
         this.setCursor('ew-resize');
       } else {
-        this.setCursor();
+        this.setCursor('move');
       }
     }
   }
@@ -281,26 +302,32 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
   }
 
   dragMove(event: PointerEvent, delta: Point) {
-    {
-      const top = this.eventRect.top + delta.y;
-      const pos = new Point(event.pageX, top);
-      this.top = pos.y;
-     const cell = this.cellService.cellAtPos(pos);
-      if (cell) {
-         this.top = cell.cellRect.top;
-      }
-    }
+    const viewType = this.schedulerViewService.getActiveViewType();
 
-    {
-      const left = this.eventRect.left + delta.x;
-      this.left = left;
       const top = this.eventRect.top + delta.y;
-      const pos = new Point(event.pageX, top);
-      let cell = this.cellService.cellAtPos(pos);
+      const  topPos = new Point(event.pageX, top);
+      if (viewType === 'Timeline' || viewType === 'TimelineMonth' || viewType === 'TimelineWeek') {
+        this.top = topPos.y;
+      } else {
+        const topCell = this.cellService.cellAtPos(topPos);
+        if (topCell) {
+          this.top = topCell.cellRect.top;
+        }
+      }
+
+
+      let left = event.pageX;
+      // const top = this.eventRect.top + delta.y;
+    if (viewType === 'Timeline' || viewType === 'TimelineMonth' || viewType === 'TimelineWeek' || viewType === 'Month') {
+        left = this.eventRect.left + delta.x;
+      }
+      // this.left = left;
+      const leftPos = new Point(left, top);
+      let cell = this.cellService.cellAtPos(leftPos);
       if (!cell) {
-        cell = this.cellService.cellAtPos(new Point(pos.x + 1, pos.y + 1));
+        cell = this.cellService.cellAtPos(new Point(leftPos.x + 1, leftPos.y + 1));
         if (!cell) {
-          cell = this.cellService.cellAtPos(new Point(pos.x - 1, pos.y + 1));
+          cell = this.cellService.cellAtPos(new Point(leftPos.x - 1, leftPos.y + 1));
         }
       }
       if (cell) {
@@ -308,7 +335,7 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
       } else {
         console.log(this.left);
       }
-    }
+
   }
 
   dragSize(event: PointerEvent, delta: Point) {

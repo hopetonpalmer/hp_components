@@ -44,6 +44,7 @@ import { EventCellService } from '../event-grid/event-cell/event-cell-service';
 
 
 
+
 export interface ISchedulerView {
   viewType: SchedulerViewType;
   dateRange: DateRange;
@@ -124,6 +125,15 @@ export abstract class SchedulerView
   // viewRect: ClientRect;
   get viewRect(): ClientRect {
     return (this.eventGrid.nativeElement as HTMLElement).getBoundingClientRect();
+  }
+
+  get hostElement(): HTMLElement {
+    return this.elRef.nativeElement as HTMLElement;
+  }
+
+  get scrollBarWidth(): number {
+     const result = this.hostElement.offsetWidth - this.hostElement.clientWidth;
+     return result;
   }
 
   protected orientation: Orientation;
@@ -602,7 +612,7 @@ export abstract class SchedulerView
 
     this._eventSelectionSubscription = this.schedulerEventService.selectedEvents$.subscribe(
       (events) => {
-
+        //  if (events && events.length && this.eventItems.indexOf(events[0]) > -1) {}
       }
     );
   }
@@ -636,7 +646,7 @@ export abstract class SchedulerView
   }
 
   ngOnChanges(changes): void {
-    // this.layoutEventsAsync();
+     // this.layoutEventsAsync();
   }
 
   ngAfterViewInit(): void {
@@ -655,7 +665,7 @@ export abstract class SchedulerView
      }, 0);
     this.setViewSize();
     const ro = new ResizeObserver((size) => {
-        this.invalidate();
+        this.schedulerViewService.invalidateView();
     });
     ro.observe(this.elRef.nativeElement);
   }
@@ -690,6 +700,11 @@ export abstract class SchedulerView
      if (event.animationName === 'view-enter') {
        // this.invalidate();
      }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKeyPressed() {
+      this.timeSlotService.clearSlotSelection();
   }
 
 

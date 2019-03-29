@@ -21,6 +21,10 @@
   animation: view-enter .6s forwards;
 }
 
+:host * {
+   box-sizing: border-box;
+}
+
 .all-day-grid, .event-grid {
   width: 100%;
   display: grid;
@@ -85,6 +89,7 @@
   flex-direction: column;
   border-top: var(--hp-scheduler-border);
   border-left: var(--hp-scheduler-border);
+  border-width: 1px;
 }
 
 .interval.day {

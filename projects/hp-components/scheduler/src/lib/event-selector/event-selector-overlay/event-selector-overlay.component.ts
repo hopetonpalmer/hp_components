@@ -1,17 +1,16 @@
-import { Component, OnInit, HostListener, ElementRef, ComponentFactoryResolver,
+import { Component, OnInit, ElementRef, ComponentFactoryResolver,
    Injector, ApplicationRef, OnDestroy, HostBinding } from '@angular/core';
 import { PortalHost, DomPortalHost, ComponentPortal } from '@angular/cdk/portal';
 import { EventItem } from '../../event-item/event-item';
 import { Orientation, Point, IRect } from '@hp-components/common';
 import { EventSelectorComponent } from '../event-selector.component';
-import { Subscription } from 'rxjs';
 import { EventSelectorService } from '../event-selector-service';
-import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
+
 
 
 
 @Component({
-  selector: 'hp-event-selector-manager',
+  selector: 'hp-event-selector-overlay',
   template: '',
   styles: [`
       :host {
@@ -25,7 +24,7 @@ import { EventCellService } from '../../event-grid/event-cell/event-cell-service
   `],
   providers: []
 })
-export class EventSelectorManagerComponent implements OnInit, OnDestroy {
+export class EventSelectorOverlayComponent implements OnInit, OnDestroy {
 
   private _selectorPortalHost: PortalHost;
   private _startPos = new Point();
@@ -44,8 +43,8 @@ export class EventSelectorManagerComponent implements OnInit, OnDestroy {
   }
 
   set pointerId(value: number) {
-    // this._pointerId = value;
-    // this.hostElement.setPointerCapture(value);
+      this._pointerId = value;
+      //this.hostElement.setPointerCapture(value);
   }
 
   @HostBinding('style.pointer-events')
@@ -76,15 +75,6 @@ export class EventSelectorManagerComponent implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener('document:keydown', ['$event'])
-  private handleKeydown(event: KeyboardEvent) {
-
-  }
-
-  // @HostListener('pointerup', ['$event'])
-  handlePointerUp(event: PointerEvent) {
-
-  }
 
   setEventSelector(eventItem: EventItem,
       eventElement: HTMLElement,

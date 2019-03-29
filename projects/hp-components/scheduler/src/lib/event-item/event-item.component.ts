@@ -13,7 +13,8 @@ import { DomPortalHost, ComponentPortal, PortalHost } from '@angular/cdk/portal'
 import { EventSelectorComponent } from '../event-selector/event-selector.component';
 import { DragService } from '../draggable/drag.service';
 import { Overlay } from '@angular/cdk/overlay';
-import { EventSelectorManagerComponent } from '../event-selector/event-selector-manager/event-selector-manager.component';
+import { EventSelectorOverlayComponent } from '../event-selector/event-selector-overlay/event-selector-overlay.component';
+
 
 
 
@@ -247,7 +248,7 @@ export class EventItemComponent implements OnInit, OnDestroy {
 
   private createSelector() {
     this._selectorPortalHost = new DomPortalHost(document.body, this.cfr, this.appRef, this.injector);
-    const portal = new ComponentPortal(EventSelectorManagerComponent);
+    const portal = new ComponentPortal(EventSelectorOverlayComponent);
     const componentRef = this._selectorPortalHost.attach(portal);
 
     const borderRadius = getStyleValue('border-top-left-radius', this.elRef.nativeElement) + ' ' +
@@ -255,7 +256,6 @@ export class EventItemComponent implements OnInit, OnDestroy {
       getStyleValue('border-bottom-right-radius', this.elRef.nativeElement) + ' ' +
       getStyleValue('border-bottom-left-radius', this.elRef.nativeElement);
 
-    componentRef.instance.pointerId = this.pointerId;
     componentRef.instance.orientation = this.orientation;
     componentRef.instance.setEventSelector(
       this.eventItem,

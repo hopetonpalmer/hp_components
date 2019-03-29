@@ -20,7 +20,8 @@ import { DragDropDirective } from './draggable/drag-drop.directive';
 import { DragSizeDirective } from './draggable/drag-size.directive';
 import { DropZoneDirective } from './draggable/drop-zone.directive';
 import { EventSelectorComponent } from './event-selector/event-selector.component';
-import { EventSelectorManagerComponent } from './event-selector/event-selector-manager/event-selector-manager.component';
+import { EventSelectorOverlayComponent } from './event-selector/event-selector-overlay/event-selector-overlay.component';
+
 
 
 @NgModule({
@@ -47,7 +48,7 @@ import { EventSelectorManagerComponent } from './event-selector/event-selector-m
     DragSizeDirective,
     DropZoneDirective,
     EventSelectorComponent,
-    EventSelectorManagerComponent,
+    EventSelectorOverlayComponent,
   ],
   exports: [
     HpSchedulerComponent,
@@ -60,6 +61,6 @@ import { EventSelectorManagerComponent } from './event-selector/event-selector-m
     MonthViewComponent,
   ],
   providers: [{ provide: LOCALE_ID, useValue: navigator.language }],
-  entryComponents: [EventSelectorComponent, EventSelectorManagerComponent]
+  entryComponents: [EventSelectorComponent, EventSelectorOverlayComponent]
 })
 export class HpSchedulerModule { }

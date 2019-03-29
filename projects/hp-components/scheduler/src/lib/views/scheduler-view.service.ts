@@ -15,8 +15,8 @@ export class SchedulerViewService {
 
   private _invalidateViewSubject = new Subject<Event>();
   invalidateView$ = this._invalidateViewSubject.asObservable();
-  constructor(private _timeSlotService: TimeSlotService,
-     private _schedulerEventService: SchedulerEventService) {}
+  constructor(private timeSlotService: TimeSlotService,
+     private schedulerEventService: SchedulerEventService) {}
 
   getActiveViewType(): SchedulerViewType {
      return this._viewTypeSubject.value;
@@ -30,8 +30,8 @@ export class SchedulerViewService {
   }
 
   clearSelection() {
-    this._timeSlotService.clearSlotSelection();
-    this._schedulerEventService.unSelectAll();
+    this.timeSlotService.clearSlotSelection();
+    this.schedulerEventService.unSelectAll();
   }
 
   isDayView(viewType = this._viewTypeSubject.value): boolean {
