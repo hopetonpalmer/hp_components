@@ -1,5 +1,5 @@
-<div hpColorScheme [colorSetName]="'headingColors'" class="slot-grid interval day header-container">
-  <div *ngFor="let daySlot of firstWeekSlots; trackBy: trackSlotFn">
+<div class="slot-grid interval day header-container">
+  <div hpColorScheme [colorSetName]="'headingColors'" *ngFor="let daySlot of firstWeekSlots; trackBy: trackSlotFn">
     <div class="slot-text month-header date-header">
       <span>{{formatDate(daySlot.startDate, 'EEEE')}}</span>
     </div>
@@ -13,7 +13,7 @@
 
 <ng-template #dayHeader let-daySlot="slot">
   <div hpColorScheme [colorSetName]="getColorSet(daySlot.startDate)">
-    <div class="date-header" [ngClass]="{'now': daySlot.isNow}"
+    <div class="date-header" [style.border-color] = "'inherit'" [ngClass]="{'now': daySlot.isNow}"
       (click)="jumpToDayView(daySlot.startDate)">
       <span *ngIf="daySlot.startDate === dateRanges[0].start || daySlot.startDate.getDate() === 1 || daySlot.isNow" class="show-month">{{formatDate(daySlot.startDate,
         'MMM')}}</span>

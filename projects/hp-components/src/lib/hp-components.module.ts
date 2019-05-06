@@ -68,6 +68,7 @@ import { BorderPropertyEditorComponent } from './property-grid/editors/property-
 // tslint:disable-next-line:max-line-length
 import { PosandsizePropertyEditorComponent } from './property-grid/editors/property-editors/posandsize-property-editor/posandsize-property-editor.component';
 import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
+import { ThemeEditorComponent } from './property-grid/editors/property-editors/theme-editor';
 
 
 
@@ -104,6 +105,7 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     MediaSourcePropertyEditorComponent,
     StylePropertyEditorComponent,
     ThicknessPropertyEditorComponent,
+    ThemeEditorComponent,
 
     ColorPickerComponent,
     InteractionDirective,
@@ -160,6 +162,7 @@ import { SliderDirective, TextDirective } from './ui/color-picker/helpers';
     ShadowPropertyEditorComponent,
     BorderPropertyEditorComponent,
     PosandsizePropertyEditorComponent,
+    ThemeEditorComponent,
 
     ColorPickerComponent,
     InteractionDirective,

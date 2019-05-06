@@ -7,14 +7,10 @@ import { IColorSet, IColorScheme } from '../interfaces/i-color-scheme';
 })
 export class ColorSchemeDirective {
 
-  private _colorScheme: IColorScheme = new ColorScheme();
+
   @Input()
   get colorScheme(): IColorScheme {
     return this._colorScheme;
-  }
-
-  set colorScheme(value: IColorScheme) {
-    this._colorScheme = value;
   }
 
   @Input()
@@ -39,5 +35,5 @@ export class ColorSchemeDirective {
     return this.colorSet ? this.colorSet.borderColor : '';
   }
 
-  constructor() {}
+  constructor(private _colorScheme: ColorScheme) {}
 }

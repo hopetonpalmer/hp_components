@@ -38,6 +38,6 @@ export class EventItem implements ISchedulerItem {
   constructor(
     public start = new Date(),
     public end = addHours(new Date(), 1),
-    public subject = 'No Title',
+    public subject = 'Untitled Event',
     public color = '#ffffff') {}
 }

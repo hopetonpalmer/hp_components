@@ -5,14 +5,18 @@
   min-width: 60px;
   width: 100%;
   justify-items: center;
-  border-top: var(--hp-scheduler-border);
+  /* border-top: var(--hp-scheduler-border); */
 }
 
 .date-header {
   text-align: center;
   font-size: .6em;
+  border-top: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
 }
 
 .interval.month:first-child {
   border-left: 0;
 }
+

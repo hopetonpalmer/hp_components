@@ -24,7 +24,7 @@ export class ColorScheme implements IColorScheme {
   // backColor = '#F1E3B9';
   // backColor = '#A8C3C2';
   // backColor = '#7D6385';
-  // backColor = '#A1BA89';
+   backColor = '#A1BA89';
   // backColor = '#7D6385';
   // backColor = '#F1914D';
   // backColor = '#B8C2AE';
@@ -37,7 +37,7 @@ export class ColorScheme implements IColorScheme {
   // backColor = '#416076';
   // backColor = '#E1CCE7';
   // backColor = '#41766F';
-   backColor = '#636E65';
+  // backColor = '#636E65';
 
 
 
@@ -54,8 +54,8 @@ export class ColorScheme implements IColorScheme {
       fontColor: '#494949',
       borderColor: '#494949'
     };
-    this.headingColors = this.calcColorSet(false, 0, 50, line);
-    this.allDayAreaColors = this.calcColorSet(false, 15);
+    this.headingColors = this.calcColorSet(true, 0, 50, line);
+    this.allDayAreaColors = this.calcColorSet(false, 15, 50, line);
     this.selectedCellColors = this.calcColorSet(false, 25, 0, line);
     this.workHoursColors = this.calcColorSet(false, -15, 50, line - 15);
     this.eventCellColors = this.calcColorSet(false, 0, 50, line);

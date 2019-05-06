@@ -9,16 +9,15 @@
           <div class="slot-text">{{slotMonth.formattedDate}}</div>
         </div>
       </div>
-      <hp-timeline-day-view hpDropZone [isEmbedded]=true [dateFormats]="dateFormats" [headerTemplate]=dayHeader></hp-timeline-day-view>
+      <hp-timeline-day-view [isEmbedded]=true [dateFormats]="dateFormats" [headerTemplate]=dayHeader></hp-timeline-day-view>
     </div>
   </div>
 </div>
 
 <ng-template #dayHeader let-daySlot="slot">
-  <div hpColorScheme [colorSetName]="'headingColors'">
-    <div class="slot-text date-header" (click)="jumpToDayView(daySlot.startDate)" [ngClass]="{'now': daySlot.isNow}">
+    <div [style.border-color]="'inherit'" class="slot-text date-header" (click)="jumpToDayView(daySlot.startDate)"
+      [ngClass]="{'now': daySlot.isNow}">
       {{daySlot.formattedDate}}
     </div>
-  </div>
 </ng-template>
 

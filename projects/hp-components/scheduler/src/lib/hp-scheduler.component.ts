@@ -104,7 +104,7 @@ export class HpSchedulerComponent implements OnInit, OnDestroy, AfterViewInit {
   customDays = [0, 1, 2, 3, 4, 5, 6];
 
   @Input()
-  minuteInterval: MinuteInterval = 30;
+  minuteInterval: MinuteInterval = 15;
 
   private _eventItems = [];
   @Input()

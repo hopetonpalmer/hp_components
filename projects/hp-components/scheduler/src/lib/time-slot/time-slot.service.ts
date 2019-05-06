@@ -46,6 +46,11 @@ export class TimeSlotService {
     this._endSlotSelectionSubject.next(selectedRange);
   }
 
+  cancelSlotSelection() {
+    this._isSelecting = false;
+    this.clearSlotSelection();
+  }
+
   clearSlotSelection() {
     this._selectedSlotsDateRangeSubject.next(null);
   }

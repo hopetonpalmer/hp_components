@@ -1,6 +1,6 @@
 <div style="overflow-y: scroll; overflow-x: hidden" class="all-day-grid interval day header-container">
   <div hpColorScheme [colorSetName]="'rulerColors'" class="all-day-spacer"></div>
-  <hp-timeline-day-view hpDropZone [isAllDay]=true [isEmbedded]=true [minHeight]=80  [growToFitEvents]=true [timeSlotServiceProvider]="allDayTimeSlotService"
+  <hp-timeline-day-view [isAllDay]=true [isEmbedded]=true [minHeight]=80  [growToFitEvents]=true [timeSlotServiceProvider]="allDayTimeSlotService"
     [headerTemplate]=dayHeader [isFullDayEventsOnly]=true ></hp-timeline-day-view>
 </div>
 <div #event_grid class="event-grid">
@@ -22,13 +22,11 @@
 </div>
 
 <ng-template #dayHeader let-daySlot="slot" let-first="first">
-  <div hpColorScheme [colorSetName]="'headingColors'">
-    <div class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}"
+    <div [style.border-color] = "'inherit'" class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}"
       (click)="jumpToDayView(daySlot.startDate)">
       <span *ngIf="first || daySlot.startDate.getDate() === 1" class="show-month">{{formatDayName(daySlot.startDate,
         'MMM')}}</span>
       <span>{{daySlot.formattedDate}}</span>
       <span class='day-name'>{{formatDayName(daySlot.startDate, 'EEE')}}</span>
     </div>
-  </div>
-</ng-template>
+ </ng-template>

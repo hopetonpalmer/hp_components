@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ThemeService } from '../../../services/theme.service';
+import { ThemeService } from '@hp-components/common';
+
+
 
 @Component({
-  selector: 'hp-number-property-editor',
+  selector: 'hp-theme-editor',
   template: `
   <div class="hp-stack-h">
     <span style="margin-right: 5px" *ngIf="caption">{{caption}}</span>

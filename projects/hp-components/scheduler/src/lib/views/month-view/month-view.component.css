@@ -1,18 +1,3 @@
-:host /deep/ hp-timeline-day-view .interval.day {
-  border: 1px solid;
-  border-right: none;
-  border-bottom: 1px solid;
-}
-
-:host /deep/ hp-timeline-day-view .header-container {
-  border-bottom: none;
-}
-
-:host /deep/ hp-timeline-day-view .event-grid {
-  border-top: none;
-}
-
-
 :host {
   display: grid;
   --column-sizing: repeat(7, 14.2857%);
@@ -43,11 +28,12 @@
 }
 
 .event-slot {
-  border-bottom: var(--hp-panel-border);
-  border-right: var(--hp-panel-border);
   font-size: 14px;
   padding: 5px;
   min-height: 100px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  box-sizing: border-box;
 }
 
 .slot-date, .show-month {
@@ -60,20 +46,23 @@
 }
 
 .date-header {
-  border-left: none;
+  border-right: 1px solid;
   font-size: 14px;
   align-items: center;
   padding: 5px;
 }
 
-.date-header:hover {
-  color: orange;
-}
+
 
 .month-header.date-header {
   cursor: default;
+  border-right: none;
+  border-bottom: 1px solid;
+  border-color: inherit;
+  min-height: 20px;
 }
 
 .month-header.date-header:hover {
   color: inherit;
 }
+

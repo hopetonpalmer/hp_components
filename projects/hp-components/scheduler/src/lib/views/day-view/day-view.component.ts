@@ -13,8 +13,8 @@ import { IRect, intersectedRects, Rect, Orientation } from '@hp-components/commo
 import { EventItem } from '../../event-item/event-item';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
 import { DateRange } from '../../types';
-import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
+import { ColorScheme } from '../../color-scheme/color-scheme';
 
 @Component({
   selector: 'hp-day-view',
@@ -46,7 +46,7 @@ export class DayViewComponent extends SchedulerView
     protected schedulerDateService: SchedulerDateService,
     protected schedulerEventService: SchedulerEventService,
     protected timeSlotService: TimeSlotService,
-    protected colorSchemeService: ColorSchemeService,
+    protected colorScheme: ColorScheme,
     protected cellService: EventCellService,
     protected elRef: ElementRef,
     private cdRef: ChangeDetectorRef
@@ -57,7 +57,7 @@ export class DayViewComponent extends SchedulerView
       schedulerDateService,
       schedulerEventService,
       timeSlotService,
-      colorSchemeService,
+      colorScheme,
       cellService,
       elRef
     );
@@ -85,7 +85,7 @@ export class DayViewComponent extends SchedulerView
     );
 
     super.ngOnInit();
-    this.setColumSizeStyle();
+    this.setColumnSizeStyle();
   }
 
   ngDestroy(): void {
@@ -93,7 +93,7 @@ export class DayViewComponent extends SchedulerView
     this._alldaySelectionChangeSubscription.unsubscribe();
   }
 
-  setColumSizeStyle() {
+  setColumnSizeStyle() {
     const style = this.elRef.nativeElement.style;
     const dayCount = this.viewTimeSlots.length;
     const rulerWidth = 60;
@@ -105,7 +105,7 @@ export class DayViewComponent extends SchedulerView
   }
 
   protected slotsGenerated() {
-    this.setColumSizeStyle();
+    this.setColumnSizeStyle();
     super.slotsGenerated();
   }
 

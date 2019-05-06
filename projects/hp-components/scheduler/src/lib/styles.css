@@ -23,8 +23,9 @@
 
 .date-header:hover {
 /*   background-color: var(--hp-highlight-background); */
-/*  color: var(--hp-highlight-color); */
-  color: orange;
+ /* color: var(--hp-highlight-color);*/
+ color: orange
+
 }
 
 .intervals {

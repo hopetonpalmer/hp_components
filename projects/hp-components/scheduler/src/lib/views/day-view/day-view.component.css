@@ -33,7 +33,7 @@
 
 
 .all-day-grid {
-  grid-template-columns: 61px 1fr;
+  grid-template-columns: 60px 1fr;
   max-height: 200px;
 }
 
@@ -49,20 +49,20 @@
 }
 
 .all-day-spacer {
-  border-right: var(--hp-scheduler-border);
+  /* border-right: var(--hp-scheduler-border); */
   box-sizing: border-box;
 }
 
 .all-day-area {
   height: 100%;
-  border-left: var(--hp-panel-border);
+ /* border-left: var(--hp-panel-border);*/
 }
 
 .minute {
   text-align: right;
   font-size: 10px;
-  border-bottom: 1px solid transparent;
-  min-height: 22px;
+  /* border-bottom: 1px solid transparent; */
+  min-height: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -76,20 +76,26 @@
 
 .event-slot{
   border-bottom: var(--hp-scheduler-border);
-  /* opacity: .3; */
   border-bottom-style: dotted;
+  border-right: 1px solid;
 }
 
 .event-slot:last-child {
   border-bottom: none;
 }
+.event-slot:first-child {
+  border-top:  var(--hp-scheduler-border);
+}
 
 .interval.hour {
-  display: flex;
+  display: grid;
   flex-direction: column;
-  border-top: var(--hp-scheduler-border);
-  border-left: var(--hp-scheduler-border);
+  grid-auto-rows: minmax(25px, auto);
+ /* border-top: var(--hp-scheduler-border);*/
+ /* border-left: var(--hp-scheduler-border); */
   border-width: 1px;
+  box-sizing: border-box;
+  flex: 1;
 }
 
 .interval.day {
@@ -98,6 +104,11 @@
 
 .intervals-container-events {
   height: 100%;
+}
+
+
+.date-header {
+  border-right: 1px solid;
 }
 
 .date-header.slot-text {
@@ -122,4 +133,5 @@
   display: flex;
   flex-direction: column;
 }
+
 

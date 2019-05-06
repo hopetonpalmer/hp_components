@@ -37,10 +37,10 @@ import { SchedulerViewLayoutService } from './scheduler-view-layout.service';
 import { IRect, Orientation, intersectRect, Point } from '@hp-components/common';
 import { SchedulerEventService } from '../services/scheduler-event.service';
 import { ResizeObserver } from 'resize-observer';
-import { ColorSchemeService } from '../color-scheme/color-scheme.service';
 import { DropEventItemArgs } from '../event-args';
 import { pointInRect, Rect } from '@hp-components/common';
 import { EventCellService } from '../event-grid/event-cell/event-cell-service';
+import { ColorScheme } from '../color-scheme/color-scheme';
 
 
 
@@ -76,7 +76,7 @@ export abstract class SchedulerView
   @ViewChildren(EventCellDirective) eventCells: QueryList<EventCellDirective>;
   @ViewChild('event_grid') eventGrid: ElementRef;
 
-  viewType: SchedulerViewType = 'Day';
+  viewType: SchedulerViewType = this.schedulerViewService.getActiveViewType();
   intervalTypes: IntervalType[];
 
   timeSlots = new Map<string, TimeSlot[]>();
@@ -198,7 +198,7 @@ export abstract class SchedulerView
     protected schedulerDateService: SchedulerDateService,
     protected schedulerEventService: SchedulerEventService,
     protected timeSlotService: TimeSlotService,
-    protected colorSchemeService: ColorSchemeService,
+    protected colorScheme: ColorScheme,
     protected cellService: EventCellService,
     protected elRef: ElementRef
   ) {
@@ -704,14 +704,14 @@ export abstract class SchedulerView
 
   @HostListener('document:keydown.escape')
   onEscapeKeyPressed() {
-      this.timeSlotService.clearSlotSelection();
+      this.timeSlotService.cancelSlotSelection();
   }
 
 
   onEventDropped(e: DropEventItemArgs) {
-    const targetStartPoint = new Point(e.item.dropRect.left, e.item.dropRect.top);
-    const targetStartCell = this.cellService.cellAtPos(targetStartPoint, this.eventCells.toArray());
-    if (targetStartCell) {
+    // const targetStartPoint = new Point(e.item.dropRect.left, e.item.dropRect.top);
+    // const targetStartCell = this.cellService.cellAtPos(targetStartPoint, this.eventCells.toArray());
+    if (this.eventCells.toArray().indexOf(e.item.startCell as any) > -1) {
       const eventItem = e.item.schedulerItem as EventItem;
       this.schedulerEventService.rescheduleEvent(eventItem, e.item.startDate,
         e.item.endDate, this.isFullDayEventsOnly || !this.isTimeInterval);

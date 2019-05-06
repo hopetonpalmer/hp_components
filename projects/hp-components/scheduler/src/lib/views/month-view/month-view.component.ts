@@ -8,8 +8,8 @@ import { SchedulerDateService } from '../../services/scheduler-date.service';
 import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { DateRange } from '../../types';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
-import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
+import { ColorScheme } from '../../color-scheme/color-scheme';
 
 
 @Component({
@@ -51,7 +51,7 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
     protected schedulerDateService: SchedulerDateService,
     protected schedulerEventService: SchedulerEventService,
     protected timeSlotService: TimeSlotService,
-    protected colorSchemeService: ColorSchemeService,
+    protected colorScheme: ColorScheme,
     protected cellService: EventCellService,
     protected elRef: ElementRef,
     protected cdRef: ChangeDetectorRef
@@ -62,7 +62,7 @@ export class MonthViewComponent extends SchedulerView implements OnInit {
       schedulerDateService,
       schedulerEventService,
       timeSlotService,
-      colorSchemeService,
+      colorScheme,
       cellService,
       elRef
     );

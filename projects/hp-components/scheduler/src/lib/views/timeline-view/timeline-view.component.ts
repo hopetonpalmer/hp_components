@@ -7,9 +7,9 @@ import { SchedulerDateService } from '../../services/scheduler-date.service';
 import { TimeSlotService } from '../../time-slot/time-slot.service';
 import { Orientation, IRect } from '@hp-components/common';
 import { SchedulerEventService } from '../../services/scheduler-event.service';
-import { ColorSchemeService } from '../../color-scheme/color-scheme.service';
 import { EventCellService } from '../../event-grid/event-cell/event-cell-service';
 import { Subscription } from 'rxjs';
+import { ColorScheme } from '../../color-scheme/color-scheme';
 
 
 @Component({
@@ -35,7 +35,7 @@ export class TimelineViewComponent extends SchedulerView {
     protected schedulerDateService: SchedulerDateService,
     protected schedulerEventService: SchedulerEventService,
     protected timeSlotService: TimeSlotService,
-    protected colorSchemeService: ColorSchemeService,
+    protected colorScheme: ColorScheme,
     protected cellService: EventCellService,
     protected elRef: ElementRef,
     protected cdRef: ChangeDetectorRef
@@ -46,7 +46,7 @@ export class TimelineViewComponent extends SchedulerView {
       schedulerDateService,
       schedulerEventService,
       timeSlotService,
-      colorSchemeService,
+      colorScheme,
       cellService,
       elRef
     );

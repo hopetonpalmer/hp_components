@@ -195,27 +195,32 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
   }
 
   getDragData(e: PointerEvent): IDragData {
-    const rect = new Rect(this.left + 1, this.top + 1, this.width - 1, this.height - 1);
+    const offset = 1; // this.dragState === DragState.Sizing ? 0 : 1;
+    const rect = new Rect(this.left + offset, this.top + offset, this.width - (offset * 1), this.height - (offset * 1));
     let endPoint: Point;
     let endDate: Date = null;
     // const startPoint = this.isSizing ? new Point(e.pageX - e.offsetX, e.pageY - e.offsetY) : new Point(rect.left, rect.top);
     const startPoint = rect.topLeft;
-
-   if (this.orientation === 'vertical') {
-      endPoint = new Point(rect.bottomRight.x, rect.bottomRight.y + 1); // new Point(startPoint.x, startPoint.y + el.offsetHeight);
-     } else {
-      endPoint = rect.topRight;
-    }
-
-
-    const startCell = this.cellService.cellAtPos(startPoint);
+    let startCell = this.cellService.cellAtPos(startPoint);
     if (!startCell) {
-      return null;
+      startCell = this.cellService.cellOfDate(this.eventItem.start);
+    }
+    const startDate = startCell.timeSlot.startDate;
+
+    if (this.orientation === 'vertical') {
+      endPoint = new Point(rect.bottomRight.x, rect.bottomRight.y + 1); // new Point(startPoint.x, startPoint.y + el.offsetHeight);
+    } else {
+      if (startCell.timeSlot.viewType === 'Timeline') {
+        endPoint = new Point(startPoint.x + this.elRef.nativeElement.offsetWidth, startPoint.y);
+        //endPoint = new Point(rect.topRight.x + 2, rect.topRight.y) ;
+      } else {
+        endPoint = rect.topRight;
+      }
     }
 
-    const startDate = startCell.timeSlot.startDate;
     if (this.dragState === DragState.Sizing) {
-      const endCell = this.cellService.cellAtPos(endPoint);
+      //const endCell = this.cellService.cellAtPos(endPoint);
+       const endCell = this.cellService.cellInPos([endPoint, new Point(endPoint.x - 1, endPoint.y)]);
       if (!endCell) {
         return null;
       }
@@ -226,11 +231,14 @@ export class EventSelectorComponent implements OnInit, OnDestroy {
         endDate = subHours(endDate, 1);
       }
     }
+    console.log(endDate);
     const dragData = {
       schedulerItem: this.eventItem,
       startDate: startDate,
       endDate: endDate,
       orientation: this.orientation,
+      startCell: startCell,
+      endCell: this.endCell,
       isSizing: this.dragState === DragState.Sizing, dropRect: rect
     };
 
