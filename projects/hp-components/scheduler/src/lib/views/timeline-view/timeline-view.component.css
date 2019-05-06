@@ -64,7 +64,7 @@
   align-self: center;
   min-width: 40px;
   overflow: hidden;
-  border-top: var(--border);
+  border-top: 1px solid;
   /*border-left: var(--border);*/
 }
 
@@ -73,8 +73,7 @@
 }
 
 .interval.minute {
-  border-top: var(--border);
-  border-right: var(--border);
+  border-right: 1px solid;
   font-size: 10px;
   width: 30px;
 }
