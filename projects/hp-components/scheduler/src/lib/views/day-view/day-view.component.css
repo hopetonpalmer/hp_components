@@ -34,7 +34,8 @@
 
 .all-day-grid {
   grid-template-columns: 60px 1fr;
-  max-height: 200px;
+  overflow: hidden scroll;
+  /* max-height: 200px; */
 }
 
 .event-grid {
@@ -109,6 +110,7 @@
 
 .date-header {
   border-right: 1px solid;
+  border-bottom: 1px solid;
 }
 
 .date-header.slot-text {

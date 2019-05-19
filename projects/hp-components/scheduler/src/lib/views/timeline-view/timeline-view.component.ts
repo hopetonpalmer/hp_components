@@ -22,7 +22,6 @@ export class TimelineViewComponent extends SchedulerView {
   private _schedulerEventNotifyChangeSubscription: Subscription;
   protected maxDays = 1;
 
-  eventHeight = 40;
 
   protected orientation: Orientation = 'horizontal';
 

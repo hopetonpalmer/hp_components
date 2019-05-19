@@ -2,10 +2,12 @@
   <div style="height: 100%" class="interval day"
     *ngFor="let daySlot of viewTimeSlots; trackBy: trackSlotFn; let first=first">
     <!-- Day Header -->
-    <div hpColorScheme [colorSetName]="'headingColors'" *ngIf="headerVisible" class="header-container">
-      <div *ngIf="!headerTemplate" [style.border-color] = "'inherit'" class="slot-text date-header" [ngClass]="{'now': daySlot.isNow}"
-       (click)="jumpToDayView(daySlot.startDate)">
-        <span *ngIf="first || daySlot.startDate.getDate() === 1" class="show-month">{{formatDayName(daySlot.startDate,'MMM')}}</span>
+    <div #header *ngIf="headerVisible" hpColorScheme [colorSetName]="'headingColors'" class="header-container"
+      [ngClass]="{'sticky-header': isStickyHeader}" [style.top.px]="stickyTop">
+      <div *ngIf="!headerTemplate" [style.border-color]="'inherit'" class="slot-text date-header"
+        [ngClass]="{'now': daySlot.isNow}" (click)="jumpToDayView(daySlot.startDate)">
+        <span *ngIf="first || daySlot.startDate.getDate() === 1"
+          class="show-month">{{formatDayName(daySlot.startDate,'MMM')}}</span>
         <span>{{daySlot.formattedDate}}</span>
         <span class='day-name'>{{formatDayName(daySlot.startDate, 'EEE')}}</span>
       </div>
@@ -13,7 +15,7 @@
         [ngTemplateOutletContext]="{slot: daySlot, first: first, cell: cell}"></ng-container>
     </div>
     <div #cell hpEventCell class="event-slot" [isAllDay]="isAllDay" [timeSlotServiceProvider]="timeSlotServiceProvider"
-     [timeSlot]=daySlot style="height: 100%"></div>
+      [timeSlot]=daySlot style="height: 100%"></div>
   </div>
   <hp-event-item [orientation]="orientation" [eventItem]=item *ngFor="let item of eventItems"></hp-event-item>
 </div>

@@ -29,15 +29,17 @@ export class ColorScheme implements IColorScheme {
   // backColor = '#F1914D';
   // backColor = '#B8C2AE';
   // backColor = '#3C3B3D';
-   backColor = '#b3cdf5';
+  // backColor = '#b3cdf5';
   // backColor = '#F1E3B9';
   // backColor = '#737A72';
   // backColor = '#625241';
   // backColor = '#B4681A';
   // backColor = '#416076';
   // backColor = '#E1CCE7';
+  // backColor = '#B2BFC3';
   // backColor = '#41766F';
   // backColor = '#636E65';
+  backColor = '#B2C3BE';
 
 
 

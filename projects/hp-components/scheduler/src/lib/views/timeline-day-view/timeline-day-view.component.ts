@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Input, OnDestroy, ElementRef, DoCheck, ViewChild } from '@angular/core';
 import { TimelineViewComponent } from '../timeline-view/timeline-view.component';
 import { EventItem } from '../../event-item/event-item';
 import { IRect, intersectedRects } from '@hp-components/common';
@@ -17,7 +17,7 @@ import { SchedulerViewType } from '../../types';
 })
 export class TimelineDayViewComponent extends TimelineViewComponent {
 
- /*  @HostBinding('style.height.px')
+  /*  @HostBinding('style.height.px')
   viewHeight: number; */
 
   protected lastCellInclusive = true;
@@ -26,9 +26,11 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
   @Input()
   growToFitEvents = false;
 
-  @HostBinding('style.min-height.px')
   @Input()
   minHeight: number;
+
+  @Input()
+  maxHeight: number;
 
   @Input()
   headerOffset = 56;
@@ -42,10 +44,26 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
   @Input()
   viewType: SchedulerViewType;
 
+  @ViewChild('header') header: ElementRef;
+  @ViewChild('event_grid') eventGrid: ElementRef;
+
+
+/*   @HostBinding('style.min-height')
+  getMinHeight(): string {
+    if (this.isAllDay) {
+      return 'auto';
+    }
+    return this.minHeight + 'px';
+  }
+ */
   protected setViewDefaults() {
     this.dateFormats['day'] = 'd';
     this.intervalTypes = ['Day'];
     this.minuteInterval = 30;
+  }
+
+  detectChanges() {
+     this.cdRef.detectChanges();
   }
 
   protected excludeEvent(event: EventItem): boolean {
@@ -68,11 +86,17 @@ export class TimelineDayViewComponent extends TimelineViewComponent {
        return r;
      }, new Array<Rect>());
 
-     const sortedRects = this.sortRects(rectangles);
-     const height = sortedRects[sortedRects.length - 1].bottom - sortedRects[0].top +
+    const sortedRects = this.sortRects(rectangles);
+    let height = sortedRects[sortedRects.length - 1].bottom - sortedRects[0].top +
       margin + this.headerOffset + this.footerOffset;
 
-     el.style.minHeight = Math.max(this.minHeight, height) + 'px';
+     if (this.maxHeight) {
+       height = Math.min(this.maxHeight, height);
+       // (this.eventGrid.nativeElement as HTMLElement).style.height = height + 'px';
+     }
+    el.style.minHeight = Math.max(this.minHeight, height) + 'px';
+
+
 
     /*  if (this.strictMinHeight) {
         el.style.height = Math.max(this.minHeight, height) + 'px';
